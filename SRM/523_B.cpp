@@ -19,6 +19,7 @@ using namespace std;
 #define debug(X) cout<<"  ... "#X" : "<<(X)<<"\n" 
 #define PB push_back
 #define ALL(X) X.begin(), X.end()
+#define ZERO(v) memset(v, 0, sizeof(v))
 typedef long long LL;
 typedef vector<int> VI;
 typedef string STR;
@@ -57,10 +58,10 @@ LL get_base(int w) {
 class BricksN {
 public:
   int countStructures(int W, int H, int K) {
-    memset(single, 0, sizeof(single));
-    memset(single_sum, 0, sizeof(single_sum));
-    memset(group, 0, sizeof(group));
-    memset(base_table, 0, sizeof(base_table));
+    ZERO(single);
+    ZERO(single_sum);
+    ZERO(group);
+    ZERO(base_table);
 
     // init
     for(int w = 0; w <= W; ++w) {
