@@ -1,6 +1,8 @@
 
-def read_array():
-  return map(int, raw_input().split())
+def read_array(convertor=None):
+  ret = raw_input().split()
+  if convertor: ret = map(convertor, ret)
+  return ret
 
 
 def main():
