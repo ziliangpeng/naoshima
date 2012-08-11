@@ -20,7 +20,9 @@ def process_file(path):
 def dfs(path):
     for sub_path in os.listdir(path):
         next_path = os.path.join(path, sub_path)
-        if os.path.isfile(next_path):
+        if os.path.islink(next_path):
+            continue
+        elif os.path.isfile(next_path):
             try:
                 process_file(next_path)
             except:
