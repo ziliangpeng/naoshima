@@ -21,7 +21,7 @@ using namespace std;
 #define ALL(X) (X).begin(), (X).end()
 #define ZERO(v) memset(v, 0, sizeof(v))
 #define debug(X) cout<<"  ... "#X" : "<<(X)<<"\n" 
-#define uniq(A) sort(ALL(A));(A).erase(unique((A).begin(),(A).end()),(A).end()) 
+#define uniq(A) sort(ALL(A)), (A).erase(unique((A).begin(),(A).end()),(A).end()) 
 #define conv(A,B) {stringstream _3xian;_3xian<<A;_3xian>>B;} 
 typedef long long LL;
 typedef vector<int> VI;
