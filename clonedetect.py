@@ -3,17 +3,22 @@ import hashlib
 import base64
 
 
+def sample_file_content(f, sz):
+    return f.read(200 * 1024)
+
+
 def process_file(path, result_dict):
-    print 'eximining ', path
+    print 'examining:', path
     sz = os.path.getsize(path)
     f = open(path)
-    b = f.read(200 * 1024)
+    b = sample_file_content(f, sz)
     f.close()
     m = hashlib.md5()
     m.update(b)
     md5_value = base64.b16encode(m.digest())
 
-    if md5_value not in result_dict: result_dict[md5_value] = []
+    if md5_value not in result_dict:
+        result_dict[md5_value] = []
     result_dict[md5_value].append((path, sz))
     
 
