@@ -12,9 +12,13 @@ def sample_file_content(f, sz):
 def process_file(path, result_dict):
     print 'examining:', path
     sz = os.path.getsize(path)
-    f = open(path)
-    b = sample_file_content(f, sz)
-    f.close()
+    
+    try:
+        f = open(path)
+        b = sample_file_content(f, sz)
+    finally:
+        if f:
+            f.close()
     m = hashlib.md5()
     m.update(b)
     md5_value = base64.b16encode(m.digest())
