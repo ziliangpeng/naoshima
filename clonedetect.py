@@ -4,6 +4,8 @@ import base64
 
 
 def sample_file_content(f, sz):
+     # I believe first 200Kb has very high probability to uniquely identify a file.
+     # The 'sz' parameter is kept in function signature though.
     return f.read(200 * 1024)
 
 
@@ -17,9 +19,10 @@ def process_file(path, result_dict):
     m.update(b)
     md5_value = base64.b16encode(m.digest())
 
-    if md5_value not in result_dict:
-        result_dict[md5_value] = []
-    result_dict[md5_value].append((path, sz))
+    key = (md5_value, sz)
+    if key not in result_dict:
+        result_dict[key] = []
+    result_dict[key].append(path)
     
 
 def dfs(path, result_dict):
