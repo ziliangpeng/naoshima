@@ -1,7 +1,7 @@
 #include <cstdio>
 #include <cstring>
 #include <cmath>
-
+#include <cassert>
 #include <vector>
 #include <queue>
 #include <list>
@@ -24,4 +24,16 @@ using namespace std;
 typedef long long LL;
 typedef vector<int> VI;
 typedef string STR;
+
+class york {
+  void solve();
+};
+
+void york::solve() {
+}
+
+int main() {
+  (new york()) -> solve();
+  return 0;
+}
 
