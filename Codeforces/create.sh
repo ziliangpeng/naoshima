@@ -60,5 +60,13 @@ fi
 
 template='header.'$suffix
 destination='All/'$FILENAME'.'$suffix
-echo 'copying '$template' to '$destination
-cp $template $destination
+if test -f $destination; then
+	echo 'file '$destination' already exist'
+else
+	echo 'copying '$template' to '$destination
+	cp $template $destination
+	echo 'done'
+fi
+
+
+
