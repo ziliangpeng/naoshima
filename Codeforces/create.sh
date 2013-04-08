@@ -59,7 +59,7 @@ else
 fi
 
 template='header.'$suffix
-destination='All/'$FILENAME'.'$suffix
+destination='tmp_'$FILENAME'.'$suffix
 if test -f $destination; then
 	echo 'file '$destination' already exist'
 else
