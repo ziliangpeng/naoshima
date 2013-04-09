@@ -1,38 +1,47 @@
 #!/bin/bash
 
-MSG='expected format: create -l python -f 42A'
+# MSG='expected format: create -l python -f 42A'
+MSG='expected format: create 42A python'
 
 echo ''
 
-while test $# -gt 0; do
-	case "$1" in
-		-l)
-			shift
-			if test $# -gt 0; then
-				LANGUAGE=$1
-			else
-				echo $MSG
-				exit 1
-			fi
-			shift
-			;;
+if test $# -lt 2; then
+	echo $MSG
+	exit 1
+fi
 
-		-f)
-			shift
-			if test $# -gt 0; then
-				FILENAME=$1
-			else
-				echo $MSG
-				exit 1
-			fi
-			shift
-			;;
-		*)
-			echo MSG
-			exit 1
-			;;
-	esac
-done
+FILENAME=$1
+LANGUAGE=$2
+
+# while test $# -gt 0; do
+# 	case "$1" in
+# 		-l)
+# 			shift
+# 			if test $# -gt 0; then
+# 				LANGUAGE=$1
+# 			else
+# 				echo $MSG
+# 				exit 1
+# 			fi
+# 			shift
+# 			;;
+
+# 		-f)
+# 			shift
+# 			if test $# -gt 0; then
+# 				FILENAME=$1
+# 			else
+# 				echo $MSG
+# 				exit 1
+# 			fi
+# 			shift
+# 			;;
+# 		*)
+# 			echo MSG
+# 			exit 1
+# 			;;
+# 	esac
+# done
 
 if test -z "$LANGUAGE" || test -z "$FILENAME"; then
 	echo $MSG
