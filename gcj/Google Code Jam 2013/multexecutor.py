@@ -26,7 +26,7 @@ class Solver(Work):
         self.data_container = data_container
 
     def _run(self):
-        pass
+        pass # solve
 
 
 class DataContainer:
@@ -48,8 +48,6 @@ class Executor(Thread):
 
 
 def main():
-    cal_all()
-    # print all_numbers
     T = input()
     executors = [Executor() for i in range(NUM_THREAD)]
     for t in range(T):
