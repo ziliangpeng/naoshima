@@ -27,54 +27,48 @@ class Solver(Work):
 
     def win(self, status, player):
         for c in status:
-            if c != player and c != 'T':
+            if c not in [player, 'T']:
                 return False
-
         return True
 
     def _run(self):
         game = self.data_container.game
 
-        X_win = False
-        O_win = False
+        players = {'X': False, 'O', False}
+        X_win = O_win = False
         # horizontal
         for i in range(4):
             status = game[i]
-            if self.win(status, 'X'):
-                X_win |= True
-            if self.win(status, 'O'):
-                O_win |= True
+            for player in players.keys():
+                if self.win(status, player):
+                    players[player] = True
 
         # vertical
         for i in range(4):
             status = ''.join([row[i] for row in game])
-            if self.win(status, 'X'):
-                X_win |= True
-            if self.win(status, 'O'):
-                O_win |= True
+            for player in players.keys():
+                if self.win(status, player):
+                    players[player] = True
 
         # 
         status = ''.join([game[i][i] for i in range(4)])
-        if self.win(status, 'X'):
-            X_win |= True
-        if self.win(status, 'O'):
-            O_win |= True
+        for player in players.keys():
+            if self.win(status, player):
+                players[player] = True
 
         status = ''.join([game[i][3-i] for i in range(4)])
-        if self.win(status, 'X'):
-            X_win |= True
-        if self.win(status, 'O'):
-            O_win |= True
+        for player in players.keys():
+            if self.win(status, player):
+                players[player] = True
 
-        if X_win:
+        if players['X']:
             return 'X won'
-        elif O_win:
+        elif players['O']:
             return 'O won'
+        elif '.' in ''.join(game):
+            return 'Game has not completed'
         else:
-            if '.' in ''.join(game):
-                return 'Game has not completed'
-            else:
-                return 'Draw'
+            return 'Draw'
 
 
 class DataContainer:

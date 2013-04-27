@@ -34,8 +34,8 @@ class Solver(Work):
         data_container = self.data_container
         K, N = data_container.K, data_container.N
         keys = data_container.keys
-        needs = data_container.need
-        gets = data_container.get
+        needs = data_container.needs
+        gets = data_container.gets
 
         #init
         startswith = defaultdict(int)
@@ -43,10 +43,8 @@ class Solver(Work):
             startswith[key] += 1
         dp = [None] * (1<<N)
         have = [None] * (1<<N)
-
         dp[0] = ''
-        have[0] = defaultdict(int)
-        have[0].update(startswith)
+        have[0] = startswith
 
         #dp
         for bt in xrange(1<<N):
@@ -81,12 +79,12 @@ class DataContainer:
         self.K, self.N = read_array(int)
         self.keys = read_array(int)
 
-        self.need = []
-        self.get = []
+        self.needs = []
+        self.gets = []
         for i in range(self.N):
             v = read_array(int)
-            self.need.append(v[0])
-            self.get.append(v[2:])
+            self.needs.append(v[0])
+            self.gets.append(v[2:])
 
 #======================== EOF  =============================#
 
