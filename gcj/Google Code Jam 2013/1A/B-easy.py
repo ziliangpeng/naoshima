@@ -70,7 +70,6 @@ class Executor(Thread):
 
 
 def main():
-    time = datetime.now()
     T = input()
     executors = [Executor() for i in range(NUM_THREAD)]
     for t in range(T):
@@ -86,8 +85,6 @@ def main():
     for id, result in result_queue:
         print 'Case #%d:' % (id+1),
         print str(result)
-
-    print datetime.now() - time
 
 if __name__ == '__main__':
     main()
