@@ -4,3 +4,7 @@ a.out
 Codeforces/All/*
 SRM/app/*
 SRM/All/*
+
+*.in
+
+*.out
