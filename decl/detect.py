@@ -1,5 +1,6 @@
 from datetime import datetime
 from collections import defaultdict
+from hashlib import md5
 import base64
 import os
 
@@ -21,10 +22,7 @@ def full_content_sampler(filename):
         return f.read()
 
 
-def detect(path, hash_func=None, sampler=None, verbose=False, fuzzy=False):
-    if hash_func == None:
-        import hashlib
-        hash_func = hashlib.md5
+def detect(path, sampler=None, verbose=False, fuzzy=False):
 
     result_dict = defaultdict(list)
 
@@ -33,7 +31,7 @@ def detect(path, hash_func=None, sampler=None, verbose=False, fuzzy=False):
             print 'examining:', path
         sz = os.path.getsize(path)
         b = full_content_sampler(path)
-        m = hash_func()
+        m = md5()
         m.update(b)
         hash_value = base64.b16encode(m.digest())
 
