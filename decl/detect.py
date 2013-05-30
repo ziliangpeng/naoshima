@@ -82,8 +82,19 @@ def detect(path, sampler=FullContentSanmpler(), verbose=False, fuzzy=False):
     return duplicate_files
 
 
-def detect_fuzzy(*kwargs):
-    return detect(*kwargs, fuzzy=True)
+def detect_fuzzy(*args, **kwargs):
+    kwfuzzy = 'fuzzy'
+    if kwfuzzy in kwargs:
+        if kwargs[kwfuzzy] == True:
+            del kwargs[kwfuzzy]
+        elif kwfuzzy == False:
+            print 'keyword %s should be True' % (kwfuzzy)
+            return
+        else:
+            print 'keyword %s must a boolean value' % (kwfuzzy)
+            return
+
+    return detect(*args, fuzzy=True, **kwargs)
 
 
 if __name__ == '__main__':
