@@ -8,13 +8,13 @@ import os
 class FileGroup:
 
     def __init__(self, file_size, v):
-        self.v = v
+        self.v = sorted(v, key=lambda x: os.stat(x).st_ctime)
         self.file_size = file_size
 
     def __str__(self):
         ret = 'found duplicate files(size %d): \n' % (self.file_size)
         for f in self.v:
-            ret += '  -- ' + f + '\n'
+            ret += '  -- %s\n' % (str(f))
         return ret
 
 
