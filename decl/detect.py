@@ -7,22 +7,38 @@ import os
 
 class FileGroup:
 
-    def __init__(self, v):
+    def __init__(self, file_size, v):
         self.v = v
+        self.file_size = file_size
 
     def __str__(self):
-        ret = 'found duplicate files:\n'
+        ret = 'found duplicate files(size %d): \n' % (self.file_size)
         for f in self.v:
             ret += '  -- ' + f + '\n'
         return ret
 
 
-def full_content_sampler(filename):
-    with open(filename, 'rb') as f:
-        return f.read()
+class FullContentSanmpler:
+
+    def __init__(self):
+        pass
+
+    def sample(self, filename):
+        with open(filename, 'rb') as f:
+            return f.read()
 
 
-def detect(path, sampler=None, verbose=False, fuzzy=False):
+class HeadFixLengthContentSampler:
+
+    def __init__(self, head_bytes=1024*1024):
+        self.head_bytes = head_bytes
+
+    def sample(self, filename):
+        with open(filename, 'rb') as f:
+            return f.read(self.head_bytes)
+
+
+def detect(path, sampler=FullContentSanmpler(), verbose=False, fuzzy=False):
 
     result_dict = defaultdict(list)
 
@@ -30,12 +46,14 @@ def detect(path, sampler=None, verbose=False, fuzzy=False):
         if verbose:
             print 'examining:', path
         sz = os.path.getsize(path)
-        b = full_content_sampler(path)
+        b = sampler.sample(path)
         m = md5()
         m.update(b)
         hash_value = base64.b16encode(m.digest())
 
-        result_dict[hash_value].append(path)
+        file_size = os.stat(path).st_size
+
+        result_dict[(hash_value, file_size)].append(path)
 
     def dfs(path):
         for sub_path in os.listdir(path):
@@ -55,12 +73,11 @@ def detect(path, sampler=None, verbose=False, fuzzy=False):
                     print e
                     print 'error processing directory', next_path
 
-
     dfs(path)
     duplicate_files = []
     for k, v in result_dict.items():
         if len(v) > 1:
-            duplicate_files.append(FileGroup(v))
+            duplicate_files.append(FileGroup(k[1], v))
 
     return duplicate_files
 
