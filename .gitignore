@@ -8,3 +8,7 @@ SRM/All/*
 *.in
 
 *.out
+
+SRM/sync.sh
+
+*.swp
