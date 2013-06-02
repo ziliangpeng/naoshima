@@ -12,3 +12,5 @@ SRM/All/*
 SRM/sync.sh
 
 *.swp
+
+timus/1363.cpp
