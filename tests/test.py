@@ -6,6 +6,7 @@ from decl import *
 
 CONTENT_STRING = 'Will iPad mini with retina display be released in WWDC 2013?'
 
+
 ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
 
 
@@ -42,7 +43,6 @@ class TestDetect(unittest.TestCase):
 
         ret = detect('./files')
         self.assertEqual(len(ret), 0)
-
 
 
 if __name__ == '__main__':

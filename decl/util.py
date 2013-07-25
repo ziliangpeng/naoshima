@@ -3,6 +3,7 @@ from ctypes import *
 class struct_timespec(Structure):
     _fields_ = [('tv_sec', c_long), ('tv_nsec', c_long)]
 
+
 class struct_stat64(Structure):
     _fields_ = [
         ('st_dev', c_int32),
@@ -22,7 +23,8 @@ class struct_stat64(Structure):
 libc = CDLL('libc.dylib')
 stat64 = libc.stat64
 stat64.argtypes = [c_char_p, POINTER(struct_stat64)]
-
+ 
+"""Hacky way to retrieve file creation time that works both on Windows, Mac, and *NIX"""
 def get_creation_time(path):
     buf = struct_stat64()
     rv = stat64(path, pointer(buf))

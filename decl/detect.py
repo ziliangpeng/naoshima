@@ -11,12 +11,14 @@ from util import sort_files_by_create_time, get_creation_time
 _debug = False
 
 
+""" Built-in file sufficies for particular category of files."""
 class FileType:
     Photo = ['jpg', 'jpeg', 'png', 'gif']
     Video = ['avi', 'mov', 'mp4', 'mpg']
     Document = ['pdf', 'doc', 'docx', 'pages']
 
 
+""" Group of files identified as duplicated, fuzzy or exact."""
 class FileGroup:
 
     def __init__(self, file_size, v):
@@ -26,7 +28,6 @@ class FileGroup:
 
     def _sort(self):
         sort_files_by_create_time(self.v)
-
 
     def append(self, val):
         self.v.append(val)
@@ -72,6 +73,7 @@ def match_file_type(fname, file_types):
         return fname[fname.rfind('.'):][1:].lower() in file_types
 
 
+""" Converts fuzzy match group to exact match group. Works for small files."""
 def small_file_exact_match(file_group):
     file_contents = []
     new_file_groups = []
@@ -90,7 +92,7 @@ def small_file_exact_match(file_group):
     return new_file_groups
 
 
-""" Match algorithm for large files. This uses buffer for content comparasion 
+""" Matching algorithm for large files. This uses buffer for content comparasion 
     to avoid huge memory consumption.
 """
 def big_file_match(fn1, fn2):
@@ -106,7 +108,7 @@ def big_file_match(fn1, fn2):
                     return True
 
 
-""" Converts fuzzy match group to exact match group."""
+""" Converts fuzzy match group to exact match group. Works for large files."""
 def big_file_exact_match(file_group):
     new_file_groups = []
 
@@ -121,6 +123,7 @@ def big_file_exact_match(file_group):
     return new_file_groups
 
 
+""" Converts fuzzy match group to exact match group. Works for both small and large files."""
 def exact_match(file_group):
     mb = 1024 * 1024
     big_file_threshold = _debug and mb or 100 * mb
@@ -149,9 +152,7 @@ def detect(path, file_types=None, sampler=FullContentSampler(), verbose=False, f
         m = md5()
         m.update(b)
         hash_value = base64.b16encode(m.digest())
-
         file_size = os.stat(path).st_size
-
         result_dict[(hash_value, file_size)].append(path)
 
     def dfs(path):
@@ -199,7 +200,6 @@ def detect_fuzzy(*args, **kwargs):
         else:
             print 'keyword %s must a boolean value' % (kwfuzzy)
             return
-
 
 
 if __name__ == '__main__':
