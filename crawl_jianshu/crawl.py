@@ -54,11 +54,19 @@ def crawl(start_url):
             logger.info('found %s', next_url)
             if next_url.startswith('/'):
                 next_url = 'http://jianshu.io' + next_url
-                logger.info('adding %s to q' % next_url)
-                q.put(next_url)
+                if '#' in next_url:
+                    next_url = next_url[:next_url.find('#')]
+                if '?' in next_url:
+                    next_url = next_url[:next_url.find('?')]
+                if next_url not in visited:
+                    logger.info('adding %s to q' % next_url)
+                    q.put(next_url)
 
         for h in logger.handlers:
             h.flush()
+
+    print 'done'
+    loger.info('done!')
 
 
 
