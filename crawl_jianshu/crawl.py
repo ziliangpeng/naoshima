@@ -21,14 +21,23 @@ def get_links(text):
             pass
 
 
+def pop_set(s):
+    v = None
+    for _ in s:
+        v = _
+        break
+    s.remove(v)
+    return v
+
+
 def crawl(start_url):
     visited = set()
-    q = Queue()
-    q.put(start_url)
+    q = set()
+    q.add(start_url)
 
     tried = 0
-    while not q.empty():
-        url = q.get()
+    while len(q) != 0:
+        url = pop_set(q)
         if '#' in url:
             url = url[:url.find('#')]
         if '?' in url:
@@ -38,7 +47,7 @@ def crawl(start_url):
             logger.info('already visited %s' % url)
             continue
 
-        print 'take %d, crawl %s, remain %d in q' % (tried, url, q.qsize())
+        print 'take %d, crawl %s, remain %d in q' % (tried, url, len(q))
         logger.info('crawl %s' % url)
         visited.add(url)
         tried += 1
@@ -58,9 +67,9 @@ def crawl(start_url):
                     next_url = next_url[:next_url.find('#')]
                 if '?' in next_url:
                     next_url = next_url[:next_url.find('?')]
-                if next_url not in visited:
+                if next_url not in visited and next_url not in q:
                     logger.info('adding %s to q' % next_url)
-                    q.put(next_url)
+                    q.add(next_url)
 
         for h in logger.handlers:
             h.flush()
