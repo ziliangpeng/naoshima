@@ -22,7 +22,7 @@ type Point struct {
 
 // add method to struct outside struct
 // golang use duck typing
-func (destination Point) gridDist() int {
+func (destination Point) gridDist() int { // `destination` is only a name
     return destination.X + destination.Y
 }
 
