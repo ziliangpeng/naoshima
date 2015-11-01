@@ -10,7 +10,7 @@ func increment(input chan int, output chan<- int) {
 
 func chain() {
 	const n = 999
-	cs := [n + 1]chan int{}
+    cs := make([]chan int, n+1)
 	for i := 0; i <= n; i++ {
 		cs[i] = make(chan int)
 	}
