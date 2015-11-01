@@ -1,7 +1,7 @@
 import socket 
 from threading import Thread
 from time import sleep
-from server_common import rev_str
+from net_common import handle_rev_str
 from Queue import Queue, Empty
 import signal
 import sys
@@ -29,7 +29,7 @@ class Worker(Thread):
         while not end:
             try:
                 conn = q.get(timeout=0.3)
-                rev_str(conn)
+                handle_rev_str(conn)
             except Empty:
                 pass
 
@@ -53,7 +53,7 @@ for _ in range(THREAD_POOL_SIZE):
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s.bind((HOST, PORT))
-s.listen(50)
+s.listen(1024)
 Thread(target=accept_thread, args=(s,)).start()
 
 while not end:
