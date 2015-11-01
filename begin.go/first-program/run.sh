@@ -1,18 +1,22 @@
 #!/bin/zsh
 
-# Run, without leaving a executable file
-echo "Running with 'go run'.."
+# Run, without leaving an executable file
+echo " >>> Running with 'go run'.. This will not leave an executable"
 go run main.go
-
 echo ''
 
 # Build executable
-rm first-program
-echo "Building with 'go build'.."
-echo "running ls.."
+if [ -f 'first-program' ];
+then
+    echo ' >>> `first-program` exist. deleting..'
+    rm first-program
+fi
+echo " >>> To build with 'go build'.."
+echo " >>> running ls.."
 ls
-echo "Building..."
+echo " >>> Building..."
 go build -v .
-echo "running ls.."
+echo " >>> running ls.."
 ls
 ./first-program
+rm first-program
