@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
+
   root :to => redirect('/images')
   get '/images' => 'images#index'
   get 'images/index'
+  get '/assemble' => 'assemble#demo'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
