@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 OUTPUT_RESOLUTION=$1
 
@@ -22,7 +21,12 @@ function convert_to {
     echo `date` >>"$stderr_file"
 
     ffmpeg -i "$filename" -vf scale=-1:$res "$tmp_file" 1>>"$stdout_file" 2>>"$stderr_file"
-    mv "$tmp_file" "$target_file"
+    if [ $? -ne 0 ]; then
+      echo "is interrupted."
+      return 1
+    else
+      mv "$tmp_file" "$target_file"
+    fi
   fi
   echo ">>>>>Ending" `date` "$filename"
 }
@@ -35,5 +39,8 @@ do
   echo $file | grep "converted" > /dev/null
   if [ $? -ne 0 ]; then
     convert_to "$file" $OUTPUT_RESOLUTION >> $log_file
+    if [ $? -ne 0 ]; then
+      exit 1
+    fi
   fi
 done
