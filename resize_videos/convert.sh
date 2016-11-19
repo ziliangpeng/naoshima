@@ -1,17 +1,15 @@
 #!/bin/bash
 
-OUTPUT_RESOLUTION=$1
-SPEED=$2
-QUALITY=$3
+SPEED=$1
+QUALITY=$2
 
 function convert_to {
   filename=$1
-  res=$OUTPUT_RESOLUTION
 
   echo ">>>Starting" `date`
-  echo "converting '$filename' to $res"
+  echo "converting '$filename'"
 
-  target_file=$filename-converted-to-$res-$SPEED-$QUALITY.mov
+  target_file=$filename-converted-to-$SPEED-$QUALITY.mov
   tmp_file=$target_file.tmp.mov
   stdout_file=$target_file.out
   stderr_file=$target_file.err
@@ -23,7 +21,7 @@ function convert_to {
     echo `date` >>"$stdout_file"
     echo `date` >>"$stderr_file"
 
-    ffmpeg -i "$filename" -vf scale=-1:$res -preset $SPEED -crf $QUALITY "$tmp_file" 1>>"$stdout_file" 2>>"$stderr_file"
+    ffmpeg -i "$filename" -preset $SPEED -crf $QUALITY "$tmp_file" 1>>"$stdout_file" 2>>"$stderr_file"
     if [ $? -ne 0 ]; then
       echo "is interrupted."
       return 1
