@@ -1,17 +1,20 @@
 #!/bin/bash
 
 OUTPUT_RESOLUTION=$1
+SPEED=$2
+QUALITY=$3
 
 function convert_to {
   filename=$1
-  res=$2
+  res=$OUTPUT_RESOLUTION
+
   echo ">>>Starting" `date`
   echo "converting '$filename' to $res"
 
-  tmp_file=$filename-converted-to-$res-tmp.mov
-  target_file=$filename-converted-to-$res.mov
-  stdout_file=$filename-converted-to-$res.out
-  stderr_file=$filename-converted-to-$res.err
+  target_file=$filename-converted-to-$res-$SPEED-$QUALITY.mov
+  tmp_file=$target_file.tmp.mov
+  stdout_file=$target_file.out
+  stderr_file=$target_file.err
 
   if [ -f "$target_file" ]; then
     echo "skipping..."
@@ -20,7 +23,7 @@ function convert_to {
     echo `date` >>"$stdout_file"
     echo `date` >>"$stderr_file"
 
-    ffmpeg -i "$filename" -vf scale=-1:$res "$tmp_file" 1>>"$stdout_file" 2>>"$stderr_file"
+    ffmpeg -i "$filename" -vf scale=-1:$res -preset $SPEED -crf $QUALITY "$tmp_file" 1>>"$stdout_file" 2>>"$stderr_file"
     if [ $? -ne 0 ]; then
       echo "is interrupted."
       return 1
@@ -38,7 +41,7 @@ for file in "."/*.mov
 do
   echo $file | grep "converted" > /dev/null
   if [ $? -ne 0 ]; then
-    convert_to "$file" $OUTPUT_RESOLUTION >> $log_file
+    convert_to "$file" >> $log_file
     if [ $? -ne 0 ]; then
       exit 1
     fi
