@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 OUTPUT_RESOLUTION=$1
 
