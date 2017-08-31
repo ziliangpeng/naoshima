@@ -14,26 +14,31 @@ print 'height = %s' % height
 fourcc = cv2.cv.CV_FOURCC(*'FMP4') # describe codec
 out = cv2.VideoWriter('%s-output-%f.mp4' % (filename, random.random()), fourcc, 20, (width, height))
 
-def img_diff(frame_cnt, prev, curr):
+def img_diff(frame_cnt, prev, curr, prev_diff_img):
     if prev is None:
         return curr
 
     ret = curr.copy()
     for i in xrange(len(curr)):
         for j in xrange(len(curr[0])):
-            ret[i][j][0] = numpy.uint8(max(0, int(curr[i][j][0]) - int(prev[i][j][0])))
-            ret[i][j][1] = numpy.uint8(max(0, int(curr[i][j][1]) - int(prev[i][j][1])))
-            ret[i][j][2] = numpy.uint8(max(0, int(curr[i][j][2]) - int(prev[i][j][2])))
+            ret[i][j][0] = numpy.uint8(abs(int(curr[i][j][0]) - int(prev[i][j][0])))
+            ret[i][j][1] = numpy.uint8(abs(int(curr[i][j][1]) - int(prev[i][j][1])))
+            ret[i][j][2] = numpy.uint8(abs(int(curr[i][j][2]) - int(prev[i][j][2])))
     return ret
 
+def proc_new_frame(*args):
+    img_diff(*args)
+
 prev_img = None
+prev_diff_img = None
 frame_cnt = 0
 while True:
     print 'frame_cnt %d' % frame_cnt
     success, img = vid.read()
     if success == False:
         break
-    diff_img = img_diff(frame_cnt, prev_img, img)
+    diff_img = img_diff(frame_cnt, prev_img, img, prev_diff_img)
+    prev_diff_img = diff_img
     out.write(diff_img)
 
     prev_img = img
