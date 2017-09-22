@@ -34,7 +34,7 @@ class Eight {
 
     private static void doRun(NaoshimaRunner r) {
       p.accept("Starting to run runner");
-      r.run();
+      r.runMethod();
       p.accept("Finished run runner");
     }
 }
