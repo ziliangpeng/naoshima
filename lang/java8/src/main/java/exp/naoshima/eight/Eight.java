@@ -17,6 +17,8 @@ class Eight {
         value = IntStream.range(0, 4).reduce(value, (a, b) -> manipulateInt(a, v -> v * 2));
 
         p.accept("Final value is " + value);
+
+        doRun(() -> {p.accept("Inside runner");});
     }
 
     /*
@@ -28,5 +30,11 @@ class Eight {
         p.accept("After value:  " + ret);
         p.accept("=====");
         return ret;
+    }
+
+    private static void doRun(NaoshimaRunner r) {
+      p.accept("Starting to run runner");
+      r.run();
+      p.accept("Finished run runner");
     }
 }
