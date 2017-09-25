@@ -3,7 +3,7 @@
   <!-- Configure the database connection here -->
   <jdbc>
     <driver>com.mysql.jdbc.Driver</driver>
-    <url>jdbc:mysql://localhost:3306/seto</url>
+    <url>jdbc:mysql://localhost:3306/banana</url>
     <user>root</user>
     <password>password</password>
   </jdbc>
@@ -24,7 +24,7 @@
 
       <!-- The database schema (or in the absence of schema support, in your RDBMS this
          can be the owner, user, database name) to be generated -->
-      <inputSchema>seto</inputSchema>
+      <inputSchema>banana</inputSchema>
 
       <outputSchemaToDefault>true</outputSchemaToDefault>
 
@@ -41,7 +41,7 @@
 
     <target>
       <!-- The destination package of your generated classes (within the destination directory) -->
-      <packageName>io.naoshima.db</packageName>
+      <packageName>com.airbnb.banana.db</packageName>
 
       <!-- The destination directory of your generated classes -->
       <directory>src/main/java</directory>
