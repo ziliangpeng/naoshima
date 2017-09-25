@@ -1,2 +1,4 @@
 # All the .jar files
 *.jar
+
+mysql-connector-java-5.1.44/*
