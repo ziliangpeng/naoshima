@@ -1,0 +1,15 @@
+
+- Attributes in Request object
+  - retries
+  - timeout
+  - is transaction
+- Attributes in Executor object
+  - retries
+  - timeout
+
+
+Design Ideas:
+- one connection provider per executor
+- circuit breaker in executor
+- metrics in either listeners or executor
+- executor can take either request object or simply a query lambda
