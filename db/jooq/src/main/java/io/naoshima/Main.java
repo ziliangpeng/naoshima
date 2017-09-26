@@ -3,7 +3,10 @@ package io.naoshima;
 import com.airbnb.banana.db.Tables;
 import com.airbnb.banana.db.tables.records.UsersRecord;
 import io.naoshima.db.containers.DbQueryRequest;
+import io.naoshima.db.containers.DbTransactionRequest;
 import org.jooq.ConnectionProvider;
+import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import org.jooq.impl.DefaultConnectionProvider;
 
 import java.sql.DriverManager;
@@ -31,8 +34,23 @@ public class Main {
             .fetchAny());
     System.out.println("Name of user is: " + r2.getName());
 
-    // Multiple queries
+    // Multiple async queries
     IntStream.range(1, 100).mapToObj(i -> executor.asyncExecute(request)).forEach(cf -> cf.join());
+
+    // Transaction
+    DbTransactionRequest transactionRequest = new DbTransactionRequest(conf -> {
+      DSLContext ctx = DSL.using(conf);
+      UsersRecord a = ctx.selectFrom(Tables.USERS).where(Tables.USERS.NAME.eq("A")).fetchOne();
+      UsersRecord b = ctx.selectFrom(Tables.USERS).where(Tables.USERS.NAME.eq("B")).fetchOne();
+      a.setWealth(a.getWealth() - 100);
+      b.setWealth(a.getWealth() + 100);
+      a.store();
+      b.store();
+    });
+    executor.asyncExecuteTransaction(transactionRequest);
+
+    // Multiple async transaction (will fail because race transactions)
+    IntStream.range(1, 100).mapToObj(i -> executor.asyncExecuteTransaction(transactionRequest)).forEach(cf -> cf.join());
   }
 
   private static ConnectionProvider getConnectionProvider() throws SQLException {
