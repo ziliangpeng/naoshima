@@ -58,6 +58,10 @@ public class QueryExecutor {
         });
     }
 
+    public CompletableFuture<?> asyncExecuteTransaction(DbTransactionRequest dbTransactionRequest) {
+        return CompletableFuture.runAsync(() -> executeTransaction(dbTransactionRequest), executorService);
+    }
+
     // TODO: implement async
     public <T> CompletableFuture<T> asyncExecute(DbQueryRequest<T> dbQueryRequest) {
         return CompletableFuture.supplyAsync(() -> execute(dbQueryRequest), executorService);
