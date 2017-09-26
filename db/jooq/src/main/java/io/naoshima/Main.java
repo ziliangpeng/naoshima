@@ -7,7 +7,6 @@ import org.jooq.ConnectionProvider;
 import org.jooq.DSLContext;
 import org.jooq.impl.DefaultConnectionProvider;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.concurrent.ForkJoinPool;
@@ -29,15 +28,13 @@ public class Main {
     IntStream.range(1, 100).mapToObj(i -> executor.asyncExecute(request)).forEach(cf -> cf.join());
   }
 
-  private static Connection getConnection() throws SQLException {
+  private static ConnectionProvider getConnectionProvider() throws SQLException {
+    // TODO: current impl is a naive single connection provider. To use DataSourceConnectionProvider and
+    // Dropwizard's DatasourceFactory
+
     String userName = "root";
     String password = "password";
     String url = "jdbc:mysql://localhost:3306/banana";
-
-    return DriverManager.getConnection(url, userName, password);
-  }
-
-  private static ConnectionProvider getConnectionProvider() throws SQLException {
-    return new DefaultConnectionProvider(getConnection());
+    return new DefaultConnectionProvider(DriverManager.getConnection(url, userName, password));
   }
 }
