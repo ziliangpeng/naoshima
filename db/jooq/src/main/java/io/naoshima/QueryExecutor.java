@@ -28,20 +28,10 @@ public class QueryExecutor {
 
     // TODO: private CircuitBreaker circuitBreaker;
 
-    private static DSLContext DSL_CONTEXT;
-
     public QueryExecutor(ConnectionProvider connectionProvider, ExecutorService executorService) {
         this.connectionProvider = connectionProvider;
         this.executorService = executorService;
 
-        Configuration conf = new DefaultConfiguration()
-                .derive(new Settings()
-                        .withStatementType(StatementType.PREPARED_STATEMENT)
-                        .withRenderNameStyle(RenderNameStyle.QUOTED))
-                .set(connectionProvider.acquire())
-                .set(SQLDialect.MYSQL)
-                .set(new DefaultExecuteListenerProvider(new AirbnbJooqListeners()));
-        DSL_CONTEXT = DSL.using(conf);
     }
 
     public QueryExecutor(ConnectionProvider connectionProvider) {
@@ -50,16 +40,29 @@ public class QueryExecutor {
 
     // every `execute` should have an exclusive connection
     public <T> T execute(DbQueryRequest<T> dbQueryRequest) {
-        return dbQueryRequest.getSql().apply(DSL_CONTEXT);
+        DSLContext ctx = getDSLContext();
+        return dbQueryRequest.getSql().apply(ctx);
     }
 
     // Shortcut for simply running a query with default configs
     public <T> T execute(Function<DSLContext, T> query) {
-        return query.apply(DSL_CONTEXT);
+        DSLContext ctx = getDSLContext();
+        return query.apply(ctx);
     }
 
     // TODO: implement async
     public <T> CompletableFuture<T> asyncExecute(DbQueryRequest<T> dbQueryRequest) {
         return CompletableFuture.supplyAsync(() -> execute(dbQueryRequest), executorService);
+    }
+
+    private DSLContext getDSLContext() {
+        Configuration conf = new DefaultConfiguration()
+                .derive(new Settings()
+                        .withStatementType(StatementType.PREPARED_STATEMENT)
+                        .withRenderNameStyle(RenderNameStyle.QUOTED))
+                .set(connectionProvider.acquire())
+                .set(SQLDialect.MYSQL)
+                .set(new DefaultExecuteListenerProvider(new AirbnbJooqListeners()));
+        return DSL.using(conf);
     }
 }
