@@ -1,6 +1,7 @@
 package io.naoshima;
 
 import io.naoshima.db.containers.DbQueryRequest;
+import io.naoshima.db.containers.DbTransactionRequest;
 import io.naoshima.db.listeners.AirbnbJooqListeners;
 import org.jooq.Configuration;
 import org.jooq.ConnectionProvider;
@@ -48,6 +49,13 @@ public class QueryExecutor {
     public <T> T execute(Function<DSLContext, T> query) {
         DSLContext ctx = getDSLContext();
         return query.apply(ctx);
+    }
+
+    public void executeTransaction(DbTransactionRequest dbTransactionRequest) {
+        DSLContext ctx = getDSLContext();
+        ctx.transaction(conf -> {
+            dbTransactionRequest.getTransaction().accept(conf);
+        });
     }
 
     // TODO: implement async
