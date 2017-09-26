@@ -42,8 +42,9 @@ public class Main {
       DSLContext ctx = DSL.using(conf);
       UsersRecord a = ctx.selectFrom(Tables.USERS).where(Tables.USERS.NAME.eq("A")).fetchOne();
       UsersRecord b = ctx.selectFrom(Tables.USERS).where(Tables.USERS.NAME.eq("B")).fetchOne();
+      System.out.println("Wealth is " + a.getWealth() + " " + b.getWealth());
       a.setWealth(a.getWealth() - 100);
-      b.setWealth(a.getWealth() + 100);
+      b.setWealth(b.getWealth() + 100);
       a.store();
       b.store();
     });
