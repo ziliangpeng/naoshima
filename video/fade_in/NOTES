@@ -1,7 +1,28 @@
-A project for fun (Instagram)
+Project ideas for fun (Instagram)
 
-1. find an image, crop to square, not too big (360 x 360?)
+- Fade in for photos
+  1. find an image, crop to square, not too big (360 x 360?)
+  2. fade in the image from 3 color channels (RGB) respectively and sequentially
+  3. advance experiment can have 3 channel fade in interleaved, plus mix with fade out
 
-2. fade in the image from 3 color channels (RGB) respectively and sequentially
+- flash montage
+  1. collect photos of same topic (e.g. hashtag from instagram)
+  2. flash images in video
+  3. possibly montage several images into a frame
 
-3. advance experiment can have 3 channel fade in interleaved, plus mix with fade out
+- iPhone burst stop motion
+  1. burst photos shoot around or walk
+  2. use photos as frame for video (~0.3 to 0.5s per frame)
+  3. skip frame if burst is too fast
+
+- skip frame of videos
+  1. take a video (my videos or youtube videos)
+  2. take every X-th fram
+  3. give long pause, make it look like stop motion
+
+
+
+
+## Backlog
+
+- play with videos from youtube
