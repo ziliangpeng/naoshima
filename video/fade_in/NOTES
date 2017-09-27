@@ -1,0 +1,7 @@
+A project for fun (Instagram)
+
+1. find an image, crop to square, not too big (360 x 360?)
+
+2. fade in the image from 3 color channels (RGB) respectively and sequentially
+
+3. advance experiment can have 3 channel fade in interleaved, plus mix with fade out
