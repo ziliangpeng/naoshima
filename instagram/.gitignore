@@ -4,3 +4,6 @@ secret.local
 # Python
 *.pyc
 *.pyo
+
+# logs
+*.log
