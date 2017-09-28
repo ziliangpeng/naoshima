@@ -105,6 +105,7 @@ class StealFoers(Thread):
         for id, name in utils.get_all_followers_gen(self.bot, self.uid):
             i += 1
             print 'Steal %d-th follower %s(%s)' % (i, str(id), str(name))
+            # TODO: don't follow if already followed
             self.queue_to_fo.put(id)
 
 
