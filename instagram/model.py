@@ -1,6 +1,7 @@
 from Queue import Queue
 from threading import Lock
 
+
 class UniqueQueue(Queue):
     def __init__(self, n):
         self.q = Queue(n)

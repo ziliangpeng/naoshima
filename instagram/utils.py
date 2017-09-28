@@ -12,15 +12,18 @@ QUERY_IDs = {
 }
 DEFAULT_PAGINATION = 8000
 QUERY = '{"id":"%s","first":%d}'
+QUERY_WITH_CURSOR = '{"id":"%s","first":%d,"after":"%s"}'
 INSTAGRAM_GRAPPHQL_QUERY = 'https://www.instagram.com/graphql/query/?query_id=%d&variables=%s'
 
 USER_ID = secret_reader.load_user_id()
 
-id_name_dict = {}
-
 
 def make_query(uid=USER_ID, paginate=DEFAULT_PAGINATION):
     return QUERY % (str(uid), int(paginate))
+
+
+def make_query_cursor(uid=USER_ID, paginate=DEFAULT_PAGINATION, cursor=""):
+    return QUERY_WITH_CURSOR % (str(uid), int(paginate), str(cursor))
 
 
 def map_user_id(user):
@@ -70,16 +73,44 @@ def get_followers(bot, uid=USER_ID):
     raise BaseException("Fail to get followers")
 
 
-def find_fofo(n):
-    follows = get_follows()
-    followers = get_followers()
+def get_all_followers_gen(bot, uid=USER_ID):
+    cursor = ""
+    while True:
+        while True:
+            time.sleep(2)  # retry delay
+            url = INSTAGRAM_GRAPPHQL_QUERY % \
+                (QUERY_IDs['followers'],
+                    urllib.quote_plus(make_query_cursor(uid, 50, cursor)))
+            r = bot.s.get(url)
+            if r.status_code != 200:
+                print 'error in get followers, error code', r.status_code
+                continue
+            all_data = json.loads(r.text)
+            followers = all_data["data"]["user"]["edge_followed_by"]["edges"]
+            cursor = all_data["data"]["user"]["edge_followed_by"]["page_info"]["end_cursor"]
+            for f in followers:
+                yield f["node"]["id"], f["node"]["username"]
+
+
+def find_fofo(bot, n, id_name_dict, poked):
+    follows = get_follows(bot)
+    followers = get_followers(bot)
     id_name_dict.update(follows)
     id_name_dict.update(followers)
     fo_list = set()
     while len(fo_list) < n:
         chosen_foer = random.choice(list(follows.keys()))
-        foer_foer = get_followers(chosen_foer)
+        foer_foer = get_followers(bot, chosen_foer)
         id_name_dict.update(foer_foer)
         fo_list |= set(foer_foer) - set(follows) - poked
         fo_list.discard(USER_ID)
     return fo_list
+
+
+if __name__ == '__main__':
+    import auth
+    bot = auth.auth()
+    i = 0
+    for id, name in get_all_followers_gen(bot):
+        i += 1
+        print i, id, name
