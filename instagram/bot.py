@@ -1,4 +1,5 @@
 import auth
+import secret_reader
 import random
 import urllib
 import time
@@ -15,13 +16,7 @@ queue_to_fo = UniqueQueue(50)
 queue_to_unfo = UniqueQueue(50)
 
 
-def load_user_id():
-    with open('secret.local', 'r') as f:
-        secret_data = json.loads(f.read())
-        return secret_data["id"]
-
-
-user_id = load_user_id()
+user_id = secret_reader.load_user_id()
 bot = auth.auth()
 
 id_name_dict = {}
