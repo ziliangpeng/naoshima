@@ -10,32 +10,29 @@ from threading import Thread
 from model import UniqueQueue
 
 
-WHITELIST_USER = ['evakecume']
-
-queue_to_fo = UniqueQueue(50)
-queue_to_unfo = UniqueQueue(50)
-
-
-user_id = secret_reader.load_user_id()
-bot = auth.auth()
-
-id_name_dict = {}
-
-# for URL decode: https://meyerweb.com/eric/tools/dencoder/
-
 QUERY_IDs = {
     'follows': 17874545323001329,
     'followers': 17851374694183129,
 }
+WHITELIST_USER = secret_reader.load_whitelist()
+FO_QUEUE_SIZE = 50
+UNFO_QUEUE_SIZE = 50
+USER_ID = secret_reader.load_user_id()
 
-DEFAULT_USER_ID = user_id
+bot = auth.auth()
+id_name_dict = {}
+queue_to_fo = UniqueQueue(FO_QUEUE_SIZE)
+queue_to_unfo = UniqueQueue(UNFO_QUEUE_SIZE)
+
+# for URL decode: https://meyerweb.com/eric/tools/dencoder/
+
 DEFAULT_PAGINATION = 8000
 QUERY = '{"id":"%s","first":%d}'
 INSTAGRAM_GRAPPHQL_QUERY = 'https://www.instagram.com/graphql/query/?query_id=%d&variables=%s'
 
 poked = set() # ppl I've followed before
 
-def make_query(uid=DEFAULT_USER_ID, paginate=DEFAULT_PAGINATION):
+def make_query(uid=USER_ID, paginate=DEFAULT_PAGINATION):
     return QUERY % (str(uid), int(paginate))
 
 def map_user_id(user):
@@ -44,7 +41,7 @@ def map_user_id(user):
 def map_user_name(user):
     return user[1]
 
-def get_follows(uid=DEFAULT_USER_ID):
+def get_follows(uid=USER_ID):
     time.sleep(3) # initial delay
     for retry in xrange(5):
         time.sleep(2) # retry delay
@@ -62,7 +59,7 @@ def get_follows(uid=DEFAULT_USER_ID):
         return ret
     raise BaseException("Fail to get follows")
 
-def get_followers(uid=DEFAULT_USER_ID):
+def get_followers(uid=USER_ID):
     time.sleep(3) # initial delay
     for retry in xrange(5):
         time.sleep(2) # retry delay
@@ -92,7 +89,7 @@ def find_fofo(n):
         foer_foer = get_followers(chosen_foer)
         id_name_dict.update(foer_foer)
         fo_list |= set(foer_foer) - set(follows) - poked
-        fo_list.discard(DEFAULT_USER_ID)
+        fo_list.discard(USER_ID)
     return fo_list
 
 
@@ -101,8 +98,8 @@ def find_fofo(n):
 def gen_unfo():
     while True:
         try:
-            follows = get_follows(user_id)
-            followers = get_followers(user_id)
+            follows = get_follows(USER_ID)
+            followers = get_followers(USER_ID)
             id_name_dict.update(follows)
             id_name_dict.update(followers)
 
