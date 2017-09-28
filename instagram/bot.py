@@ -1,37 +1,28 @@
+import auth
 import random
 import urllib
 import time
-import os
 import sys
 import json
 import datetime
-from threading import Lock, Thread
+from threading import Thread
 from model import UniqueQueue
 
-sys.path.append(os.path.join(sys.path[0], 'src'))
-from instabot import InstaBot
-from userinfo import UserInfo
 
 WHITELIST_USER = ['evakecume']
 
 queue_to_fo = UniqueQueue(50)
 queue_to_unfo = UniqueQueue(50)
 
-def load_secrets():
-    with open('secret.local', 'r') as f:
-        secret_data = json.loads(f.read())
-        return secret_data["login"], secret_data["password"]
 
 def load_user_id():
     with open('secret.local', 'r') as f:
         secret_data = json.loads(f.read())
         return secret_data["id"]
 
-login, password = load_secrets()
-user_id = load_user_id()
 
-#use instabot
-bot = InstaBot(login = login, password = password, log_mod = 1)
+user_id = load_user_id()
+bot = auth.auth()
 
 id_name_dict = {}
 
