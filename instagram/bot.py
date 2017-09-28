@@ -6,7 +6,7 @@ import sys
 import json
 import datetime
 from threading import Lock, Thread
-from Queue import Queue
+from model import UniqueQueue
 
 sys.path.append(os.path.join(sys.path[0], 'src'))
 from instabot import InstaBot
@@ -14,31 +14,8 @@ from userinfo import UserInfo
 
 WHITELIST_USER = ['evakecume']
 
-class SetQueue(Queue):
-    def __init__(self, n):
-        self.q = Queue(n)
-        self.s = set()
-        self.put_lock = Lock()
-        self.get_lock = Lock()
-
-    def put(self, x):
-        with self.put_lock:
-            if x not in self.s:
-                self.s.add(x)
-                self.q.put(x)
-
-    def get(self):
-        with self.get_lock:
-            x = self.q.get()
-            self.q.task_done()
-            if x in self.s:
-                self.s.remove(x)
-            else:
-                print 'Error: Queue key not in set'
-            return x
-
-queue_to_fo = SetQueue(50)
-queue_to_unfo = SetQueue(50)
+queue_to_fo = UniqueQueue(50)
+queue_to_unfo = UniqueQueue(50)
 
 def load_secrets():
     with open('secret.local', 'r') as f:
