@@ -4,7 +4,7 @@ import signal
 import auth
 import secret_reader
 from model import UniqueQueue
-from runners import GenFo, DoFo, GenUnfo, DoUnfo
+from runners import GenFo, DoFo, GenUnfo, DoUnfo, StealFoers
 
 
 WHITELIST_USER = secret_reader.load_whitelist()
@@ -49,6 +49,18 @@ if __name__ == '__main__':
             t.daemon = True
             t.start()
             threads.append(t)
+        elif cmd.startswith('steal'):
+            steal_id = cmd[cmd.index('(') + 1: cmd.index(')')]
+            t = StealFoers(bot, steal_id, queue_to_fo)
+            t.daemon = True
+            t.start()
+            threads.append(t)
+
+            t = DoFo(bot, queue_to_fo)
+            t.daemon = True
+            t.start()
+            threads.append(t)
+
 
     while True:
         time.sleep(1)

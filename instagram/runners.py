@@ -93,6 +93,21 @@ class GenFo(Thread):
                 print e
 
 
+class StealFoers(Thread):
+    def __init__(self, bot, uid, queue_to_fo):
+        Thread.__init__(self)
+        self.bot = bot
+        self.uid = uid
+        self.queue_to_fo = queue_to_fo
+
+    def run(self):
+        i = 0
+        for id, name in utils.get_all_followers_gen(self.bot, self.uid):
+            i += 1
+            print 'Steal %d-th follower %s(%s)' % (i, str(id), str(name))
+            self.queue_to_fo.put(id)
+
+
 class DoFo(Thread):
     def __init__(self, bot, queue_to_fo):
         Thread.__init__(self)
@@ -105,6 +120,7 @@ class DoFo(Thread):
             try:
                 f = self.queue_to_fo.get()
                 self.bot.follow(f)
+                # TODO: mark that it's been followed
                 time.sleep(24 * 3600 / daily_rate)
             except KeyboardInterrupt as e:
                 print 'interrupted'
