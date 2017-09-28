@@ -1,9 +1,9 @@
+import sys
 import auth
 import secret_reader
 import random
 import urllib
 import time
-import sys
 import json
 import datetime
 from threading import Thread
@@ -14,6 +14,10 @@ QUERY_IDs = {
     'follows': 17874545323001329,
     'followers': 17851374694183129,
 }
+DEFAULT_PAGINATION = 8000
+QUERY = '{"id":"%s","first":%d}'
+INSTAGRAM_GRAPPHQL_QUERY = 'https://www.instagram.com/graphql/query/?query_id=%d&variables=%s'
+
 WHITELIST_USER = secret_reader.load_whitelist()
 FO_QUEUE_SIZE = 50
 UNFO_QUEUE_SIZE = 50
@@ -23,14 +27,9 @@ bot = auth.auth()
 id_name_dict = {}
 queue_to_fo = UniqueQueue(FO_QUEUE_SIZE)
 queue_to_unfo = UniqueQueue(UNFO_QUEUE_SIZE)
+poked = set()  # ppl I've followed before
 
 # for URL decode: https://meyerweb.com/eric/tools/dencoder/
-
-DEFAULT_PAGINATION = 8000
-QUERY = '{"id":"%s","first":%d}'
-INSTAGRAM_GRAPPHQL_QUERY = 'https://www.instagram.com/graphql/query/?query_id=%d&variables=%s'
-
-poked = set() # ppl I've followed before
 
 def make_query(uid=USER_ID, paginate=DEFAULT_PAGINATION):
     return QUERY % (str(uid), int(paginate))
