@@ -18,10 +18,6 @@ INSTAGRAM_GRAPPHQL_QUERY = 'https://www.instagram.com/graphql/query/?query_id=%d
 USER_ID = secret_reader.load_user_id()
 
 
-def make_query(uid=USER_ID, paginate=DEFAULT_PAGINATION):
-    return QUERY % (str(uid), int(paginate))
-
-
 def make_query_cursor(uid=USER_ID, paginate=DEFAULT_PAGINATION, cursor=""):
     return QUERY_WITH_CURSOR % (str(uid), int(paginate), str(cursor))
 
@@ -39,7 +35,7 @@ def get_follows(bot, uid=USER_ID):
     for retry in xrange(5):
         time.sleep(2)  # retry delay
         url = INSTAGRAM_GRAPPHQL_QUERY % \
-            (QUERY_IDs['follows'], urllib.quote_plus(make_query(uid)))
+            (QUERY_IDs['follows'], urllib.quote_plus(make_query_cursor(uid)))
         r = bot.s.get(url)
         if r.status_code != 200:
             print 'error in get follows, error code', r.status_code
@@ -59,7 +55,7 @@ def get_followers(bot, uid=USER_ID):
     for retry in xrange(5):
         time.sleep(2)  # retry delay
         url = INSTAGRAM_GRAPPHQL_QUERY % \
-            (QUERY_IDs['followers'], urllib.quote_plus(make_query(uid)))
+            (QUERY_IDs['followers'], urllib.quote_plus(make_query_cursor(uid)))
         r = bot.s.get(url)
         if r.status_code != 200:
             print 'error in get followers, error code', r.status_code
