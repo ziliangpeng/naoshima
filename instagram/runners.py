@@ -26,6 +26,9 @@ class GenUnfo(Thread):
                 followers = utils.get_followers(self.bot, USER_ID)
                 self.id_name_dict.update(follows)
                 self.id_name_dict.update(followers)
+                if len(follows) < 500:
+                    time.sleep(60 * 10)
+                    continue
 
                 n = 100
                 filtered_user_ids = filter(
