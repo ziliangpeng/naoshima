@@ -4,6 +4,7 @@ import time
 
 import utils
 import secret_reader
+import data
 from threading import Thread
 
 
@@ -121,6 +122,7 @@ class DoFo(Thread):
             try:
                 f = self.queue_to_fo.get()
                 self.bot.follow(f)
+                data.followed(f)
                 # TODO: mark that it's been followed
                 time.sleep(24 * 3600 / daily_rate)
             except KeyboardInterrupt as e:
