@@ -83,6 +83,8 @@ def get_all_followers_gen(bot, uid=USER_ID):
                 continue
             all_data = json.loads(r.text)
             followers = all_data["data"]["user"]["edge_followed_by"]["edges"]
+            if len(followers) == 0:
+                return
             cursor = all_data["data"]["user"]["edge_followed_by"]["page_info"]["end_cursor"]
             for f in followers:
                 yield f["node"]["id"], f["node"]["username"]
