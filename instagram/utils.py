@@ -73,7 +73,7 @@ def get_all_followers_gen(bot, uid=USER_ID):
     cursor = ""
     while True:
         while True:
-            time.sleep(2)  # retry delay
+            time.sleep(10)  # retry delay
             url = INSTAGRAM_GRAPPHQL_QUERY % \
                 (QUERY_IDs['followers'],
                     urllib.quote_plus(make_query_cursor(uid, 50, cursor)))
