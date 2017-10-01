@@ -7,3 +7,6 @@ secret.local
 
 # logs
 *.log
+
+# data files
+followed.txt
