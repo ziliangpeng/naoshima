@@ -28,14 +28,22 @@ signal.signal(signal.SIGINT, signal_handler)
 
 if __name__ == '__main__':
     threads = []
+
+    # Always DoFo
+    t = DoFo(bot, queue_to_fo)
+    t.daemon = True
+    t.start()
+    threads.append(t)
+
+    # Always DoUnfo
+    t = DoUnfo(bot, queue_to_unfo)
+    t.daemon = True
+    t.start()
+    threads.append(t)
+
     for cmd in sys.argv[1:]:
         if cmd == 'fo':
             t = GenFo(bot, queue_to_fo, id_name_dict, poked)
-            t.daemon = True
-            t.start()
-            threads.append(t)
-
-            t = DoFo(bot, queue_to_fo)
             t.daemon = True
             t.start()
             threads.append(t)
@@ -44,19 +52,9 @@ if __name__ == '__main__':
             t.daemon = True
             t.start()
             threads.append(t)
-
-            t = DoUnfo(bot, queue_to_unfo)
-            t.daemon = True
-            t.start()
-            threads.append(t)
         elif cmd.startswith('steal'):
             steal_id = cmd[cmd.index('(') + 1: cmd.index(')')]
             t = StealFoers(bot, steal_id, queue_to_fo)
-            t.daemon = True
-            t.start()
-            threads.append(t)
-
-            t = DoFo(bot, queue_to_fo)
             t.daemon = True
             t.start()
             threads.append(t)
