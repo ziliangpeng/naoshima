@@ -103,9 +103,17 @@ class StealFoers(Thread):
                 print '%s: Skip %d-th follower %s(%s). Already followed.' % \
                     (str(datetime.datetime.now()), i, str(id), str(name))
             else:
-                print '%s: Steal %d-th follower %s(%s)' % \
-                    (str(datetime.datetime.now()), i, str(id), str(name))
-                self.queue_to_fo.put(id)
+                recent_post_epoch = utils.get_recent_post_epoch(name, -1)
+                now_epoch = int(time.time())
+                fresh_threshold = 3600 * 24 * 3  # 3 days
+                epoch_diff = now_epoch - recent_post_epoch
+                if epoch_diff < fresh_threshold:
+                    print '%s: Steal %d-th follower %s(%s)' % \
+                        (str(datetime.datetime.now()), i, str(id), str(name))
+                    self.queue_to_fo.put(id)
+                else:
+                    print '%s: %d-th follower %s(%s) posted %d s ago. longer than %d' % \
+                        (str(datetime.datetime.now()), i, str(id), str(name), epoch_diff, fresh_threshold)
 
 
 class DoFo(Thread):

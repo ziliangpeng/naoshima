@@ -2,6 +2,8 @@ import time
 import urllib
 import json
 import random
+import requests
+
 import secret_reader
 # for URL decode: https://meyerweb.com/eric/tools/dencoder/
 
@@ -103,6 +105,27 @@ def find_fofo(bot, n, id_name_dict, poked):
         fo_list |= set(foer_foer) - set(follows) - poked
         fo_list.discard(USER_ID)
     return fo_list
+
+
+def get_recent_post_epoch(username, default=None):
+    time.sleep(1)  # initial delay
+    url = 'https://www.instagram.com/%s/?__a=1' % username
+    for retry in xrange(5):
+        r = requests.get(url)
+        if r.status_code == 200:
+            j = r.json()
+            posts = j["user"]["media"]["nodes"]
+            if len(posts) == 0:
+                return -1
+            else:
+                return int(posts[0]["date"])
+        else:
+            time.sleep(5)
+            continue
+    if default is None:
+        raise BaseException("Fail to get recent post")
+    else:
+        return default
 
 
 if __name__ == '__main__':
