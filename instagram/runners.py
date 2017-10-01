@@ -41,9 +41,6 @@ class GenUnfo(Thread):
                         (str(datetime.datetime.now()), i, self.id_name_dict[f])
                     self.queue_to_unfo.put(f)
                 time.sleep(10)
-            except KeyboardInterrupt as e:
-                print 'interrupted'
-                return
             except BaseException as e:
                 print 'Error in GenUnfo'
                 print e
@@ -62,9 +59,6 @@ class DoUnfo(Thread):
                 f = self.queue_to_unfo.get()
                 self.bot.unfollow(f)
                 time.sleep(24 * 3600 / daily_rate)
-            except KeyboardInterrupt as e:
-                print 'interrupted'
-                return
             except BaseException as e:
                 print 'Error in DoUnfo'
                 print e
@@ -89,9 +83,6 @@ class GenFo(Thread):
                     self.queue_to_fo.put(f)
                     self.poked.add(f)
                 time.sleep(10)
-            except KeyboardInterrupt as e:
-                print 'interrupted'
-                return
             except BaseException as e:
                 print 'Error in GenFo'
                 print e
@@ -131,9 +122,6 @@ class DoFo(Thread):
                 self.bot.follow(f)
                 data.follow(f)
                 time.sleep(24 * 3600 / daily_rate)
-            except KeyboardInterrupt as e:
-                print 'interrupted'
-                return
             except BaseException as e:
                 print 'Error in DoFo'
                 print e
