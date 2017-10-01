@@ -108,9 +108,12 @@ class StealFoers(Thread):
         i = 0
         for id, name in utils.get_all_followers_gen(self.bot, self.uid):
             i += 1
-            print 'Steal %d-th follower %s(%s)' % (i, str(id), str(name))
-            # TODO: don't follow if already followed
-            self.queue_to_fo.put(id)
+            if data.is_followed(id):
+                print 'Skip %d-th follower %s(%s). Already followed.' % \
+                    (i, str(id), str(name))
+            else:
+                print 'Steal %d-th follower %s(%s)' % (i, str(id), str(name))
+                self.queue_to_fo.put(id)
 
 
 class DoFo(Thread):
@@ -125,8 +128,7 @@ class DoFo(Thread):
             try:
                 f = self.queue_to_fo.get()
                 self.bot.follow(f)
-                data.followed(f)
-                # TODO: mark that it's been followed
+                data.follow(f)
                 time.sleep(24 * 3600 / daily_rate)
             except KeyboardInterrupt as e:
                 print 'interrupted'
