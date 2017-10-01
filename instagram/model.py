@@ -11,7 +11,9 @@ class UniqueQueue(Queue):
 
     def put(self, x):
         with self.put_lock:
-            if x not in self.s:
+            if x in self.s:
+                print '%s already enqueued in UniqueQueue' % (str(x))
+            else:
                 self.s.add(x)
                 self.q.put(x)
 
