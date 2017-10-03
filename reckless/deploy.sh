@@ -4,9 +4,7 @@
 docker build -t reckless .
 
 # stop running instance
-echo 'to kill'
 docker ps -a -q  --filter ancestor=reckless | xargs docker kill
-echo 'to rm'
 docker ps -a -q  --filter ancestor=reckless | xargs docker rm
 
 # wait
