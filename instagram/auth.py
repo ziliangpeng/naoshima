@@ -8,4 +8,4 @@ from instabot import InstaBot
 def auth():
     login, password = secret_reader.load_secrets()
     # use instabot
-    return InstaBot(login=login, password=password, log_mod=1)
+    return InstaBot(login=login, password=password, log_mod=0)
