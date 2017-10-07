@@ -108,7 +108,7 @@ def find_fofo(bot, n, id_name_dict, poked):
 
 
 def get_recent_post_epoch(username, default=None):
-    time.sleep(1)  # initial delay
+    time.sleep(3)  # initial delay
     url = 'https://www.instagram.com/%s/?__a=1' % username
     for retry in xrange(5):
         r = requests.get(url)
