@@ -105,7 +105,7 @@ class StealFoers(Thread):
             else:
                 recent_post_epoch = utils.get_recent_post_epoch(name, -1)
                 now_epoch = int(time.time())
-                fresh_threshold = 3600 * 24 * 3  # 3 days
+                fresh_threshold = 3600 * 24 * 7  # 7 days
                 epoch_diff = now_epoch - recent_post_epoch
                 if epoch_diff < fresh_threshold:
                     print '%s: Steal %d-th follower %s(%s)' % \
