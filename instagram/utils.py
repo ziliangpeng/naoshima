@@ -18,6 +18,7 @@ QUERY_WITH_CURSOR = '{"id":"%s","first":%d,"after":"%s"}'
 INSTAGRAM_GRAPPHQL_QUERY = 'https://www.instagram.com/graphql/query/?query_id=%d&variables=%s'
 
 USER_ID = secret_reader.load_user_id()
+CACHED_USER_JSON = {}
 
 
 def make_query_cursor(uid=USER_ID, paginate=DEFAULT_PAGINATION, cursor=""):
@@ -107,25 +108,49 @@ def find_fofo(bot, n, id_name_dict, poked):
     return fo_list
 
 
-def get_recent_post_epoch(username, default=None):
-    time.sleep(3)  # initial delay
-    url = 'https://www.instagram.com/%s/?__a=1' % username
-    for retry in xrange(5):
-        r = requests.get(url)
-        if r.status_code == 200:
-            j = r.json()
-            posts = j["user"]["media"]["nodes"]
-            if len(posts) == 0:
-                return -1
-            else:
-                return int(posts[0]["date"])
-        else:
-            time.sleep(5)
-            continue
-    if default is None:
-        raise BaseException("Fail to get recent post")
+def get_user_json(username):
+    if username in CACHED_USER_JSON:
+        return CACHED_USER_JSON[username]
     else:
-        return default
+        time.sleep(3)  # initial delay
+        url = 'https://www.instagram.com/%s/?__a=1' % username
+        for retry in xrange(7):
+            r = requests.get(url)
+            if r.status_code == 200:
+                j = r.json()
+                CACHED_USER_JSON[username] = j
+                return j
+            else:
+                time.sleep(5)
+                continue
+    raise BaseException("Fail to get user json")
+
+
+def get_recent_post_epoch(username, default=None):
+    try:
+        j = get_user_json(username)
+        posts = j["user"]["media"]["nodes"]
+        if len(posts) == 0:
+            return -1
+        else:
+            return int(posts[0]["date"])
+    except BaseException as e:
+        print e
+        if default is None:
+            raise e
+        else:
+            return default
+
+
+def get_follow_counts(username, default=None):
+    try:
+        j = get_user_json(username)
+        return int(j["user"]["followed_by"]["count"]), int(j["user"]["follows"]["count"])
+    except BaseException as e:
+        if default is None:
+            raise e
+        else:
+            return default
 
 
 if __name__ == '__main__':

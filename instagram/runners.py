@@ -107,13 +107,18 @@ class StealFoers(Thread):
                 now_epoch = int(time.time())
                 fresh_threshold = 3600 * 24 * 7  # 7 days
                 epoch_diff = now_epoch - recent_post_epoch
-                if epoch_diff < fresh_threshold:
+                followed_by_count, follows_count = \
+                    utils.get_follow_counts(name, (0, 0))
+                if epoch_diff > fresh_threshold:
+                    print '%s: %d-th follower %s(%s) posted %d s ago. longer than %d' % \
+                        (str(datetime.datetime.now()), i, str(id), str(name), epoch_diff, fresh_threshold)
+                elif follows_count < followed_by_count * 2:
+                    print '%s: %d-th follower %s(%s) has %d follows and %d followed_by. Not likely to follow back' % \
+                        (str(datetime.datetime.now()), i, str(id), str(name), follows_count, followed_by_count)
+                else:
                     print '%s: Steal %d-th follower %s(%s)' % \
                         (str(datetime.datetime.now()), i, str(id), str(name))
                     self.queue_to_fo.put(id)
-                else:
-                    print '%s: %d-th follower %s(%s) posted %d s ago. longer than %d' % \
-                        (str(datetime.datetime.now()), i, str(id), str(name), epoch_diff, fresh_threshold)
 
 
 class DoFo(Thread):
