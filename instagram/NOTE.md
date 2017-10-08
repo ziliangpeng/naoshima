@@ -11,11 +11,11 @@ Following ideas were tried:
 
 As the project keeps growing, there are 2 directions:
 
-*A well architected, fully productionized distributed system.*
+**A well architected, fully productionized distributed system.**
 
 It can be a bot simultaneously running for several users, efficiently, fault tolerant, and can scale. Data should be shared among users too.
 
-*A data driven project*
+**A data driven project**
 
 Record high quality data of what the dot does (follow people, like posts, etc) and what happens (followed by someone).
 
