@@ -27,7 +27,8 @@ class GenUnfo(Thread):
                 self.id_name_dict.update(follows)
                 self.id_name_dict.update(followers)
                 if len(follows) < 500:
-                    time.sleep(60 * 10)
+                    print 'Only %d follows. Pause.' % len(follows)
+                    time.sleep(60 * 30)
                     continue
 
                 n = 100
@@ -105,7 +106,7 @@ class StealFoers(Thread):
             else:
                 recent_post_epoch = utils.get_recent_post_epoch(name, -1)
                 now_epoch = int(time.time())
-                fresh_threshold = 3600 * 24 * 60  # 60 days
+                fresh_threshold = 3600 * 24 * 14  # 14 days
                 epoch_diff = now_epoch - recent_post_epoch
                 followed_by_count, follows_count = \
                     utils.get_follow_counts(name, (0, 0))
