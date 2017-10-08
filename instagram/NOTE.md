@@ -1,4 +1,4 @@
-An automated Instagram following bot.
+# An automated Instagram following bot.
 
 This is an evolving project, as I'm experimenting different ideas, and continuously improving code quality.
 
@@ -24,7 +24,6 @@ Then we can do data driven in 2 ways:
 1. easy for human to query data, get insight, can come up with new ideas or iterate on ides
 
 2. apply machine learning to train better filters, or new strategy to discover users.
-
 
 
 ## One more thing
