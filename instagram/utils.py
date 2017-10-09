@@ -3,6 +3,7 @@ import urllib
 import json
 import random
 import requests
+import pylru
 
 import secret_reader
 # for URL decode: https://meyerweb.com/eric/tools/dencoder/
@@ -18,7 +19,7 @@ QUERY_WITH_CURSOR = '{"id":"%s","first":%d,"after":"%s"}'
 INSTAGRAM_GRAPPHQL_QUERY = 'https://www.instagram.com/graphql/query/?query_id=%d&variables=%s'
 
 USER_ID = secret_reader.load_user_id()
-CACHED_USER_JSON = {}
+CACHED_USER_JSON = pylru.lrucache(1024)
 
 
 def make_query_cursor(uid=USER_ID, paginate=DEFAULT_PAGINATION, cursor=""):
