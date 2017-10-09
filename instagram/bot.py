@@ -28,7 +28,7 @@ signal.signal(signal.SIGINT, signal_handler)
 
 if __name__ == '__main__':
     # Always DoFo
-    t = DoFo(bot, queue_to_fo)
+    t = DoFo(bot, queue_to_fo, id_name_dict)
     t.daemon = True
     t.start()
 
@@ -48,7 +48,7 @@ if __name__ == '__main__':
             t.start()
         elif cmd.startswith('steal'):
             steal_id = cmd[cmd.index('(') + 1: cmd.index(')')]
-            t = StealFoers(bot, steal_id, queue_to_fo)
+            t = StealFoers(bot, steal_id, queue_to_fo, id_name_dict)
             t.daemon = True
             t.start()
 

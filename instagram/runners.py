@@ -90,11 +90,12 @@ class GenFo(Thread):
 
 
 class StealFoers(Thread):
-    def __init__(self, bot, uid, queue_to_fo):
+    def __init__(self, bot, uid, queue_to_fo, id_name_dict):
         Thread.__init__(self)
         self.bot = bot
         self.uid = uid
         self.queue_to_fo = queue_to_fo
+        self.id_name_dict = id_name_dict
 
     def run(self):
         i = 0
@@ -122,14 +123,16 @@ class StealFoers(Thread):
                 else:
                     print '%s: Steal %d-th follower %s(%s)' % \
                         (str(datetime.datetime.now()), i, str(id), str(name))
+                    self.id_name_dict[int(id)] = name
                     self.queue_to_fo.put(id)
 
 
 class DoFo(Thread):
-    def __init__(self, bot, queue_to_fo):
+    def __init__(self, bot, queue_to_fo, id_name_dict):
         Thread.__init__(self)
         self.bot = bot
         self.queue_to_fo = queue_to_fo
+        self.id_name_dict = id_name_dict
 
     def run(self):
         daily_rate = 999
@@ -138,6 +141,11 @@ class DoFo(Thread):
                 f = self.queue_to_fo.get()
                 self.bot.follow(f)
                 data.follow(f)
+                username = self.id_name_dict[int(f)]
+                post_ids = utils.get_post_ids(username)
+                for post_id in post_ids[:5]:
+                    print 'like user(%s) post %d' % (username, int(post_id))
+                    self.bot.like(post_id)
                 time.sleep(24 * 3600 / daily_rate)
             except BaseException as e:
                 print 'Error in DoFo'

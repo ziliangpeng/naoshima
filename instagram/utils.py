@@ -127,6 +127,18 @@ def get_user_json(username):
     raise BaseException("Fail to get user json")
 
 
+def get_post_ids(username):
+    try:
+        j = get_user_json(username)
+        posts = j["user"]["media"]["nodes"]
+        result = []
+        for post in posts:
+            result.append(post["id"])
+        return result
+    except BaseException:
+        return []
+
+
 def get_recent_post_epoch(username, default=None):
     try:
         j = get_user_json(username)
