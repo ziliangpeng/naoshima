@@ -143,7 +143,7 @@ class DoFo(Thread):
                 data.follow(f)
                 username = self.id_name_dict[int(f)]
                 post_ids = utils.get_post_ids(username)
-                for post_id in post_ids[:5]:
+                for post_id in post_ids[:7]:
                     print 'like user(%s) post %d' % (username, int(post_id))
                     self.bot.like(post_id)
                 time.sleep(24 * 3600 / daily_rate)
