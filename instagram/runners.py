@@ -99,6 +99,7 @@ class StealFoers(Thread):
 
     def run(self):
         i = 0
+        skip = 18000
         for id, name in utils.get_all_followers_gen(self.bot, self.uid):
             i += 1
             if data.is_followed(id):
