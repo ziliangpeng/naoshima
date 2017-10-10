@@ -77,13 +77,14 @@ def get_all_followers_gen(bot, uid=USER_ID):
     cursor = ""
     while True:
         while True:
-            time.sleep(10)  # retry delay
+            time.sleep(3)  # initial delay
             url = INSTAGRAM_GRAPPHQL_QUERY % \
                 (QUERY_IDs['followers'],
                     urllib.quote_plus(make_query_cursor(uid, 50, cursor)))
             r = bot.s.get(url)
             if r.status_code != 200:
                 print 'error in get followers, error code', r.status_code
+                time.sleep(10)  # retry delay
                 continue
             all_data = json.loads(r.text)
             followers = all_data["data"]["user"]["edge_followed_by"]["edges"]
