@@ -153,6 +153,7 @@ class DoFo(Thread):
                     r = self.bot.like(post_id)
                     if r.status_code != 200:
                         print 'fail to like. status code %d' % r.status_code
+                        print r.text
                 time.sleep(24 * 3600 / daily_rate)
             except BaseException as e:
                 print 'Error in DoFo'
