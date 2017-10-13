@@ -99,7 +99,7 @@ class StealFoers(Thread):
 
     def run(self):
         i = 0
-        skip_head = 18000  # hack: skip something already processed
+        skip_head = 0  # hack: skip something already processed
         for id, name in utils.get_all_followers_gen(self.bot, self.uid):
             i += 1
             if i < skip_head:
