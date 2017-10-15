@@ -1668,7 +1668,7 @@ function makeClipper(){
         document.getElementById('clipmakerLevel2').innerHTML = clipmakerLevel;
     }
 
-    clipperCost = (Math.pow(1.1,clipmakerLevel)+5);
+    // clipperCost = (Math.pow(1.1,clipmakerLevel)+5);
     document.getElementById('clipperCost').innerHTML = clipperCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
 }
@@ -1681,7 +1681,7 @@ function makeMegaClipper(){
         document.getElementById('funds').innerHTML = funds.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
     }
 
-    megaClipperCost = (Math.pow(1.07,megaClipperLevel)*1000);
+    // megaClipperCost = (Math.pow(1.07,megaClipperLevel)*1000);
     document.getElementById('megaClipperCost').innerHTML = megaClipperCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
 }
@@ -1756,7 +1756,7 @@ function makeHarvester(amount){
     unusedClips = unusedClips - harvesterCost;
     harvesterBill = harvesterBill + harvesterCost;
     harvesterLevel++;
-    harvesterCost = Math.pow((harvesterLevel+1),2.25)*1000000;
+    // harvesterCost = Math.pow((harvesterLevel+1),2.25)*1000000;
     }
 
     document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);
@@ -1778,7 +1778,7 @@ function makeWireDrone(amount){
     unusedClips = unusedClips - wireDroneCost;
     wireDroneBill = wireDroneBill + wireDroneCost;
     wireDroneLevel++;
-    wireDroneCost = Math.pow((wireDroneLevel+1),2.25)*1000000;
+    // wireDroneCost = Math.pow((wireDroneLevel+1),2.25)*1000000;
     }
 
     document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);
@@ -2171,7 +2171,7 @@ function makeFarm(amount){
     unusedClips = unusedClips - farmCost;
     farmBill = farmBill + farmCost;
     farmLevel++;
-    farmCost = Math.pow(farmLevel+1,2.78)*100000000;
+    // farmCost = Math.pow(farmLevel+1,2.78)*100000000;
     }
 
     document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);
@@ -2199,7 +2199,7 @@ function makeBattery(amount){
     unusedClips = unusedClips - batteryCost;
     batteryBill = batteryBill + batteryCost;
     batteryLevel++;
-    batteryCost = Math.pow(batteryLevel+1,2.54)*10000000;
+    // batteryCost = Math.pow(batteryLevel+1,2.54)*10000000;
     }
 
     document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);
@@ -2886,7 +2886,7 @@ function increaseProbeTrust(){
     yomi = yomi - probeTrustCost;
     document.getElementById('yomiDisplay').innerHTML = yomi.toLocaleString();
     probeTrust++;
-    probeTrustCost = Math.floor(Math.pow(probeTrust+1, 1.47)*200);
+    // probeTrustCost = Math.floor(Math.pow(probeTrust+1, 1.47)*200);
     document.getElementById('probeTrustDisplay').innerHTML = probeTrust;
     document.getElementById('probeTrustCostDisplay').innerHTML = Math.floor(probeTrustCost).toLocaleString();
     displayMessage("WARNING: Risk of value drift increased");
