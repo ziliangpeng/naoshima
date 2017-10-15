@@ -897,12 +897,9 @@ function updateStocks(){
     stocks[i].age = stocks[i].age + 1;
       if (Math.random()<.6){
         var gain = true;
-        if (Math.random()>stockGainThreshold){
-            gain = false;
-            }
 
         var currentPrice = stocks[i].price;
-        var delta = Math.ceil((Math.random()*currentPrice)/(4*riskiness));
+        var delta = Math.ceil((Math.random()*2*currentPrice)/(4*riskiness));
 
         if(gain){
         stocks[i].price = stocks[i].price + delta;
@@ -1317,7 +1314,7 @@ function newTourney(){
 
     document.getElementById("tourneyDisplay").innerHTML = "Pick strategy, run tournament, gain yomi";
 
-
+    runTourney()
 }
 
 function runTourney(){
@@ -1575,7 +1572,7 @@ function round(roundNum){
     function roundLoop(){
     if (rCounter<10){
         runRound();
-        setTimeout(function(){clearGrid();}, 50);
+        setTimeout(function(){clearGrid();}, 5);
         } else {
         currentRound++;
         runTourney();
