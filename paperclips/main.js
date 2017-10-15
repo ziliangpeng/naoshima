@@ -1572,7 +1572,7 @@ function round(roundNum){
     function roundLoop(){
     if (rCounter<10){
         runRound();
-        setTimeout(function(){clearGrid();}, 5);
+        setTimeout(function(){clearGrid();}, 1);
         } else {
         currentRound++;
         runTourney();
@@ -1595,7 +1595,7 @@ function round(roundNum){
         z.style.backgroundColor = "white";
 
 
-        setTimeout(function(){roundLoop();}, 50);
+        setTimeout(function(){roundLoop();}, 1);
 
     }
 
@@ -1742,7 +1742,7 @@ function makeFactory(){
         }
     updateUpgrades();
 
-    factoryCost = factoryCost * fcmod;
+    // factoryCost = factoryCost * fcmod;
  //   factoryCost = Math.log(1.25,(factoryLevel+1))*100000000;
     document.getElementById('factoryCostDisplay').innerHTML = numberCruncher(factoryCost);
 }
@@ -2244,7 +2244,7 @@ function updatePower(){
         if (powMod<1){powMod = 1;}
 
         if (momentum == 1) {
-            powMod = powMod + .0001;
+            powMod = powMod + .05;
             }
 
 
@@ -2254,7 +2254,7 @@ function updatePower(){
             if (storedPower >= xsDemand){
 
                 if (momentum == 1) {
-                powMod = powMod + .0001;
+                powMod = powMod + .05;
                 }
 
                 storedPower = storedPower - xsDemand;
@@ -2342,7 +2342,7 @@ function buyAds(){
     if(funds >= adCost){
         marketingLvl = marketingLvl +1;
         funds = funds - adCost;
-        adCost = Math.floor(adCost * 2);
+        // adCost = Math.floor(adCost * 2);
         document.getElementById('adCost').innerHTML = adCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
         document.getElementById('funds').innerHTML = funds.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
         document.getElementById('marketingLvl').innerHTML = marketingLvl;
@@ -2853,7 +2853,7 @@ var probeSpeed = 0;
 var probeNav = 0;
 var probeXBaseRate = 1750000000000000000;
 var probeRep = 0;
-var probeRepBaseRate = .00005;
+var probeRepBaseRate = .005;
 var partialProbeSpawn = 0;
 var probeHaz = 0;
 var probeHazBaseRate = .01;
@@ -2875,7 +2875,7 @@ var probeDriftBaseRate = .000001;
 var probeLaunchLevel = 0;
 var probeCost = Math.pow(10, 17);
 
-var probeTrustCost = Math.floor(Math.pow(probeTrust+1, 1.47)*200);
+var probeTrustCost = Math.floor(Math.pow(1+1, 1.47)*200);
 
 //var probeCost = Math.pow((probeLaunchLevel+1), 1.44)*Math.pow(10, 24);
 
