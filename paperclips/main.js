@@ -2615,7 +2615,7 @@ function calculateTrust(){
 
 function addProc(){
         processors=processors+1;
-        creativitySpeed = Math.log10(processors) * Math.pow(processors,1.1) + processors-1;
+        creativitySpeed = 1000 * Math.log10(processors) * Math.pow(processors,1.1) + processors-1;
         document.getElementById("processors").innerHTML = processors;
         if (creativityOn == 1){
           displayMessage("Processor added, operations (or creativity) per sec increased")
@@ -2661,7 +2661,7 @@ function calculateOperations(){
     operations = Math.floor(standardOps + Math.floor(tempOps));
 
     if (operations<memory*1000){
-        var opCycle = processors/10;
+        var opCycle = processors * 100;
         var opBuf = (memory*1000)-operations;
 
         if (opCycle > opBuf) {
@@ -3579,7 +3579,7 @@ if (dismantle >= 7) {
 
 
 
-}, 10);
+}, 10); // main loop time
 
 // Slow Loop
 
