@@ -2,13 +2,19 @@ import web
 
 
 urls = (
-    '/', 'index'
+    '/', 'index',
+    '/hyperclips', 'hyperclips'
 )
 
 
 class index:
     def GET(self):
         raise web.seeother('/static/main.html')
+
+
+class hyperclips:
+    def GET(self):
+        raise web.seeother('/static/hyperclips/hyper.html')
 
 
 if __name__ == "__main__":
