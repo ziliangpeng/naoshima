@@ -23,9 +23,9 @@ class GenUnfo(Thread):
         while True:
             try:
                 follows = utils.get_follows(self.bot, USER_ID)
-                followers = utils.get_followers(self.bot, USER_ID)
+                # followers = utils.get_followers(self.bot, USER_ID)
                 self.id_name_dict.update(follows)
-                self.id_name_dict.update(followers)
+                # self.id_name_dict.update(followers)
                 if len(follows) < 5000:
                     print 'Only %d follows. Pause.' % len(follows)
                     time.sleep(60 * 30)
