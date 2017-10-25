@@ -122,7 +122,7 @@ class StealFoers(Thread):
                 elif follows_count < followed_by_count * 2:
                     print '%s: %d-th follower %s(%s) has %d follows and %d followed_by. Not likely to follow back' % \
                         (str(datetime.datetime.now()), i, str(id), str(name), follows_count, followed_by_count)
-                elif follows_count > 1024:
+                elif follows_count > 5000:
                     print '%s: %d-th follower %s(%s) has %d follows. It is an overwhelmed stalker' % \
                         (str(datetime.datetime.now()), i, str(id), str(name), follows_count)
                 else:
