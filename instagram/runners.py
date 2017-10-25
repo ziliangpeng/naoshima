@@ -148,7 +148,7 @@ class DoFo(Thread):
                 data.follow(f)
                 username = self.id_name_dict[int(f)]
                 post_ids = utils.get_post_ids(username)
-                for post_id in post_ids[:3]:
+                for post_id in post_ids[:2]:
                     print 'like user(%s) post %d' % (username, int(post_id))
                     r = self.bot.like(post_id)
                     if r.status_code != 200:
