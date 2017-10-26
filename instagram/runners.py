@@ -157,7 +157,7 @@ class DoFo(Thread):
                             print 'fail to like. status code %d' % r.status_code
                             print r.text
                             print 'start like cooldown'
-                            like_cooldown = 99
+                            like_cooldown = 999
                             break
                 else:
                     print 'remain like cooldown', like_cooldown
