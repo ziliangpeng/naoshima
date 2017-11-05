@@ -95,6 +95,12 @@ def get_all_followers_gen(bot, uid=USER_ID):
                 yield f["node"]["id"], f["node"]["username"]
 
 
+def get_all_followers(bot):
+    ret = {}
+    for k, v in get_all_followers_gen(bot):
+        ret[k] = v
+    return ret
+
 def find_fofo(bot, n, id_name_dict, poked):
     follows = get_follows(bot)
     followers = get_followers(bot)
