@@ -50,9 +50,9 @@ function toggleWireBuyer(){
 function buyWire(){
     if(funds >= wireCost){
         wirePriceTimer = 0;
-        wire = wire + wireSupply;
-        funds = funds - wireCost;
-        wirePurchase = wirePurchase + 1;
+        wire = wire + wireSupply * 10;
+        funds = funds - wireCost * 10;
+        wirePurchase = wirePurchase + 10;
         wireBasePrice = wireBasePrice + .05;
         document.getElementById('wire').innerHTML = Math.floor(wire).toLocaleString();
         document.getElementById('funds').innerHTML = funds.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -1660,8 +1660,8 @@ function clipClick(number){
 
 function makeClipper(){
     if(funds >= clippperCost){
-        clipmakerLevel = clipmakerLevel + 1;
-        funds = funds - clipperCost;
+        clipmakerLevel = clipmakerLevel + 10;
+        funds = funds - clipperCost * 10;
         document.getElementById('clipmakerLevel2').innerHTML = clipmakerLevel;
     }
 
@@ -1672,8 +1672,8 @@ function makeClipper(){
 
 function makeMegaClipper(){
     if(funds >= megaClipperCost){
-        megaClipperLevel = megaClipperLevel + 1;
-        funds = funds - megaClipperCost;
+        megaClipperLevel = megaClipperLevel + 10;
+        funds = funds - megaClipperCost * 10;
         document.getElementById('megaClipperLevel').innerHTML = megaClipperLevel;
         document.getElementById('funds').innerHTML = funds.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
     }
@@ -1713,10 +1713,10 @@ function updateUpgrades(){
 
 
 function makeFactory(){
-    unusedClips = unusedClips - factoryCost;
-    factoryBill = factoryBill + factoryCost;
+    unusedClips = unusedClips - factoryCost * 10;
+    factoryBill = factoryBill + factoryCost * 10;
     document.getElementById("unusedClipsDisplay").innerHTML = numberCruncher(unusedClips);
-    factoryLevel++;
+    factoryLevel += 10;
     document.getElementById('factoryLevelDisplay').innerHTML = factoryLevel;
     var fcmod = 1;
     if (factoryLevel > 0 && factoryLevel < 8){
@@ -2340,8 +2340,8 @@ function updatePower(){
 
 function buyAds(){
     if(funds >= adCost){
-        marketingLvl = marketingLvl +1;
-        funds = funds - adCost;
+        marketingLvl = marketingLvl +10;
+        funds = funds - adCost*10;
         // adCost = Math.floor(adCost * 2);
         document.getElementById('adCost').innerHTML = adCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
         document.getElementById('funds').innerHTML = funds.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -2611,7 +2611,7 @@ function calculateTrust(){
 }
 
 function addProc(){
-        processors=processors+1;
+        processors=processors+5;
         creativitySpeed = 1000 * Math.log10(processors) * Math.pow(processors,1.1) + processors-1;
         document.getElementById("processors").innerHTML = processors;
         if (creativityOn == 1){
@@ -2626,7 +2626,7 @@ function addProc(){
 
 function addMem(){
         displayMessage("Memory added, max operations increased");
-        memory=memory+1;
+        memory=memory+5;
         document.getElementById("memory").innerHTML = memory;
 
         if (humanFlag == 0){
