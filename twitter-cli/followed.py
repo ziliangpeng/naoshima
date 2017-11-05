@@ -1,4 +1,4 @@
-FOLLOWED_FILENAME = 'followed;local'
+FOLLOWED_FILENAME = 'followed.local'
 
 
 followed = set()

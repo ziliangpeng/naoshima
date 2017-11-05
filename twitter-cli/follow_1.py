@@ -1,6 +1,7 @@
 import tweepy
 from auth import api
 import time
+import sys
 from datetime import datetime, timedelta
 import followed
 
@@ -12,7 +13,6 @@ Follows the lists that I (or any user) belong to.
 following_ids = map(int, tweepy.Cursor(api.friends_ids, count=2000).items())
 # following_ids = map(lambda x: x.id, followers)
 print "found", len(following_ids), "following"
-print following_ids
 
 name = sys.argv[1]
 print 'username is', name
