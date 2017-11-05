@@ -6,3 +6,7 @@ bazel-*
 
 # IntelliJ
 .idea
+
+# Python
+*.pyc
+*.pyo
