@@ -1,6 +1,7 @@
 import random
 import datetime
 import time
+from langdetect import detect
 
 import utils
 import secret_reader
@@ -116,7 +117,17 @@ class StealFoers(Thread):
                 epoch_diff = now_epoch - recent_post_epoch
                 followed_by_count, follows_count = \
                     utils.get_follow_counts(name, (0, 0))
-                if epoch_diff > fresh_threshold:
+                bio = utils.get_biography(name)
+                lang = ''
+                try:
+                    if bio:
+                        lang = detect(bio)
+                except Exception:
+                    pass
+                if lang != 'ja':
+                    print '%s: %d-th follower %s(%s) language is %s, not Japanese' % \
+                        (str(datetime.datetime.now()), i, str(id), str(name), lang)
+                elif epoch_diff > fresh_threshold:
                     print '%s: %d-th follower %s(%s) posted %d s ago. longer than %d' % \
                         (str(datetime.datetime.now()), i, str(id), str(name), epoch_diff, fresh_threshold)
                 elif follows_count < followed_by_count * 2:

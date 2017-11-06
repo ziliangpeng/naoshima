@@ -162,6 +162,19 @@ def get_recent_post_epoch(username, default=None):
             return default
 
 
+def get_biography(username, default=''):
+    try:
+        j = get_user_json(username)
+        bio = j["user"]["biography"]
+        return bio
+    except BaseException as e:
+        print e
+        if default is None:
+            raise e
+        else:
+            return default
+
+
 def get_follow_counts(username, default=None):
     try:
         j = get_user_json(username)
