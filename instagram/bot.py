@@ -20,7 +20,7 @@ poked = set()  # ppl I've followed before
 
 
 def signal_handler(signal, frame):
-        sys.exit(0)
+    sys.exit(0)
 
 
 signal.signal(signal.SIGINT, signal_handler)

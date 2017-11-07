@@ -78,7 +78,8 @@ class GenFo(Thread):
         while True:
             try:
                 n = 100
-                fo_ids = random.sample(utils.find_fofo(self.bot, n, self.id_name_dict, self.poked), n)
+                fo_ids = random.sample(utils.find_fofo(
+                    self.bot, n, self.id_name_dict, self.poked), n)
                 for i, f in enumerate(fo_ids):
                     print '%s: #%03d gen follow: %s' % \
                         (str(datetime.datetime.now()), i, self.id_name_dict[f])
@@ -129,13 +130,16 @@ class StealFoers(Thread):
                         (str(datetime.datetime.now()), i, str(id), str(name), lang)
                 elif epoch_diff > fresh_threshold:
                     print '%s: %d-th follower %s(%s) posted %d s ago. longer than %d' % \
-                        (str(datetime.datetime.now()), i, str(id), str(name), epoch_diff, fresh_threshold)
+                        (str(datetime.datetime.now()), i, str(id),
+                         str(name), epoch_diff, fresh_threshold)
                 elif follows_count < followed_by_count * 1.5:
                     print '%s: %d-th follower %s(%s) has %d follows and %d followed_by. Not likely to follow back' % \
-                        (str(datetime.datetime.now()), i, str(id), str(name), follows_count, followed_by_count)
+                        (str(datetime.datetime.now()), i, str(id),
+                         str(name), follows_count, followed_by_count)
                 elif follows_count > 5000:
                     print '%s: %d-th follower %s(%s) has %d follows. It is an overwhelmed stalker' % \
-                        (str(datetime.datetime.now()), i, str(id), str(name), follows_count)
+                        (str(datetime.datetime.now()), i,
+                         str(id), str(name), follows_count)
                 else:
                     print '%s: Steal %d-th follower %s(%s)' % \
                         (str(datetime.datetime.now()), i, str(id), str(name))

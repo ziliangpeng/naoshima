@@ -4,7 +4,7 @@ import requests
 import random
 
 score = 0.0
-bot = auth.auth(log_mod=2) # no log
+bot = auth.auth(log_mod=2)  # no log
 
 FO_CNT_FILE_PATTERN = '/tmp/%s_fo'
 FOER_CNT_FILE_PATTERN = '/tmp/%s_foer'

@@ -101,6 +101,7 @@ def get_all_followers(bot):
         ret[k] = v
     return ret
 
+
 def find_fofo(bot, n, id_name_dict, poked):
     follows = get_follows(bot)
     followers = get_followers(bot)
