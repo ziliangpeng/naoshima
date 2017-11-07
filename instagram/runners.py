@@ -130,7 +130,7 @@ class StealFoers(Thread):
                 elif epoch_diff > fresh_threshold:
                     print '%s: %d-th follower %s(%s) posted %d s ago. longer than %d' % \
                         (str(datetime.datetime.now()), i, str(id), str(name), epoch_diff, fresh_threshold)
-                elif follows_count < followed_by_count * 2:
+                elif follows_count < followed_by_count * 1.5:
                     print '%s: %d-th follower %s(%s) has %d follows and %d followed_by. Not likely to follow back' % \
                         (str(datetime.datetime.now()), i, str(id), str(name), follows_count, followed_by_count)
                 elif follows_count > 5000:
