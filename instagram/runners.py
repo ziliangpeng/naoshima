@@ -125,7 +125,7 @@ class StealFoers(Thread):
                         lang = detect(bio)
                 except Exception:
                     pass
-                if lang != 'ja':
+                if lang not in ['ja', 'ko', 'zh', 'zh-cn', 'zh-tw']:
                     print '%s: %d-th follower %s(%s) language is %s, not Japanese' % \
                         (str(datetime.datetime.now()), i, str(id), str(name), lang)
                 elif epoch_diff > fresh_threshold:
