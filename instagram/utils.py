@@ -176,6 +176,19 @@ def get_biography(username, default=''):
             return default
 
 
+def get_user_id(username, default=''):
+    try:
+        j = get_user_json(username)
+        id = j["user"]["id"]
+        return id
+    except BaseException as e:
+        print e
+        if default is None:
+            raise e
+        else:
+            return default
+
+
 def get_follow_counts(username, default=None):
     try:
         j = get_user_json(username)
