@@ -6,8 +6,8 @@ from langdetect import detect
 import utils
 import secret_reader
 import data
+import filter
 from threading import Thread
-
 
 USER_ID = secret_reader.load_user_id()
 WHITELIST_USER = secret_reader.load_whitelist()
@@ -40,7 +40,7 @@ class GenUnfo(Thread):
                 random.shuffle(to_unfo)
                 for i, f in enumerate(to_unfo):
                     print '%s: #%03d gen unfollow: %s' % \
-                        (str(datetime.datetime.now()), i, self.id_name_dict[f])
+                          (str(datetime.datetime.now()), i, self.id_name_dict[f])
                     self.queue_to_unfo.put(f)
                 time.sleep(10)
             except BaseException as e:
@@ -82,7 +82,7 @@ class GenFo(Thread):
                     self.bot, n, self.id_name_dict, self.poked), n)
                 for i, f in enumerate(fo_ids):
                     print '%s: #%03d gen follow: %s' % \
-                        (str(datetime.datetime.now()), i, self.id_name_dict[f])
+                          (str(datetime.datetime.now()), i, self.id_name_dict[f])
                     self.queue_to_fo.put(f)
                     self.poked.add(f)
                 time.sleep(10)
@@ -110,7 +110,7 @@ class StealFoers(Thread):
 
             if data.is_followed(id):
                 print '%s: Skip %d-th follower %s(%s). Already followed.' % \
-                    (str(datetime.datetime.now()), i, str(id), str(name))
+                      (str(datetime.datetime.now()), i, str(id), str(name))
             else:
                 recent_post_epoch = utils.get_recent_post_epoch(name, -1)
                 now_epoch = int(time.time())
@@ -125,24 +125,11 @@ class StealFoers(Thread):
                         lang = detect(bio)
                 except Exception:
                     pass
-                # if lang not in ['ja', 'ko', 'zh', 'zh-cn', 'zh-tw']:
-                #     print '%s: %d-th follower %s(%s) language is %s, not Japanese' % \
-                #         (str(datetime.datetime.now()), i, str(id), str(name), lang)
-                if epoch_diff > fresh_threshold:
-                    print '%s: %d-th follower %s(%s) posted %d s ago. longer than %d' % \
-                        (str(datetime.datetime.now()), i, str(id),
-                         str(name), epoch_diff, fresh_threshold)
-                elif follows_count < followed_by_count * 1.5:
-                    print '%s: %d-th follower %s(%s) has %d follows and %d followed_by. Not likely to follow back' % \
-                        (str(datetime.datetime.now()), i, str(id),
-                         str(name), follows_count, followed_by_count)
-                elif follows_count > 5000:
-                    print '%s: %d-th follower %s(%s) has %d follows. It is an overwhelmed stalker' % \
-                        (str(datetime.datetime.now()), i,
-                         str(id), str(name), follows_count)
+                if not filter.legacy_filter(name):
+                    print '%s has not passed filter' % name
                 else:
                     print '%s: Steal %d-th follower %s(%s)' % \
-                        (str(datetime.datetime.now()), i, str(id), str(name))
+                          (str(datetime.datetime.now()), i, str(id), str(name))
                     self.id_name_dict[int(id)] = name
                     self.queue_to_fo.put(id)
 
