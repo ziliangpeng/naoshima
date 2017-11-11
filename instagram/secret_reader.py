@@ -16,10 +16,10 @@ def load_user_id():
 def load_whitelist():
     with open('secret.local', 'r') as f:
         secret_data = json.loads(f.read())
-        return secret_data["whitelist"]
+        return secret_data.get("whitelist", [])
 
 
 def load_conditions():
     with open('secret.local', 'r') as f:
         secret_data = json.loads(f.read())
-        return secret_data["conditions"]
+        return secret_data.get("conditions", {})
