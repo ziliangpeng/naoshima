@@ -9,6 +9,18 @@ date = datetime.datetime.now
 class Filter:
     def __init__(self, name, conditions={}):
         self.name = str(name)
+        self.conditions = conditions
+        self.methods = {
+            'max_follows': self.max_follows,
+            'min_ratio': self.min_ratio,
+            'fresh': self.fresh
+        }
+
+    def filter(self):
+        for k, v in self.conditions.items():
+            if not self.methods[k](v):
+                return False
+        return True
 
     def max_follows(self, threshold):
         followed_by_count, follows_count = \
@@ -41,17 +53,14 @@ class Filter:
 
 
 def legacy_filter(name):
-    f = Filter(name)
-
     fresh_threshold = 3600 * 24 * 14  # 14 days
     ratio_threshold = 1.5
     follows_threshold = 5000
 
-    if not f.fresh(fresh_threshold):
-        return False
-    elif not f.min_ratio(ratio_threshold):
-        return False
-    elif not f.max_follows(follows_threshold):
-        return False
-    else:
-        return True
+    f = Filter(name, {
+        'fresh': fresh_threshold,
+        'min_ratio': ratio_threshold,
+        'max_follows': follows_threshold
+    })
+
+    return f.filter()
