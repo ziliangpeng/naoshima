@@ -40,7 +40,8 @@ class GenUnfo(Thread):
                 random.shuffle(to_unfo)
                 for i, f in enumerate(to_unfo):
                     print '%s: #%03d gen unfollow: %s' % \
-                          (str(datetime.datetime.now()), i, self.id_name_dict[f])
+                          (str(datetime.datetime.now()),
+                           i, self.id_name_dict[f])
                     self.queue_to_unfo.put(f)
                 time.sleep(10)
             except BaseException as e:
@@ -82,7 +83,8 @@ class GenFo(Thread):
                     self.bot, n, self.id_name_dict, self.poked), n)
                 for i, f in enumerate(fo_ids):
                     print '%s: #%03d gen follow: %s' % \
-                          (str(datetime.datetime.now()), i, self.id_name_dict[f])
+                          (str(datetime.datetime.now()),
+                           i, self.id_name_dict[f])
                     self.queue_to_fo.put(f)
                     self.poked.add(f)
                 time.sleep(10)
