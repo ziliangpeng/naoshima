@@ -2,6 +2,7 @@ import datetime
 from datetime import timedelta
 import time
 import utils
+import secret_reader
 
 date = datetime.datetime.now
 
@@ -16,7 +17,7 @@ class Filter:
             'fresh': self.fresh
         }
 
-    def filter(self):
+    def apply(self):
         for k, v in self.conditions.items():
             if not self.methods[k](v):
                 return False
@@ -50,17 +51,3 @@ class Filter:
                   (date(), self.name, epoch_diff, td_threshold)
             return False
         return True
-
-
-def legacy_filter(name):
-    fresh_threshold = 3600 * 24 * 14  # 14 days
-    ratio_threshold = 1.5
-    follows_threshold = 5000
-
-    f = Filter(name, {
-        'fresh': fresh_threshold,
-        'min_ratio': ratio_threshold,
-        'max_follows': follows_threshold
-    })
-
-    return f.filter()

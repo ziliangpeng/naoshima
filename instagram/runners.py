@@ -6,7 +6,7 @@ from langdetect import detect
 import utils
 import secret_reader
 import data
-import filter
+from filter import Filter
 from threading import Thread
 
 USER_ID = secret_reader.load_user_id()
@@ -100,6 +100,7 @@ class StealFoers(Thread):
         self.id_name_dict = id_name_dict
 
     def run(self):
+        conditions = secret_reader.load_conditions()
         i = 0
         skip_head = 0  # hack: skip something already processed
         for id, name in utils.get_all_followers_gen(self.bot, self.uid):
@@ -125,7 +126,8 @@ class StealFoers(Thread):
                         lang = detect(bio)
                 except Exception:
                     pass
-                if not filter.legacy_filter(name):
+
+                if not Filter(name, conditions).apply():
                     print '%s has not passed filter' % name
                 else:
                     print '%s: Steal %d-th follower %s(%s)' % \

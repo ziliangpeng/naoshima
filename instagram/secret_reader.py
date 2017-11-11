@@ -17,3 +17,9 @@ def load_whitelist():
     with open('secret.local', 'r') as f:
         secret_data = json.loads(f.read())
         return secret_data["whitelist"]
+
+
+def load_conditions():
+    with open('secret.local', 'r') as f:
+        secret_data = json.loads(f.read())
+        return secret_data["conditions"]
