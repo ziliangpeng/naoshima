@@ -1,7 +1,6 @@
 import random
 import datetime
 import time
-from langdetect import detect
 
 import utils
 import secret_reader
@@ -115,20 +114,6 @@ class StealFoers(Thread):
                 print '%s: Skip %d-th follower %s(%s). Already followed.' % \
                       (str(datetime.datetime.now()), i, str(id), str(name))
             else:
-                recent_post_epoch = utils.get_recent_post_epoch(name, -1)
-                now_epoch = int(time.time())
-                fresh_threshold = 3600 * 24 * 14  # 14 days
-                epoch_diff = now_epoch - recent_post_epoch
-                followed_by_count, follows_count = \
-                    utils.get_follow_counts(name, (0, 0))
-                bio = utils.get_biography(name)
-                lang = ''
-                try:
-                    if bio:
-                        lang = detect(bio)
-                except Exception:
-                    pass
-
                 if not Filter(name, conditions).apply():
                     print '%s has not passed filter' % name
                 else:

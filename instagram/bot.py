@@ -1,6 +1,5 @@
 import sys
 import time
-import signal
 import auth
 import secret_reader
 from model import UniqueQueue

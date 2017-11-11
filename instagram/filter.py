@@ -2,7 +2,6 @@ import datetime
 from datetime import timedelta
 import time
 import utils
-import secret_reader
 
 date = datetime.datetime.now
 

@@ -1,5 +1,4 @@
 from Queue import Queue
-from threading import Lock
 from wrapt import synchronized
 
 
