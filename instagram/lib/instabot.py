@@ -14,7 +14,7 @@ if 'threading' in sys.modules:
     del sys.modules['threading']
 import time
 import requests
-from userinfo import UserInfo
+from .userinfo import UserInfo
 
 
 class InstaBot:
@@ -354,8 +354,8 @@ class InstaBot:
                              l_c <= self.media_max_like) or
                             (self.media_min_like == 0 and
                              self.media_max_like == 0)):
-                            for blacklisted_user_name, blacklisted_user_id in self.user_blacklist.items(
-                            ):
+                            for blacklisted_user_name, blacklisted_user_id in list(self.user_blacklist.items(
+                            )):
                                 if self.media_by_tag[i]['owner'][
                                         'id'] == blacklisted_user_id:
                                     self.write_log(
@@ -383,7 +383,7 @@ class InstaBot:
                                     }
                                 else:
                                     tags = {
-                                        unicode.lower(
+                                        str.lower(
                                             (tag.decode('ASCII')).strip('#'))
                                         for tag in caption.split()
                                         if (tag.decode('ASCII')
