@@ -7,15 +7,16 @@ import data
 import secret_reader
 import utils
 from filter import Filter
+import data_repo
 
 USER_ID = secret_reader.load_user_id()
 WHITELIST_USER = secret_reader.load_whitelist()
 
 
 class GenUnfo(Thread):
-    def __init__(self, bot, queue_to_unfo, id_name_dict):
+    def __init__(self, queue_to_unfo, id_name_dict):
         Thread.__init__(self)
-        self.bot = bot
+        self.bot = data_repo.bot
         self.queue_to_unfo = queue_to_unfo
         self.id_name_dict = id_name_dict
 
@@ -49,9 +50,9 @@ class GenUnfo(Thread):
 
 
 class DoUnfo(Thread):
-    def __init__(self, bot, queue_to_unfo):
+    def __init__(self, queue_to_unfo):
         Thread.__init__(self)
-        self.bot = bot
+        self.bot = data_repo.bot
         self.queue_to_unfo = queue_to_unfo
 
     def run(self):
@@ -67,9 +68,9 @@ class DoUnfo(Thread):
 
 
 class GenFo(Thread):
-    def __init__(self, bot, queue_to_fo, id_name_dict, poked):
+    def __init__(self, queue_to_fo, id_name_dict, poked):
         Thread.__init__(self)
-        self.bot = bot
+        self.bot = data_repo.bot
         self.queue_to_fo = queue_to_fo
         self.id_name_dict = id_name_dict
         self.poked = poked
@@ -93,9 +94,9 @@ class GenFo(Thread):
 
 
 class StealFoers(Thread):
-    def __init__(self, bot, uid, queue_to_fo, id_name_dict):
+    def __init__(self, uid, queue_to_fo, id_name_dict):
         Thread.__init__(self)
-        self.bot = bot
+        self.bot = data_repo.bot
         self.uid = uid
         self.queue_to_fo = queue_to_fo
         self.id_name_dict = id_name_dict
@@ -124,9 +125,9 @@ class StealFoers(Thread):
 
 
 class DoFo(Thread):
-    def __init__(self, bot, queue_to_fo, id_name_dict):
+    def __init__(self, queue_to_fo, id_name_dict):
         Thread.__init__(self)
-        self.bot = bot
+        self.bot = data_repo.bot
         self.queue_to_fo = queue_to_fo
         self.id_name_dict = id_name_dict
 
