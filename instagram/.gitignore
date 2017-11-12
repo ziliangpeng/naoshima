@@ -14,3 +14,7 @@ followed.txt
 # Science
 science.txt
 science_followers.html
+
+# 2to3 bak
+*.py.bak
+
