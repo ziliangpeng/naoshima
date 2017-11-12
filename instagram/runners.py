@@ -15,11 +15,11 @@ WHITELIST_USER = secret_reader.load_whitelist()
 
 
 class GenUnfo(Thread):
-    def __init__(self, username):
+    def __init__(self, u):
         Thread.__init__(self)
-        self.username = username
-        self.bot = data_repo.bot
-        self.queue_to_unfo = data_repo.queue_to_unfo
+        self.username = u
+        self.bot = datas[u].bot
+        self.queue_to_unfo = datas[u].queue_to_unfo
         self.id_name_dict = data_repo.id_name_dict
 
     def run(self):
@@ -52,11 +52,11 @@ class GenUnfo(Thread):
 
 
 class DoUnfo(Thread):
-    def __init__(self, username):
+    def __init__(self, u):
         Thread.__init__(self)
-        self.username = username
-        self.bot = data_repo.bot
-        self.queue_to_unfo = data_repo.queue_to_unfo
+        self.username = u
+        self.bot = datas[u].bot
+        self.queue_to_unfo = datas[u].queue_to_unfo
 
     def run(self):
         daily_rate = 1000
@@ -71,13 +71,13 @@ class DoUnfo(Thread):
 
 
 class GenFo(Thread):
-    def __init__(self, username):
+    def __init__(self, u):
         Thread.__init__(self)
-        self.username = username
-        self.bot = data_repo.bot
-        self.queue_to_fo = data_repo.queue_to_fo
+        self.username = u
+        self.bot = datas[u].bot
+        self.queue_to_fo = datas[u].queue_to_fo
         self.id_name_dict = data_repo.id_name_dict
-        self.poked = data_repo.poked
+        self.poked = datas[u].poked
 
     # def run(self):
     #     while True:
@@ -98,12 +98,12 @@ class GenFo(Thread):
 
 
 class StealFoers(Thread):
-    def __init__(self, username, steal_id):
+    def __init__(self, u, steal_id):
         Thread.__init__(self)
-        self.username = username
-        self.bot = data_repo.bot
+        self.username = u
+        self.bot = datas[u].bot
         self.steal_id = steal_id
-        self.queue_to_fo = data_repo.queue_to_fo
+        self.queue_to_fo = datas[u].queue_to_fo
         self.id_name_dict = data_repo.id_name_dict
 
     def run(self):
@@ -130,11 +130,11 @@ class StealFoers(Thread):
 
 
 class DoFo(Thread):
-    def __init__(self, username):
+    def __init__(self, u):
         Thread.__init__(self)
-        self.username = username
-        self.bot = data_repo.bot
-        self.queue_to_fo = data_repo.queue_to_fo
+        self.username = u
+        self.bot = datas[u].bot
+        self.queue_to_fo = datas[u].queue_to_fo
         self.id_name_dict = data_repo.id_name_dict
 
     def run(self):
