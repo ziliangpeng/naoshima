@@ -14,11 +14,11 @@ WHITELIST_USER = secret_reader.load_whitelist()
 
 
 class GenUnfo(Thread):
-    def __init__(self, queue_to_unfo, id_name_dict):
+    def __init__(self):
         Thread.__init__(self)
         self.bot = data_repo.bot
-        self.queue_to_unfo = queue_to_unfo
-        self.id_name_dict = id_name_dict
+        self.queue_to_unfo = data_repo.queue_to_unfo
+        self.id_name_dict = data_repo.id_name_dict
 
     def run(self):
         while True:
@@ -50,10 +50,10 @@ class GenUnfo(Thread):
 
 
 class DoUnfo(Thread):
-    def __init__(self, queue_to_unfo):
+    def __init__(self):
         Thread.__init__(self)
         self.bot = data_repo.bot
-        self.queue_to_unfo = queue_to_unfo
+        self.queue_to_unfo = data_repo.queue_to_unfo
 
     def run(self):
         daily_rate = 1000
@@ -68,12 +68,12 @@ class DoUnfo(Thread):
 
 
 class GenFo(Thread):
-    def __init__(self, queue_to_fo, id_name_dict, poked):
+    def __init__(self):
         Thread.__init__(self)
         self.bot = data_repo.bot
-        self.queue_to_fo = queue_to_fo
-        self.id_name_dict = id_name_dict
-        self.poked = poked
+        self.queue_to_fo = data_repo.queue_to_fo
+        self.id_name_dict = data_repo.id_name_dict
+        self.poked = data_repo.poked
 
     def run(self):
         while True:
@@ -94,12 +94,12 @@ class GenFo(Thread):
 
 
 class StealFoers(Thread):
-    def __init__(self, uid, queue_to_fo, id_name_dict):
+    def __init__(self, uid):
         Thread.__init__(self)
         self.bot = data_repo.bot
         self.uid = uid
-        self.queue_to_fo = queue_to_fo
-        self.id_name_dict = id_name_dict
+        self.queue_to_fo = data_repo.queue_to_fo
+        self.id_name_dict = data_repo.id_name_dict
 
     def run(self):
         conditions = secret_reader.load_conditions()
@@ -125,11 +125,11 @@ class StealFoers(Thread):
 
 
 class DoFo(Thread):
-    def __init__(self, queue_to_fo, id_name_dict):
+    def __init__(self):
         Thread.__init__(self)
         self.bot = data_repo.bot
-        self.queue_to_fo = queue_to_fo
-        self.id_name_dict = id_name_dict
+        self.queue_to_fo = data_repo.queue_to_fo
+        self.id_name_dict = data_repo.id_name_dict
 
     def run(self):
         daily_rate = 999

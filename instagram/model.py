@@ -1,4 +1,5 @@
 from Queue import Queue
+from threading import Lock
 
 from wrapt import synchronized
 
@@ -8,7 +9,7 @@ class UniqueQueue(Queue):
         self.q = Queue(n)
         self.s = set()
 
-    @synchronized
+    @synchronized(Lock())
     def put(self, x):
         if x in self.s:
             print '%s already enqueued in UniqueQueue' % (str(x))
@@ -16,7 +17,7 @@ class UniqueQueue(Queue):
             self.s.add(x)
             self.q.put(x)
 
-    @synchronized
+    @synchronized(Lock())
     def get(self):
         x = self.q.get()
         self.q.task_done()
