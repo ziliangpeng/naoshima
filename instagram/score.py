@@ -62,4 +62,4 @@ for fid, fname in utils.get_all_followers_gen(bot):
     if fo_cnt != -1 and foer_cnt != -1:
         score = update_score(score, fo_cnt, foer_cnt)
 
-print 'score:', score
+print('score:', score)

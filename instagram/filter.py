@@ -18,7 +18,7 @@ class Filter:
         }
 
     def apply(self):
-        for k, v in self.conditions.items():
+        for k, v in list(self.conditions.items()):
             if not self.methods[k](v):
                 return False
         return True
@@ -27,8 +27,8 @@ class Filter:
         followed_by_count, follows_count = \
             utils.get_follow_counts(self.name, (0, 0))
         if follows_count > threshold:
-            print '%s: follower %s has %d follows(>%d). It is an overwhelmed stalker' % \
-                  (date(), self.name, follows_count, threshold)
+            print('%s: follower %s has %d follows(>%d). It is an overwhelmed stalker' % \
+                  (date(), self.name, follows_count, threshold))
             return False
         return True
 
@@ -36,8 +36,8 @@ class Filter:
         followed_by_count, follows_count = \
             utils.get_follow_counts(self.name, (0, 0))
         if follows_count < followed_by_count * ratio_threshold:
-            print '%s: follower %s has %d follows and %d followed_by(<%f). Not likely to follow back' % \
-                  (date(), self.name, follows_count, followed_by_count, ratio_threshold)
+            print('%s: follower %s has %d follows and %d followed_by(<%f). Not likely to follow back' % \
+                  (date(), self.name, follows_count, followed_by_count, ratio_threshold))
             return False
         return True
 
@@ -47,7 +47,7 @@ class Filter:
         epoch_diff = timedelta(seconds=now_epoch - recent_post_epoch)
         td_threshold = timedelta(seconds=fresh_threshold)
         if epoch_diff > td_threshold:
-            print '%s: follower %s posted %s ago. longer than %s' % \
-                  (date(), self.name, epoch_diff, td_threshold)
+            print('%s: follower %s posted %s ago. longer than %s' % \
+                  (date(), self.name, epoch_diff, td_threshold))
             return False
         return True

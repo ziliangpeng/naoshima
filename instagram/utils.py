@@ -1,7 +1,7 @@
 import json
 import random
 import time
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 import pylru
 import requests
@@ -38,13 +38,13 @@ def map_user_name(user):
 
 def get_follows(bot, uid=USER_ID):
     time.sleep(3)  # initial delay
-    for retry in xrange(5):
+    for retry in range(5):
         time.sleep(2)  # retry delay
         url = INSTAGRAM_GRAPPHQL_QUERY % \
-              (QUERY_IDs['follows'], urllib.quote_plus(make_query_cursor(uid)))
+              (QUERY_IDs['follows'], urllib.parse.quote_plus(make_query_cursor(uid)))
         r = bot.s.get(url)
         if r.status_code != 200:
-            print 'error in get follows, error code', r.status_code
+            print('error in get follows, error code', r.status_code)
             time.sleep(2)
             continue
         all_data = json.loads(r.text)
@@ -82,10 +82,10 @@ def get_all_followers_gen(bot, uid=USER_ID):
             time.sleep(3)  # initial delay
             url = INSTAGRAM_GRAPPHQL_QUERY % \
                   (QUERY_IDs['followers'],
-                   urllib.quote_plus(make_query_cursor(uid, 500, cursor)))
+                   urllib.parse.quote_plus(make_query_cursor(uid, 500, cursor)))
             r = bot.s.get(url)
             if r.status_code != 200:
-                print 'error in get followers, error code', r.status_code
+                print('error in get followers, error code', r.status_code)
                 time.sleep(10)  # retry delay
                 continue
             all_data = json.loads(r.text)
@@ -125,7 +125,7 @@ def get_user_json(username):
     else:
         time.sleep(3)  # initial delay
         url = 'https://www.instagram.com/%s/?__a=1' % username
-        for retry in xrange(7):
+        for retry in range(7):
             r = requests.get(url)
             if r.status_code == 200:
                 j = r.json()
@@ -158,7 +158,7 @@ def get_recent_post_epoch(username, default=None):
         else:
             return int(posts[0]["date"])
     except BaseException as e:
-        print e
+        print(e)
         if default is None:
             raise e
         else:
@@ -171,7 +171,7 @@ def get_biography(username, default=''):
         bio = j["user"]["biography"]
         return bio
     except BaseException as e:
-        print e
+        print(e)
         if default is None:
             raise e
         else:
@@ -184,7 +184,7 @@ def get_user_id(username, default=''):
         id = j["user"]["id"]
         return id
     except BaseException as e:
-        print e
+        print(e)
         if default is None:
             raise e
         else:
@@ -209,4 +209,4 @@ if __name__ == '__main__':
     i = 0
     for id, name in get_all_followers_gen(bot):
         i += 1
-        print i, id, name
+        print(i, id, name)

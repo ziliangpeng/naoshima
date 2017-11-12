@@ -12,7 +12,7 @@ def get_user_json(u):
         # TODO: find proper way to do rate limit
         time.sleep(3)  # initial delay
         url = 'https://www.instagram.com/%s/?__a=1' % u
-        for retry in xrange(7):
+        for retry in range(7):
             r = requests.get(url)
             if r.status_code == 200:
                 j = r.json()
@@ -27,7 +27,7 @@ def get_user_json(u):
 def get_post_ids(u):
     j = get_user_json(u)
     posts = _json_path(j, ["user", "media", "nodes"])
-    return map(lambda x: int(x["id"]), posts)
+    return [int(x["id"]) for x in posts]
 
 
 def get_recent_post_epoch(u):

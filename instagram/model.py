@@ -1,4 +1,4 @@
-from Queue import Queue
+from queue import Queue
 from threading import Lock
 
 from wrapt import synchronized
@@ -12,7 +12,7 @@ class UniqueQueue(Queue):
     @synchronized(Lock())
     def put(self, x):
         if x in self.s:
-            print '%s already enqueued in UniqueQueue' % (str(x))
+            print('%s already enqueued in UniqueQueue' % (str(x)))
         else:
             self.s.add(x)
             self.q.put(x)
@@ -24,5 +24,5 @@ class UniqueQueue(Queue):
         if x in self.s:
             self.s.remove(x)
         else:
-            print 'Error: Queue key not in set'
+            print('Error: Queue key not in set')
         return x

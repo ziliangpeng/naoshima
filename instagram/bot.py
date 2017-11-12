@@ -33,7 +33,7 @@ if __name__ == '__main__':
             t.daemon = True
             t.start()
         else:
-            print 'unrecognized runner', cmd
+            print('unrecognized runner', cmd)
 
     while True:
         time.sleep(1)
