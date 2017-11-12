@@ -46,4 +46,3 @@ if __name__ == '__main__':
         gen()
     elif sys.argv[1] == 'plot':
         plot()
-

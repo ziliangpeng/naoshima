@@ -1,7 +1,9 @@
-import utils
-import auth
-import requests
 import random
+
+import requests
+
+import auth
+import utils
 
 score = 0.0
 bot = auth.auth(log_mod=2)  # no log

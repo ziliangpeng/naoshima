@@ -1,7 +1,6 @@
 import auth
 import utils
 
-
 bot = auth.auth()
 follows = utils.get_follows(bot)
 followers = utils.get_followers(bot)

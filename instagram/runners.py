@@ -1,12 +1,12 @@
-import random
 import datetime
+import random
 import time
-
-import utils
-import secret_reader
-import data
-from filter import Filter
 from threading import Thread
+
+import data
+import secret_reader
+import utils
+from filter import Filter
 
 USER_ID = secret_reader.load_user_id()
 WHITELIST_USER = secret_reader.load_whitelist()

@@ -1,11 +1,13 @@
-import time
-import urllib
 import json
 import random
-import requests
+import time
+import urllib
+
 import pylru
+import requests
 
 import secret_reader
+
 # for URL decode: https://meyerweb.com/eric/tools/dencoder/
 
 
@@ -39,7 +41,7 @@ def get_follows(bot, uid=USER_ID):
     for retry in xrange(5):
         time.sleep(2)  # retry delay
         url = INSTAGRAM_GRAPPHQL_QUERY % \
-            (QUERY_IDs['follows'], urllib.quote_plus(make_query_cursor(uid)))
+              (QUERY_IDs['follows'], urllib.quote_plus(make_query_cursor(uid)))
         r = bot.s.get(url)
         if r.status_code != 200:
             print 'error in get follows, error code', r.status_code
@@ -59,7 +61,7 @@ def get_followers(bot, uid=USER_ID):
     for retry in xrange(5):
         time.sleep(2)  # retry delay
         url = INSTAGRAM_GRAPPHQL_QUERY % \
-            (QUERY_IDs['followers'], urllib.quote_plus(make_query_cursor(uid)))
+              (QUERY_IDs['followers'], urllib.quote_plus(make_query_cursor(uid)))
         r = bot.s.get(url)
         if r.status_code != 200:
             print 'error in get followers, error code', r.status_code
@@ -79,8 +81,8 @@ def get_all_followers_gen(bot, uid=USER_ID):
         while True:
             time.sleep(3)  # initial delay
             url = INSTAGRAM_GRAPPHQL_QUERY % \
-                (QUERY_IDs['followers'],
-                    urllib.quote_plus(make_query_cursor(uid, 500, cursor)))
+                  (QUERY_IDs['followers'],
+                   urllib.quote_plus(make_query_cursor(uid, 500, cursor)))
             r = bot.s.get(url)
             if r.status_code != 200:
                 print 'error in get followers, error code', r.status_code
@@ -202,6 +204,7 @@ def get_follow_counts(username, default=None):
 
 if __name__ == '__main__':
     import auth
+
     bot = auth.auth()
     i = 0
     for id, name in get_all_followers_gen(bot):

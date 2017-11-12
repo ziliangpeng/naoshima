@@ -1,4 +1,3 @@
-
 data_filename = 'followed.txt'
 followed = set()
 
