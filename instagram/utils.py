@@ -56,23 +56,23 @@ def get_follows(bot, uid=USER_ID):
     raise BaseException("Fail to get follows")
 
 
-def get_followers(bot, uid=USER_ID):
-    time.sleep(3)  # initial delay
-    for retry in xrange(5):
-        time.sleep(2)  # retry delay
-        url = INSTAGRAM_GRAPPHQL_QUERY % \
-              (QUERY_IDs['followers'], urllib.quote_plus(make_query_cursor(uid)))
-        r = bot.s.get(url)
-        if r.status_code != 200:
-            print 'error in get followers, error code', r.status_code
-            continue
-        all_data = json.loads(r.text)
-        followers = all_data["data"]["user"]["edge_followed_by"]["edges"]
-        ret = {}
-        for f in followers:
-            ret[f["node"]["id"]] = f["node"]["username"]
-        return ret
-    raise BaseException("Fail to get followers")
+# def get_followers(bot, uid=USER_ID):
+#     time.sleep(3)  # initial delay
+#     for retry in xrange(5):
+#         time.sleep(2)  # retry delay
+#         url = INSTAGRAM_GRAPPHQL_QUERY % \
+#               (QUERY_IDs['followers'], urllib.quote_plus(make_query_cursor(uid)))
+#         r = bot.s.get(url)
+#         if r.status_code != 200:
+#             print 'error in get followers, error code', r.status_code
+#             continue
+#         all_data = json.loads(r.text)
+#         followers = all_data["data"]["user"]["edge_followed_by"]["edges"]
+#         ret = {}
+#         for f in followers:
+#             ret[f["node"]["id"]] = f["node"]["username"]
+#         return ret
+#     raise BaseException("Fail to get followers")
 
 
 def get_all_followers_gen(bot, uid=USER_ID):
@@ -104,19 +104,19 @@ def get_all_followers(bot):
     return ret
 
 
-def find_fofo(bot, n, id_name_dict, poked):
-    follows = get_follows(bot)
-    followers = get_followers(bot)
-    id_name_dict.update(follows)
-    id_name_dict.update(followers)
-    fo_list = set()
-    while len(fo_list) < n:
-        chosen_foer = random.choice(list(follows.keys()))
-        foer_foer = get_followers(bot, chosen_foer)
-        id_name_dict.update(foer_foer)
-        fo_list |= set(foer_foer) - set(follows) - poked
-        fo_list.discard(USER_ID)
-    return fo_list
+# def find_fofo(bot, n, id_name_dict, poked):
+#     follows = get_follows(bot)
+#     followers = get_followers(bot)
+#     id_name_dict.update(follows)
+#     id_name_dict.update(followers)
+#     fo_list = set()
+#     while len(fo_list) < n:
+#         chosen_foer = random.choice(list(follows.keys()))
+#         foer_foer = get_followers(bot, chosen_foer)
+#         id_name_dict.update(foer_foer)
+#         fo_list |= set(foer_foer) - set(follows) - poked
+#         fo_list.discard(USER_ID)
+#     return fo_list
 
 
 def get_user_json(username):

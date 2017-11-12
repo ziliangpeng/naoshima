@@ -8,14 +8,16 @@ import secret_reader
 import utils
 from filter import Filter
 import data_repo
+from data_repo import datas
 
 USER_ID = secret_reader.load_user_id()
 WHITELIST_USER = secret_reader.load_whitelist()
 
 
 class GenUnfo(Thread):
-    def __init__(self):
+    def __init__(self, username):
         Thread.__init__(self)
+        self.username = username
         self.bot = data_repo.bot
         self.queue_to_unfo = data_repo.queue_to_unfo
         self.id_name_dict = data_repo.id_name_dict
@@ -50,8 +52,9 @@ class GenUnfo(Thread):
 
 
 class DoUnfo(Thread):
-    def __init__(self):
+    def __init__(self, username):
         Thread.__init__(self)
+        self.username = username
         self.bot = data_repo.bot
         self.queue_to_unfo = data_repo.queue_to_unfo
 
@@ -68,36 +71,38 @@ class DoUnfo(Thread):
 
 
 class GenFo(Thread):
-    def __init__(self):
+    def __init__(self, username):
         Thread.__init__(self)
+        self.username = username
         self.bot = data_repo.bot
         self.queue_to_fo = data_repo.queue_to_fo
         self.id_name_dict = data_repo.id_name_dict
         self.poked = data_repo.poked
 
-    def run(self):
-        while True:
-            try:
-                n = 100
-                fo_ids = random.sample(utils.find_fofo(
-                    self.bot, n, self.id_name_dict, self.poked), n)
-                for i, f in enumerate(fo_ids):
-                    print '%s: #%03d gen follow: %s' % \
-                          (str(datetime.datetime.now()),
-                           i, self.id_name_dict[f])
-                    self.queue_to_fo.put(f)
-                    self.poked.add(f)
-                time.sleep(10)
-            except BaseException as e:
-                print 'Error in GenFo'
-                print e
+    # def run(self):
+    #     while True:
+    #         try:
+    #             n = 100
+    #             fo_ids = random.sample(utils.find_fofo(
+    #                 self.bot, n, self.id_name_dict, self.poked), n)
+    #             for i, f in enumerate(fo_ids):
+    #                 print '%s: #%03d gen follow: %s' % \
+    #                       (str(datetime.datetime.now()),
+    #                        i, self.id_name_dict[f])
+    #                 self.queue_to_fo.put(f)
+    #                 self.poked.add(f)
+    #             time.sleep(10)
+    #         except BaseException as e:
+    #             print 'Error in GenFo'
+    #             print e
 
 
 class StealFoers(Thread):
-    def __init__(self, uid):
+    def __init__(self, username, steal_id):
         Thread.__init__(self)
+        self.username = username
         self.bot = data_repo.bot
-        self.uid = uid
+        self.steal_id = steal_id
         self.queue_to_fo = data_repo.queue_to_fo
         self.id_name_dict = data_repo.id_name_dict
 
@@ -105,7 +110,7 @@ class StealFoers(Thread):
         conditions = secret_reader.load_conditions()
         i = 0
         skip_head = 0  # hack: skip something already processed
-        for id, name in utils.get_all_followers_gen(self.bot, self.uid):
+        for id, name in utils.get_all_followers_gen(self.bot, self.steal_id):
             i += 1
             if i < skip_head:
                 print 'skip head %d-th followers' % i
@@ -125,8 +130,9 @@ class StealFoers(Thread):
 
 
 class DoFo(Thread):
-    def __init__(self):
+    def __init__(self, username):
         Thread.__init__(self)
+        self.username = username
         self.bot = data_repo.bot
         self.queue_to_fo = data_repo.queue_to_fo
         self.id_name_dict = data_repo.id_name_dict
