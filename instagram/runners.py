@@ -119,7 +119,7 @@ class StealFoers(Thread):
                       (str(datetime.datetime.now()), i, str(id), str(name)))
             else:
                 if not Filter(name, conditions).apply():
-                    print('%s has not passed filter' % name)
+                    print('%s(%d) has not passed filter' % (name, i))
                 else:
                     print('%s: Steal %d-th follower %s(%s)' % \
                           (str(datetime.datetime.now()), i, str(id), str(name)))
