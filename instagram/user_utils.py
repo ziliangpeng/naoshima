@@ -19,6 +19,8 @@ def get_user_json(u):
                 CACHED_USER_JSON[u] = j
                 return j
             else:
+                print(r.status_code)
+
                 time.sleep(5)
                 continue
     raise BaseException("Fail to get user json")
@@ -66,3 +68,4 @@ def _json_path(j, paths):
             j = j[k]
         else:
             return None
+    return j

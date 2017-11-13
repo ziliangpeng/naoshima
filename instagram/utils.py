@@ -2,6 +2,7 @@ import json
 import random
 import time
 import urllib.request, urllib.parse, urllib.error
+from user_utils import get_user_json
 
 import pylru
 import requests
@@ -119,22 +120,22 @@ def get_all_followers(bot):
 #     return fo_list
 
 
-def get_user_json(username):
-    if username in CACHED_USER_JSON:
-        return CACHED_USER_JSON[username]
-    else:
-        time.sleep(3)  # initial delay
-        url = 'https://www.instagram.com/%s/?__a=1' % username
-        for retry in range(7):
-            r = requests.get(url)
-            if r.status_code == 200:
-                j = r.json()
-                CACHED_USER_JSON[username] = j
-                return j
-            else:
-                time.sleep(5)
-                continue
-    raise BaseException("Fail to get user json")
+# def get_user_json(username):
+#     if username in CACHED_USER_JSON:
+#         return CACHED_USER_JSON[username]
+#     else:
+#         time.sleep(3)  # initial delay
+#         url = 'https://www.instagram.com/%s/?__a=1' % username
+#         for retry in range(7):
+#             r = requests.get(url)
+#             if r.status_code == 200:
+#                 j = r.json()
+#                 CACHED_USER_JSON[username] = j
+#                 return j
+#             else:
+#                 time.sleep(5)
+#                 continue
+#     raise BaseException("Fail to get user json")
 
 
 def get_post_ids(username):

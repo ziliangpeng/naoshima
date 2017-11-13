@@ -9,7 +9,7 @@ class UniqueQueue(Queue):
         self.q = Queue(n)
         self.s = set()
 
-    @synchronized(Lock())
+    # @synchronized(Lock())
     def put(self, x):
         if x in self.s:
             print('%s already enqueued in UniqueQueue' % (str(x)))
@@ -17,7 +17,7 @@ class UniqueQueue(Queue):
             self.s.add(x)
             self.q.put(x)
 
-    @synchronized(Lock())
+    # @synchronized(Lock())
     def get(self):
         x = self.q.get()
         self.q.task_done()

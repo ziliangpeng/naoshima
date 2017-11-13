@@ -2,24 +2,39 @@ import json
 
 
 def load_secrets():
-    with open('secret.local', 'r') as f:
-        secret_data = json.loads(f.read())
-        return secret_data["login"], secret_data["password"]
+    return _load(["login"]), _load(["password"])
 
 
 def load_user_id():
-    with open('secret.local', 'r') as f:
-        secret_data = json.loads(f.read())
-        return secret_data["id"]
+    return _load(["id"])
 
 
 def load_whitelist():
-    with open('secret.local', 'r') as f:
-        secret_data = json.loads(f.read())
-        return secret_data.get("whitelist", [])
+    return _load(["whitelist"], [])
 
 
 def load_conditions():
+    return _load(["conditions"], {})
+
+
+def load_user_data_dir():
+    return _load(["user_data_dir"], '/data/instagram/user')
+
+
+def load_like_per_fo():
+    return _load(["like_per_fo"], 1)
+
+
+def load_comment_pool():
+    return _load(["comments"], [u"これは素晴らしい写真です", u"私はこの写真が好き"])
+
+
+def _load(keys, default=None):
     with open('secret.local', 'r') as f:
-        secret_data = json.loads(f.read())
-        return secret_data.get("conditions", {})
+        j = json.loads(f.read())
+        for k in keys:
+            if k in j:
+                j = j[k]
+            else:
+                return default
+        return j

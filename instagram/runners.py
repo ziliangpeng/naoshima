@@ -134,6 +134,8 @@ class DoFo(Thread):
         self.bot = datas[u].bot
         self.queue_to_fo = datas[u].queue_to_fo
         self.id_name_dict = data_repo.id_name_dict
+        self.like_per_fo = datas[u].like_per_fo
+        self.comment_pool = datas[u].comment_pool
 
     def run(self):
         daily_rate = 999
@@ -145,8 +147,12 @@ class DoFo(Thread):
                 data.follow(f)
                 username = self.id_name_dict[int(f)]
                 post_ids = utils.get_post_ids(username)
+
+                # to like
+                if len(post_ids) > self.like_per_fo:
+                    post_ids = random.sample(post_ids, self.like_per_fo)
                 if like_cooldown == 0:
-                    for post_id in post_ids[:3]:
+                    for post_id in post_ids:
                         print('like user(%s) post %d' % (username, int(post_id)))
                         r = self.bot.like(post_id)
                         if r.status_code != 200:
@@ -158,6 +164,15 @@ class DoFo(Thread):
                 else:
                     print('remain like cooldown', like_cooldown)
                     like_cooldown -= 1
+
+                # to comment
+                if post_ids:
+                    post_id = random.choice(post_ids)
+                    comment = random.choice(self.comment_pool)
+                    print('comment %s on %s' % (comment, str(post_id)))
+                    self.bot.comment(post_id, comment)
+
+                # slow down
                 time.sleep(24 * 3600 / daily_rate)
             except BaseException as e:
                 print('Error in DoFo')
