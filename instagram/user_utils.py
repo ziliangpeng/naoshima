@@ -24,7 +24,9 @@ def get_user_json(u):
                 print('get json failed. sleeping for %d s' % (retry_delay))
                 time.sleep(retry_delay)
                 retry_delay = int(retry_delay * 1.2)  # exponentially increase delay
-    raise BaseException("Fail to get user json")
+    # raise BaseException("Fail to get user json")
+    print("Unable to get user json. Returning {}")
+    return {}
 
 
 def get_post_ids(u):
