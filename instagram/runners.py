@@ -166,7 +166,7 @@ class DoFo(Thread):
                     like_cooldown -= 1
 
                 # to comment
-                if post_ids:
+                if post_ids and self.comment_pool:
                     post_id = random.choice(post_ids)
                     comment = random.choice(self.comment_pool)
                     print('comment %s on %s' % (comment, str(post_id)))
