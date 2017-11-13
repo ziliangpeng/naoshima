@@ -5,6 +5,7 @@ import plotly.offline as py
 
 import auth
 import utils
+import user_utils
 
 
 def gen():
@@ -12,7 +13,7 @@ def gen():
     with open('science.txt', 'w') as f:
         # __________________v___
         for fid, fname in utils.get_all_followers_gen(bot, 2288001113):
-            followed_by, follows = utils.get_follow_counts(fname)
+            followed_by, follows = user_utils.get_follow_counts(fname)
             f.write('%s %d %d\n' % (fname, followed_by, follows))
             f.flush()
 
