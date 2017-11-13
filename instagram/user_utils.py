@@ -10,9 +10,10 @@ def get_user_json(u):
         return CACHED_USER_JSON[u]
     else:
         # TODO: find proper way to do rate limit
-        time.sleep(3)  # initial delay
+        time.sleep(1)  # initial delay
         url = 'https://www.instagram.com/%s/?__a=1' % u
-        for retry in range(7):
+        retry_delay = 5
+        while True:
             r = requests.get(url)
             if r.status_code == 200:
                 j = r.json()
@@ -20,9 +21,9 @@ def get_user_json(u):
                 return j
             else:
                 print(r.status_code)
-
-                time.sleep(5)
-                continue
+                print('get json failed. sleeping for %d s' % (retry_delay))
+                time.sleep(retry_delay)
+                retry_delay = int(retry_delay * 1.2)  # exponentially increase delay
     raise BaseException("Fail to get user json")
 
 
