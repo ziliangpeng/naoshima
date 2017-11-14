@@ -41,4 +41,4 @@ for i in range(len(data_list)):
 
 py.plot({
     "data": graphs,
-}, filename='likes-gen.html')
+}, filename='/data/reckless/likes-gen.html')

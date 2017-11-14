@@ -10,4 +10,4 @@ docker kill reckless-prod
 sleep 2
 
 # run new deployment
-docker run -d --rm --name=reckless-prod -v "$(pwd)"/static:/reckless/static -p 80:80 reckless
+docker run -d --rm --name=reckless-prod -v /data/reckless:/reckless/static/data -p 80:80 reckless
