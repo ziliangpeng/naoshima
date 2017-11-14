@@ -10,7 +10,7 @@ bot = auth.auth(log_mod=2)  # no log
 
 FO_CNT_FILE_PATTERN = '/tmp/%s_fo'
 FOER_CNT_FILE_PATTERN = '/tmp/%s_foer'
-INVALIDATE_CACHE_RATE = 0.01
+INVALIDATE_CACHE_RATE = 0.001
 
 
 def update_score(score, fo_cnt, foer_cnt):
