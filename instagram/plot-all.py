@@ -1,7 +1,7 @@
 import sys
-import plotly.offline as py
-import plotly.graph_objs as go
 
+import plotly.graph_objs as go
+import plotly.offline as py
 
 date_list = []
 
@@ -29,18 +29,17 @@ for fo_data_file in sys.argv[1:]:
     data_list.append(data_dict)
     date_list.append(sub_date_list)
 
-
 graphs = []
 for i in range(len(data_list)):
     graphs.append(
         go.Scatter(
             x=date_list[i],
             y=make_data(date_list[i], data_list[i]),
-            name = sys.argv[i+1],
-            mode = 'lines',
+            name=sys.argv[i + 1],
+            mode='lines',
         )
     )
 
 py.plot({
     "data": graphs,
-    })
+})
