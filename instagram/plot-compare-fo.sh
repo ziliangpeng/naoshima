@@ -1,6 +1,5 @@
 #!/bin/zsh
 # This script uses some local aliased commands. Not supposed to use elsewhere.
-
 source ~/dotfiles/zsh/local.zsh
 
 ins-stats > /tmp/stat.txt 2>/dev/null
