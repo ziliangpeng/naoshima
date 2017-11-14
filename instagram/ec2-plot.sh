@@ -1,6 +1,6 @@
 #!/bin/bash
 
-python plot-likes.py \
+python3 plot-likes.py \
     ~/instagram_likes.txt \
     ~/eva_instagram_likes.txt \
     ~/z_instagram_likes.txt \
@@ -8,7 +8,7 @@ python plot-likes.py \
     ~/nesign_instagram_likes.txt \
     ~/hixchan_instagram_likes.txt
 
-python plot-all.py \
+python3 plot-all.py \
     ~/instagram_followers_count.txt \
     ~/eva_instagram_followers_count.txt \
     ~/z_instagram_followers_count.txt \
