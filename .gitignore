@@ -10,3 +10,6 @@ bazel-*
 # Python
 *.pyc
 *.pyo
+
+# gen html
+*-gen.html
