@@ -4,14 +4,10 @@
 docker build -t reckless .
 
 # stop running instance
-echo "running containers:"
-docker ps -a -q  --filter ancestor=reckless
-docker ps -a -q  --filter ancestor=reckless | xargs docker kill
-# echo "existing containers:"
-# docker ps -a -q  --filter ancestor=reckless
-# docker ps -a -q  --filter ancestor=reckless | xargs docker rm
+docker kill reckless-prod
 
 # wait
 sleep 2
+
 # run new deployment
-docker run -d --rm -p 80:80 reckless
+docker run -d --rm --name=reckless-prod -v "$(pwd)"/static:/reckless/static -p 80:80 reckless
