@@ -42,4 +42,4 @@ for i in range(len(data_list)):
 
 py.plot({
     "data": graphs,
-})
+}, filename='stats-gen.html')
