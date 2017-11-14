@@ -4,7 +4,11 @@
 docker build -t reckless .
 
 # stop running instance
+echo "running containers:"
+docker ps -a -q  --filter ancestor=reckless
 docker ps -a -q  --filter ancestor=reckless | xargs docker kill
+echo "existing containers:"
+docker ps -a -q  --filter ancestor=reckless
 docker ps -a -q  --filter ancestor=reckless | xargs docker rm
 
 # wait
