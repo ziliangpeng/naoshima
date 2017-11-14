@@ -140,31 +140,48 @@ class DoFo(Thread):
 
     def run(self):
         daily_rate = 999
-        like_cooldown = 0
+        # TODO: extract all cooldown logic into separate module
+        DEFAULT_LIKE_COOLDOWN = 100
+        DEFAULT_COMMENT_COOLDOWN = 100
+        like_cooldown = DEFAULT_LIKE_COOLDOWN
+        like_cooldown_remain = 0
+        comment_cooldown = DEFAULT_COMMENT_COOLDOWN
+        comment_cooldown_remain = 0
         while True:
             try:
                 f = self.queue_to_fo.get()
-                self.bot.follow(f)
-                data.follow(f)
+                r = self.bot.follow(f)
+                if r.status_code == 200:
+                    data.follow(f)
+                else:
+                    print('fail to follow')
+                    # TODO: cool down?
+                    continue
+
                 username = self.id_name_dict[int(f)]
                 post_ids = utils.get_post_ids(username)
 
                 # to like
                 if len(post_ids) > self.like_per_fo:
                     post_ids = random.sample(post_ids, self.like_per_fo)
-                if like_cooldown == 0:
+                if like_cooldown_remain <= 0:
                     for post_id in post_ids:
                         print('like user(%s) post %d' % (username, int(post_id)))
                         r = self.bot.like(post_id)
-                        if r.status_code != 200:
+                        if r.status_code == 200:
+                            like_cooldown = DEFAULT_LIKE_COOLDOWN
+                            like_cooldown_remain = 0
+                        else:
                             print('fail to like. status code %d' % r.status_code)
-                            print(r.text)
-                            print('start like cooldown')
-                            like_cooldown = 999
+                            # print(r.text)
+                            like_cooldown *= 1.2
+                            print('like cool down gap increased to', like_cooldown)
+                            like_cooldown_remain = like_cooldown
+                            print('start like cool down for', like_cooldown)
                             break
                 else:
-                    print('remain like cooldown', like_cooldown)
-                    like_cooldown -= 1
+                    print('remain like cooldown', like_cooldown_remain)
+                    like_cooldown_remain -= 1
 
                 # to comment
                 if post_ids and self.comment_pool:
@@ -173,8 +190,9 @@ class DoFo(Thread):
                     print('comment %s on %s' % (comment, str(post_id)))
                     self.bot.comment(post_id, comment)
 
-                # slow down
-                time.sleep(24 * 3600 / daily_rate)
             except BaseException as e:
                 print('Error in DoFo')
                 print(e)
+            finally:
+                # slow down
+                time.sleep(24 * 3600 / daily_rate)
