@@ -96,13 +96,14 @@ class GenFo(Thread):
 
 
 class StealFoers(Thread):
-    def __init__(self, u, steal_id):
+    def __init__(self, u, steal_name):
         Thread.__init__(self)
         self.username = u
         self.bot = datas[u].bot
-        self.steal_id = steal_id
+        self.steal_id = utils.get_user_id(steal_name)
         self.queue_to_fo = datas[u].queue_to_fo
         self.id_name_dict = data_repo.id_name_dict
+        print('to steal user %s, id %d' % (steal_name, int(self.steal_id)))
 
     def run(self):
         conditions = secret_reader.load_conditions()

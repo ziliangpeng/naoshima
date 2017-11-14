@@ -28,8 +28,8 @@ if __name__ == '__main__':
             t.daemon = True
             t.start()
         elif cmd.startswith('steal'):
-            steal_id = cmd[cmd.index('(') + 1: cmd.index(')')]
-            t = StealFoers(username, steal_id)
+            steal_name = cmd[cmd.index('(') + 1: cmd.index(')')]
+            t = StealFoers(username, steal_name)
             t.daemon = True
             t.start()
         else:
