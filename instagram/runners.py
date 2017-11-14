@@ -13,6 +13,11 @@ from data_repo import datas
 USER_ID = secret_reader.load_user_id()
 WHITELIST_USER = secret_reader.load_whitelist()
 
+# TODO:
+# 1. follow followers' followers
+# 2. keep following top brand's latest followers
+# 3. keep following hashtag's most recent users
+
 
 class GenUnfo(Thread):
     def __init__(self, u):
