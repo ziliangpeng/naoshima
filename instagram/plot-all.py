@@ -1,4 +1,5 @@
 import sys
+from os.path import commonprefix
 
 import plotly.graph_objs as go
 import plotly.offline as py
@@ -39,13 +40,15 @@ for fo_data_file in sys.argv[1:]:
     data_list.append(data_dict)
     date_list.append(sub_date_list)
 
+prefix = commonprefix(sys.argv[1:])
+suffix = commonprefix([s[::-1] for s in sys.argv[1:]])[::-1]
 graphs = []
 for i in range(len(data_list)):
     graphs.append(
         go.Scatter(
             x=date_list[i],
             y=make_data(date_list[i], data_list[i]),
-            name=sys.argv[i + 1],
+            name=sys.argv[i + 1][len(prefix):-len(suffix)],
             mode='lines',
         )
     )
