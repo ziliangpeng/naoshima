@@ -10,6 +10,15 @@ def make_data(dates, dict):
     return [d in dict and dict[d] or 0 for d in dates]
 
 
+def parse_foer(s):
+    if 'k' in s:
+        # 10k   -> 10000
+        # 10.1k -> 10100
+        return int(float(s.replace('k', '')) * 1000)
+    else:
+        return int(s)
+
+
 data_list = []
 date_list = []
 for fo_data_file in sys.argv[1:]:
@@ -22,7 +31,8 @@ for fo_data_file in sys.argv[1:]:
             if len(date_list) > 0 and date not in date_list[0]:
                 continue
             data_block = line.split('\"')[3]
-            foer_cnt = int(data_block.split(' ')[0].replace(',', ''))
+            foer_str = data_block.split(' ')[0].replace(',', '')
+            foer_cnt = parse_foer(foer_str)
             sub_date_list.append(date)
             data_dict[date] = foer_cnt
 
