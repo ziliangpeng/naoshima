@@ -1,0 +1,10 @@
+# Re-Architect
+
+- a queue for produce/consumer people to fo/unfo
+- proper logging to file/console
+- proper data collection
+    - hourly stats (likes, fo counts, etc)
+    - follow record
+    - followed record
+    - readying for analysis/ML
+
