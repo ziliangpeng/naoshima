@@ -10,7 +10,6 @@ from filter import Filter
 import data_repo
 from data_repo import datas
 
-USER_ID = secret_reader.load_user_id()
 WHITELIST_USER = secret_reader.load_whitelist()
 
 # TODO:
@@ -23,6 +22,7 @@ class GenUnfo(Thread):
     def __init__(self, u):
         Thread.__init__(self)
         self.username = u
+        self.user_id = utils.get_user_id(u)
         self.bot = datas[u].bot
         self.queue_to_unfo = datas[u].queue_to_unfo
         self.id_name_dict = data_repo.id_name_dict
@@ -30,8 +30,8 @@ class GenUnfo(Thread):
     def run(self):
         while True:
             try:
-                follows = utils.get_follows(self.bot, USER_ID)
-                # followers = utils.get_followers(self.bot, USER_ID)
+                follows = utils.get_follows(self.bot, self.user_id)
+                # followers = utils.get_followers(self.bot, self.user_id)
                 self.id_name_dict.update(follows)
                 # self.id_name_dict.update(followers)
                 if len(follows) < 5000:
