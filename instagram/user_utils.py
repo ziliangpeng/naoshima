@@ -19,11 +19,14 @@ def get_user_json(u):
                 j = r.json()
                 CACHED_USER_JSON[u] = j
                 return j
-            else:
-                print(r.status_code)
+            elif r.status_code == 429:
+                print('status code', r.status_code)
                 print('get json failed. sleeping for %d s' % (retry_delay))
                 time.sleep(retry_delay)
                 retry_delay = int(retry_delay * 1.2)  # exponentially increase delay
+            else:
+                print('status code', r.status_code)
+                break
     # raise BaseException("Fail to get user json")
     print("Unable to get user json. Returning {}")
     return {}
