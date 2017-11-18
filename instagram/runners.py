@@ -100,6 +100,39 @@ class GenFo(Thread):
     #             print e
 
 
+class Fofo(Thread):
+    def __init__(self, u):
+        Thread.__init__(self)
+        self.u = u
+        self.bot = datas[u].bot
+        self.queue_to_fo = datas[u].queue_to_fo
+        self.id_name_dict = data_repo.id_name_dict
+        print('user %s to FOFO' % u)
+
+    def run(self):
+        conditions = secret_reader.load_conditions()
+        i = 0
+        k = 0
+        for id, name in utils.get_all_followers_gen(self.bot):
+            i += 1
+            print('starting to steal from %d-th: %s' % (i, name))
+            j = 0
+            for _id, _name in utils.get_all_followers_gen(self.bot, uid=id, max=2000):
+                j += 1
+                k += 1
+                print('inspecting %d-th foer(%s) of %d-th foer(%s)' % \
+                      (j, _name, i, name))
+                if data.is_followed(_id):
+                    print('Already followed.')
+                else:
+                    if not Filter(_name, conditions).apply():
+                        print('%s(%d) has not passed filter' % (_name, k))
+                    else:
+                        print('Steal follower %s' % (str(_name)))
+                        self.id_name_dict[int(_id)] = _name
+                        self.queue_to_fo.put(_id)
+
+
 class StealFoers(Thread):
     def __init__(self, u, steal_name):
         Thread.__init__(self)

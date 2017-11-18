@@ -2,7 +2,7 @@ import sys
 import time
 import secret_reader
 
-from runners import GenFo, DoFo, GenUnfo, DoUnfo, StealFoers
+from runners import GenFo, DoFo, GenUnfo, DoUnfo, StealFoers, Fofo
 
 
 username = secret_reader.load_secrets()[0]
@@ -30,6 +30,10 @@ if __name__ == '__main__':
         elif cmd.startswith('steal'):
             steal_name = cmd[cmd.index('(') + 1: cmd.index(')')]
             t = StealFoers(username, steal_name)
+            t.daemon = True
+            t.start()
+        elif cmd == 'fofo':
+            t = Fofo(username)
             t.daemon = True
             t.start()
         else:

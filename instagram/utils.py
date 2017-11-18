@@ -76,10 +76,13 @@ def get_follows(bot, uid=USER_ID):
 #     raise BaseException("Fail to get followers")
 
 
-def get_all_followers_gen(bot, uid=USER_ID):
+def get_all_followers_gen(bot, uid=USER_ID, max=0):
+    count = 0
     cursor = ""
     while True:
         while True:
+            if max != 0 and count >= max:
+                return
             time.sleep(3)  # initial delay
             url = INSTAGRAM_GRAPPHQL_QUERY % \
                   (QUERY_IDs['followers'],
@@ -96,6 +99,7 @@ def get_all_followers_gen(bot, uid=USER_ID):
             cursor = all_data["data"]["user"]["edge_followed_by"]["page_info"]["end_cursor"]
             for f in followers:
                 yield f["node"]["id"], f["node"]["username"]
+                count += 1
 
 
 def get_all_followers(bot):
