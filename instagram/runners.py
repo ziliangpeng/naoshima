@@ -133,6 +133,38 @@ class Fofo(Thread):
                         self.queue_to_fo.put(_id)
 
 
+class StealSuperBrand(Thread):
+    def __init__(self, u):
+        Thread.__init__(self)
+        self.u = u
+        self.bot = datas[u].bot
+        self.queue_to_fo = datas[u].queue_to_fo
+        self.id_name_dict = data_repo.id_name_dict
+
+    def run(self):
+        conditions = secret_reader.load_conditions()
+        BIG_LIST = ['instagram', 'apple', 'liuwenlw', 'london']
+        BATCH_SIZE = 1000
+        while True:
+            for brand in BIG_LIST:
+                i = 0
+                brand_id = utils.get_user_id(brand)
+                for id, name in utils.get_all_followers_gen(self.bot, brand_id, BATCH_SIZE):
+                    i += 1
+                    print('inspecting %d-th foer of %s' % (i, brand))
+                    if data.is_followed(id):
+                        print('%s: Skip %d-th follower %s(%s). Already followed.' % \
+                              (str(datetime.datetime.now()), i, str(id), str(name)))
+                    else:
+                        if not Filter(name, conditions).apply():
+                            print('%s(%d) has not passed filter' % (name, i))
+                        else:
+                            print('%s: Steal %d-th follower %s(%s)' % \
+                                  (str(datetime.datetime.now()), i, str(id), str(name)))
+                            self.id_name_dict[int(id)] = name
+                            self.queue_to_fo.put(id)
+
+
 class StealFoers(Thread):
     def __init__(self, u, steal_name):
         Thread.__init__(self)
