@@ -7,4 +7,6 @@ RUN pip install web.py
 ADD . reckless/
 WORKDIR "/reckless"
 
+EXPOSE 80
+
 ENTRYPOINT ["python", "run.py", "80"]
