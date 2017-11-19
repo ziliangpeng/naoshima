@@ -17,10 +17,6 @@ def load_conditions():
     return _load(["conditions"], {})
 
 
-def load_user_data_dir():
-    return _load(["user_data_dir"], '/data/instagram/user')
-
-
 def load_like_per_fo():
     return _load(["like_per_fo"], 1)
 
