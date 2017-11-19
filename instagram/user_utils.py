@@ -1,13 +1,16 @@
 import pylru
 import time
 import requests
+import data
 
 CACHED_USER_JSON = pylru.lrucache(1024)
 
 
 def get_user_json(u):
-    if u in CACHED_USER_JSON:
-        return CACHED_USER_JSON[u]
+    cached_json = data.get_json_by_username(u)
+    if cached_json != None:
+        print('user json cached')
+        return cached_json
     else:
         # TODO: find proper way to do rate limit
         time.sleep(1)  # initial delay
@@ -17,7 +20,7 @@ def get_user_json(u):
             r = requests.get(url)
             if r.status_code == 200:
                 j = r.json()
-                CACHED_USER_JSON[u] = j
+                data.set_json_by_username(u, j)
                 return j
             elif r.status_code == 429:
                 print('status code', r.status_code)
