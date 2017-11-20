@@ -1,6 +1,5 @@
 import secret_reader
 import redis
-import utils
 import json
 
 REDIS_DB = 1
