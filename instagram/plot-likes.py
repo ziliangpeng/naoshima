@@ -22,6 +22,9 @@ for fo_data_file in sys.argv[1:]:
             date = ' '.join(line.split(' ')[1:6]).split(':')[0] + ':00'
             if len(date_list) > 0 and date not in date_list[0]:
                 continue
+
+            if len(line.split()) < 7:
+                continue  # sum-of-likes is missing
             likes = int(line.split()[-1])
             sub_date_list.append(date)
             data_dict[date] = likes
