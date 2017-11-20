@@ -7,32 +7,35 @@ swap_filename = '/data/swap.txt'
 mem_date_list = []
 total_mem_list = []
 used_mem_list = []
+free_mem_list = []
 with open(mem_filename, 'r') as f:
     for line in f.readlines():
         if '|' not in line:
             continue
         date_line = line.split('|')[1].strip()
         date = ':'.join(date_line.split(':')[:2]) + ':00'
+        date = ' '.join(date.split(' ')[1:])
         mem_date_list.append(date)
 
         mem_block = line.split('|')[0]
         mem_data = mem_block.split()
         total_mem = mem_data[1]
         used_mem = mem_data[2]
+        free_mem = mem_data[3]
         total_mem_list.append(total_mem)
         used_mem_list.append(used_mem)
+        free_mem_list.append(free_mem)
 
 
 swap_date_list = []
 used_swap_list = []
 with open(swap_filename, 'r') as f:
     for line in f.readlines():
-        print('line', line)
         if '|' not in line:
             continue
         date_line = line.split('|')[1].strip()
         date = ':'.join(date_line.split(':')[:2]) + ':00'
-        print('date', date)
+        date = ' '.join(date.split(' ')[1:])
         swap_date_list.append(date)
 
         swap_block = line.split('|')[0]
@@ -56,6 +59,13 @@ used_mem_graph = \
         name='used mem',
         mode='lines',
     )
+free_mem_graph = \
+    go.Scatter(
+        x=mem_date_list,
+        y=free_mem_list,
+        name='free mem',
+        mode='lines',
+    )
 used_swap_graph = \
     go.Scatter(
         x=swap_date_list,
@@ -64,7 +74,7 @@ used_swap_graph = \
         mode='lines',
     )
 
-graphs = [total_mem_graph, used_mem_graph, used_swap_graph]
+graphs = [total_mem_graph, used_mem_graph, free_mem_graph, used_swap_graph]
 
 py.plot({
     "data": graphs,
