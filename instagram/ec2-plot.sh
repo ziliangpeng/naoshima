@@ -1,17 +1,17 @@
 #!/bin/bash
 
 python3 plot-likes.py \
-    ~/instagram_likes.txt \
-    ~/eva_instagram_likes.txt \
-    ~/z_instagram_likes.txt \
-    ~/newdone_instagram_likes.txt \
-    ~/nesign_instagram_likes.txt \
-    ~/hixchan_instagram_likes.txt
+    /data/ig/v_likes.txt \
+    /data/ig/eva_likes.txt \
+    /data/ig/z_likes.txt \
+    /data/ig/newdone_likes.txt \
+    /data/ig/nesign_likes.txt \
+    /data/ig/hixchan_likes.txt
 
 python3 plot-all.py \
-    ~/instagram_followers_count.txt \
-    ~/eva_instagram_followers_count.txt \
-    ~/z_instagram_followers_count.txt \
-    ~/newdone_instagram_followers_count.txt \
-    ~/nesign_instagram_followers_count.txt \
-    ~/hixchan_instagram_followers_count.txt
+    /data/ig/v_count.txt \
+    /data/ig/eva_count.txt \
+    /data/ig/z_count.txt \
+    /data/ig/newdone_count.txt \
+    /data/ig/nesign_count.txt \
+    /data/ig/hixchan_count.txt
