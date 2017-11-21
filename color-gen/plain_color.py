@@ -8,9 +8,15 @@ W = 1024
 
 im = Image.new('RGB', (H, W))
 
-r = random.randint(0, 255)
-g = random.randint(0, 255)
-b = random.randint(0, 255)
+while True:
+    r = random.randint(0, 255)
+    g = random.randint(0, 255)
+    b = random.randint(0, 255)
+    print(r, g, b)
+    avg = (r + g + b) / 3
+    print('avg', avg)
+    if avg >= 128:
+        break
 
 c = (r, g, b)
 
