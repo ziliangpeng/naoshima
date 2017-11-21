@@ -6,7 +6,8 @@ python3 plot-likes.py \
     /data/ig/z_likes.txt \
     /data/ig/newdone_likes.txt \
     /data/ig/nesign_likes.txt \
-    /data/ig/hixchan_likes.txt
+    /data/ig/hixchan_likes.txt \
+    /data/ig/airbnb_likes.txt
 
 python3 plot-all.py \
     /data/ig/v_count.txt \
@@ -14,4 +15,5 @@ python3 plot-all.py \
     /data/ig/z_count.txt \
     /data/ig/newdone_count.txt \
     /data/ig/nesign_count.txt \
-    /data/ig/hixchan_count.txt
+    /data/ig/hixchan_count.txt \
+    /data/ig/airbnb_count.txt
