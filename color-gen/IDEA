@@ -1,0 +1,17 @@
+# Project Ideas
+
+Use Instagram bot to automate daily post with some Ideas
+
+- an image of random plain color every day,
+  - possibly include some text on it, e.g. date, RGB code of color
+- color changing spectrum that continuously grow, 3 images a day (a row in IG),
+  - can apply some ideas/patterns on the 3 images
+  - should not just stitch 3 images into one giant image.
+  - take the opportunity that each image's x axis is set, apply some ideas here
+- color changing spectrum that continuously grow, 1 image a day
+  - to achieve that, an image need to match the one on right (1 day ago) and the one at below (3 days ago)
+  - implementation:
+    - cast random virtual points with location and color on image, not too many points, maybe 3 - 5 points
+    - every pixel calculate its color based on distance to virtual points, the closer, the more influence it gets
+    - right edge and bottom edge, each pixel should be a virtual point because the color was decided
+    - can use various ways of calculating distance (Euclidean distance, real distance, funky distance, etc.)
