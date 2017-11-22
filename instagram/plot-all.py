@@ -28,14 +28,17 @@ for fo_data_file in sys.argv[1:]:
     data_dict = {}
     with open(fo_data_file, 'r') as f:
         for line in f.readlines():
-            date = ' '.join(line.split(' ')[1:6]).split(':')[0] + ':00'
-            if len(date_list) > 0 and date not in date_list[0]:
-                continue
-            data_block = line.split('\"')[3]
-            foer_str = data_block.split(' ')[0].replace(',', '')
-            foer_cnt = parse_foer(foer_str)
-            sub_date_list.append(date)
-            data_dict[date] = foer_cnt
+            try:
+                date = ' '.join(line.split(' ')[1:6]).split(':')[0] + ':00'
+                if len(date_list) > 0 and date not in date_list[0]:
+                    continue
+                data_block = line.split('\"')[3]
+                foer_str = data_block.split(' ')[0].replace(',', '')
+                foer_cnt = parse_foer(foer_str)
+                sub_date_list.append(date)
+                data_dict[date] = foer_cnt
+            except:
+                pass
 
     data_list.append(data_dict)
     date_list.append(sub_date_list)
