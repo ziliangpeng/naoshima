@@ -231,7 +231,7 @@ class DoFo(Thread):
                 if r.status_code == 200:
                     data.follow(f)
                 else:
-                    print('fail to follow')
+                    print('fail to follow, stats code:', r.status_code)
                     # TODO: cool down?
                     continue
 
