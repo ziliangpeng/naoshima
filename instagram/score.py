@@ -1,5 +1,3 @@
-import random
-
 import requests
 
 import auth
@@ -39,11 +37,10 @@ def write_cached_fo_and_foer_cnt(name, fo_cnt, foer_cnt):
 
 
 def get_fo_and_foer_cnt(f):
-    if random.random() > INVALIDATE_CACHE_RATE:
-        try:
-            return get_cached_fo_and_foer_cnt(f)
-        except:
-            pass
+    try:
+        return get_cached_fo_and_foer_cnt(f)
+    except:
+        pass
 
     url = 'https://www.instagram.com/%s/?__a=1' % f
     r = requests.get(url)
