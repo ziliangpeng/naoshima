@@ -2,6 +2,7 @@ import requests
 
 import auth
 import utils
+import user_utils
 
 score = 0.0
 bot = auth.auth(log_mod=2)  # no log
@@ -25,37 +26,28 @@ def get_cached_fo_and_foer_cnt(name):
     return fo_cnt, foer_cnt
 
 
-def write_cached_fo_and_foer_cnt(name, fo_cnt, foer_cnt):
-    fo_cnt_filename = FO_CNT_FILE_PATTERN % name
-    foer_cnt_filename = FOER_CNT_FILE_PATTERN % name
-    with open(fo_cnt_filename, 'w+') as f:
-        f.write(str(fo_cnt))
-    with open(foer_cnt_filename, 'w+') as f:
-        f.write(str(foer_cnt))
-    return fo_cnt, foer_cnt
+# def write_cached_fo_and_foer_cnt(name, fo_cnt, foer_cnt):
+#     fo_cnt_filename = FO_CNT_FILE_PATTERN % name
+#     foer_cnt_filename = FOER_CNT_FILE_PATTERN % name
+#     with open(fo_cnt_filename, 'w+') as f:
+#         f.write(str(fo_cnt))
+#     with open(foer_cnt_filename, 'w+') as f:
+#         f.write(str(foer_cnt))
+#     return fo_cnt, foer_cnt
 
 
-def get_fo_and_foer_cnt(f):
+def get_fo_and_foer_cnt(u):
     try:
-        return get_cached_fo_and_foer_cnt(f)
+        return get_cached_fo_and_foer_cnt(u)
     except:
         pass
-
-    url = 'https://www.instagram.com/%s/?__a=1' % f
-    r = requests.get(url)
-    if r.status_code == 200:
-        j = r.json()
-        fo_cnt = j["user"]["follows"]["count"]
-        foer_cnt = j["user"]["followed_by"]["count"]
-        write_cached_fo_and_foer_cnt(f, fo_cnt, foer_cnt)
-        return fo_cnt, foer_cnt
-    else:
-        return -1, -1
+    foer_cnt, fo_cnt = user_utils.get_follow_counts(u)
+    return fo_cnt, foer_cnt  # note: order is reversed
 
 
 for fid, fname in utils.get_all_followers_gen(bot):
     fo_cnt, foer_cnt = get_fo_and_foer_cnt(fname)
-    if fo_cnt != -1 and foer_cnt != -1:
+    if fo_cnt != None and foer_cnt != None:
         score = update_score(score, fo_cnt, foer_cnt)
 
 print('score:', score)
