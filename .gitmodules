@@ -1,3 +1,0 @@
-[submodule "instabot.py"]
-	path = instagram/instabot_libs
-	url = https://github.com/ziliangpeng/instabot.py.git
