@@ -117,7 +117,7 @@ class Fofo(Thread):
             i += 1
             print('starting to steal from %d-th: %s' % (i, name))
             j = 0
-            for _id, _name in utils.get_all_followers_gen(self.bot, uid=id, max=2000):
+            for _id, _name in utils.get_all_followers_gen(self.bot, uid=id, max=100):
                 j += 1
                 k += 1
                 print('inspecting %d-th foer(%s) of %d-th foer(%s)' % \
