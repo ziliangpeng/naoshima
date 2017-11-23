@@ -78,7 +78,6 @@ class GenFo(Thread):
         self.username = u
         self.bot = datas[u].bot
         self.queue_to_fo = datas[u].queue_to_fo
-        self.poked = datas[u].poked
 
     # def run(self):
     #     while True:
