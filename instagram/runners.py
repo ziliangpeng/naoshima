@@ -126,7 +126,7 @@ class Fofo(Thread):
                         k += 1
                         print('inspecting %d-th foer(%s) of %d-th foer(%s), overall %d-th, %d-th loop' % \
                               (j, _name, i, name, k, loop))
-                        if data.is_followed(_id):
+                        if data.is_followed(self.u, _id):
                             print('Already followed.')
                         else:
                             if not Filter(_name, conditions).apply():
@@ -159,7 +159,7 @@ class StealSuperBrand(Thread):
                 for id, name in utils.get_all_followers_gen(self.bot, brand_id, BATCH_SIZE):
                     i += 1
                     print('inspecting %d-th foer of %s' % (i, brand))
-                    if data.is_followed(id):
+                    if data.is_followed(self.u, id):
                         print('%s: Skip %d-th follower %s(%s). Already followed.' % \
                               (str(datetime.datetime.now()), i, str(id), str(name)))
                     else:
@@ -192,7 +192,7 @@ class StealFoers(Thread):
                 print('skip head %d-th followers' % i)
                 continue
 
-            if data.is_followed(id):
+            if data.is_followed(self.username, id):
                 print('%s: Skip %d-th follower %s(%s). Already followed.' % \
                       (str(datetime.datetime.now()), i, str(id), str(name)))
             else:
@@ -229,7 +229,7 @@ class DoFo(Thread):
                 f = self.queue_to_fo.get()
                 r = self.bot.follow(f)
                 if r.status_code == 200:
-                    data.follow(f)
+                    data.set_followed(self.username, f)
                 else:
                     print('fail to follow, stats code:', r.status_code)
                     # TODO: cool down?
