@@ -194,6 +194,8 @@ class DoFo(Thread):
         comment_cooldown_remain = 0
         while True:
             try:
+                # TODO: this is not UniqueQueue any more so possibly there's double-following, not a big deal
+                # but can use a fix
                 f = self.queue_to_fo.get()
                 r = self.bot.follow(f)
                 if r.status_code == 200:
