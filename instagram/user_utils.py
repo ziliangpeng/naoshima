@@ -4,6 +4,7 @@ import time
 import requests
 import data
 import urllib.request, urllib.parse, urllib.error
+from utils import _json_path
 
 CACHED_USER_JSON = pylru.lrucache(1024)
 
@@ -137,10 +138,3 @@ def get_follow_counts(u):
     return get_followed_by_count(u), get_follows_count(u)
 
 
-def _json_path(j, paths):
-    for k in paths:
-        if k in j:
-            j = j[k]
-        else:
-            return None
-    return j

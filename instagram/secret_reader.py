@@ -1,4 +1,5 @@
 import json
+from utils import _json_path
 
 
 def load_secrets():
@@ -37,12 +38,7 @@ def load_redis_port():
     return _load(["redis", "port"])
 
 
-def _load(keys, default=None):
+def _load(paths, default=None):
     with open('secret.local', 'r') as f:
         j = json.loads(f.read())
-        for k in keys:
-            if k in j:
-                j = j[k]
-            else:
-                return default
-        return j
+        return _json_path(j, paths) or default
