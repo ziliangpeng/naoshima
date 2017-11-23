@@ -21,7 +21,7 @@ WHITELIST_USER = secret_reader.load_whitelist()
 class GenUnfo(Thread):
     def __init__(self, u):
         Thread.__init__(self)
-        self.username = u
+        self.u = u
         self.user_id = utils.get_user_id(u)
         self.bot = datas[u].bot
         self.queue_to_unfo = datas[u].queue_to_unfo
@@ -56,7 +56,7 @@ class GenUnfo(Thread):
 class DoUnfo(Thread):
     def __init__(self, u):
         Thread.__init__(self)
-        self.username = u
+        self.u = u
         self.bot = datas[u].bot
         self.queue_to_unfo = datas[u].queue_to_unfo
 
@@ -145,7 +145,7 @@ class StealSuperBrand(Thread):
 class StealFoers(Thread):
     def __init__(self, u, steal_name):
         Thread.__init__(self)
-        self.username = u
+        self.u = u
         self.bot = datas[u].bot
         self.steal_id = utils.get_user_id(steal_name)
         self.queue_to_fo = datas[u].queue_to_fo
@@ -161,7 +161,7 @@ class StealFoers(Thread):
                 print('skip head %d-th followers' % i)
                 continue
 
-            if data.is_followed(self.username, id):
+            if data.is_followed(self.u, id):
                 print('%s: Skip %d-th follower %s(%s). Already followed.' % \
                       (str(datetime.datetime.now()), i, str(id), str(name)))
             else:
@@ -177,7 +177,7 @@ class StealFoers(Thread):
 class DoFo(Thread):
     def __init__(self, u):
         Thread.__init__(self)
-        self.username = u
+        self.u = u
         self.bot = datas[u].bot
         self.queue_to_fo = datas[u].queue_to_fo
         self.like_per_fo = datas[u].like_per_fo
@@ -199,7 +199,7 @@ class DoFo(Thread):
                 f = self.queue_to_fo.get()
                 r = self.bot.follow(f)
                 if r.status_code == 200:
-                    data.set_followed(self.username, f)
+                    data.set_followed(self.u, f)
                 else:
                     print('fail to follow, stats code:', r.status_code)
                     # TODO: cool down?

@@ -61,25 +61,6 @@ def get_follows(bot, uid=USER_ID):
     raise BaseException("Fail to get follows")
 
 
-# def get_followers(bot, uid=USER_ID):
-#     time.sleep(3)  # initial delay
-#     for retry in xrange(5):
-#         time.sleep(2)  # retry delay
-#         url = INSTAGRAM_GRAPPHQL_QUERY % \
-#               (QUERY_IDs['followers'], urllib.quote_plus(make_query_cursor(uid)))
-#         r = bot.s.get(url)
-#         if r.status_code != 200:
-#             print 'error in get followers, error code', r.status_code
-#             continue
-#         all_data = json.loads(r.text)
-#         followers = all_data["data"]["user"]["edge_followed_by"]["edges"]
-#         ret = {}
-#         for f in followers:
-#             ret[f["node"]["id"]] = f["node"]["username"]
-#         return ret
-#     raise BaseException("Fail to get followers")
-
-
 def get_all_followers_gen(bot, uid=USER_ID, max=0):
     count = 0
     cursor = ""
@@ -113,42 +94,9 @@ def get_all_followers(bot):
     return ret
 
 
-# def find_fofo(bot, n, id_name_dict, poked):
-#     follows = get_follows(bot)
-#     followers = get_followers(bot)
-#     id_name_dict.update(follows)
-#     id_name_dict.update(followers)
-#     fo_list = set()
-#     while len(fo_list) < n:
-#         chosen_foer = random.choice(list(follows.keys()))
-#         foer_foer = get_followers(bot, chosen_foer)
-#         id_name_dict.update(foer_foer)
-#         fo_list |= set(foer_foer) - set(follows) - poked
-#         fo_list.discard(USER_ID)
-#     return fo_list
-
-
-# def get_user_json(username):
-#     if username in CACHED_USER_JSON:
-#         return CACHED_USER_JSON[username]
-#     else:
-#         time.sleep(3)  # initial delay
-#         url = 'https://www.instagram.com/%s/?__a=1' % username
-#         for retry in range(7):
-#             r = requests.get(url)
-#             if r.status_code == 200:
-#                 j = r.json()
-#                 CACHED_USER_JSON[username] = j
-#                 return j
-#             else:
-#                 time.sleep(5)
-#                 continue
-#     raise BaseException("Fail to get user json")
-
-
-def get_post_ids(username):
+def get_post_ids(u):
     try:
-        j = get_user_json(username)
+        j = get_user_json(u)
         posts = j["user"]["media"]["nodes"]
         result = []
         for post in posts:
@@ -158,9 +106,9 @@ def get_post_ids(username):
         return []
 
 
-def get_recent_post_epoch(username, default=None):
+def get_recent_post_epoch(u, default=None):
     try:
-        j = get_user_json(username)
+        j = get_user_json(u)
         posts = j["user"]["media"]["nodes"]
         if len(posts) == 0:
             return -1
@@ -174,9 +122,9 @@ def get_recent_post_epoch(username, default=None):
             return default
 
 
-def get_biography(username, default=''):
+def get_biography(u, default=''):
     try:
-        j = get_user_json(username)
+        j = get_user_json(u)
         bio = j["user"]["biography"]
         return bio
     except BaseException as e:
@@ -187,9 +135,9 @@ def get_biography(username, default=''):
             return default
 
 
-def get_user_id(username, default=''):
+def get_user_id(u, default=''):
     try:
-        j = get_user_json(username)
+        j = get_user_json(u)
         id = j["user"]["id"]
         return id
     except BaseException as e:
@@ -200,9 +148,9 @@ def get_user_id(username, default=''):
             return default
 
 
-def get_follow_counts(username, default=None):
+def get_follow_counts(u, default=None):
     try:
-        j = get_user_json(username)
+        j = get_user_json(u)
         return int(j["user"]["followed_by"]["count"]), int(j["user"]["follows"]["count"])
     except BaseException as e:
         if default is None:
