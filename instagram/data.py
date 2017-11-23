@@ -7,9 +7,10 @@ REDIS_DB = 1
 
 NAMESPACE_JSON = 'user_json:'
 NAMESPACE_FOLLOWED = 'followed:'
+NAMESPACE_ID_NAME_MAP = 'id_to_name:'
 
 
-JSON_TTL = 3600 * 24 * 7  # in seconds
+DEFAULT_TTL = 3600 * 24 * 7  # in seconds
 
 
 redis_host = secret_reader.load_redis_host()
@@ -30,7 +31,18 @@ def get_json_by_username(u):
 
 
 def set_json_by_username(u, j):
-    _redis.set(NAMESPACE_JSON + str(u), json.dumps(j), JSON_TTL)
+    _redis.set(NAMESPACE_JSON + str(u), json.dumps(j), DEFAULT_TTL)
+
+
+def set_id_to_name(i, u):
+    _redis.set(NAMESPACE_ID_NAME_MAP + str(i), str(u))
+
+
+def get_id_to_name(i):
+    ret = _redis.get(NAMESPACE_ID_NAME_MAP + str(i))
+    if not ret:
+        raise BaseException("id-name mapping for %s should present" % (i))
+    return ret
 
 
 def set_followed(u, i):

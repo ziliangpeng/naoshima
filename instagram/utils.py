@@ -3,6 +3,7 @@ import random
 import time
 import urllib.request, urllib.parse, urllib.error
 from user_utils import get_user_json
+import data
 
 import pylru
 import requests
@@ -52,7 +53,10 @@ def get_follows(bot, uid=USER_ID):
         follows = all_data["data"]["user"]["edge_follow"]["edges"]
         ret = {}
         for f in follows:
-            ret[f["node"]["id"]] = f["node"]["username"]
+            i = f["node"]["id"]
+            u = f["node"]["username"]
+            data.set_id_to_name(i, u)
+            ret[i] = u
         return ret
     raise BaseException("Fail to get follows")
 
