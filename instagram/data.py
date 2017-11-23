@@ -42,7 +42,7 @@ def get_id_to_name(i):
     ret = _redis.get(NAMESPACE_ID_NAME_MAP + str(i))
     if not ret:
         raise BaseException("id-name mapping for %s should present" % (i))
-    return ret
+    return ret.decode()  #byte array to string
 
 
 def set_followed(u, i):
