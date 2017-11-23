@@ -25,14 +25,13 @@ class GenUnfo(Thread):
         self.user_id = utils.get_user_id(u)
         self.bot = datas[u].bot
         self.queue_to_unfo = datas[u].queue_to_unfo
-        self.id_name_dict = data_repo.id_name_dict
 
     def run(self):
         while True:
             try:
                 follows = utils.get_follows(self.bot, self.user_id)
                 # followers = utils.get_followers(self.bot, self.user_id)
-                self.id_name_dict.update(follows)
+                # self.id_name_dict.update(follows)
                 # self.id_name_dict.update(followers)
                 if len(follows) < 5000:
                     print('Only %d follows. Pause.' % len(follows))
@@ -40,13 +39,13 @@ class GenUnfo(Thread):
                     continue
 
                 n = 100
-                filtered_user_ids = [x for x in follows if self.id_name_dict[x] not in WHITELIST_USER]
+                filtered_user_ids = [x for x in follows if data.get_id_to_name(x) not in WHITELIST_USER]
                 to_unfo = random.sample(filtered_user_ids, n)
                 random.shuffle(to_unfo)
                 for i, f in enumerate(to_unfo):
                     print('%s: #%03d gen unfollow: %s' % \
                           (str(datetime.datetime.now()),
-                           i, self.id_name_dict[f]))
+                           i, data.get_id_to_name(f)))
                     self.queue_to_unfo.put(f)
                 time.sleep(10)
             except BaseException as e:
@@ -79,7 +78,6 @@ class GenFo(Thread):
         self.username = u
         self.bot = datas[u].bot
         self.queue_to_fo = datas[u].queue_to_fo
-        self.id_name_dict = data_repo.id_name_dict
         self.poked = datas[u].poked
 
     # def run(self):
@@ -106,7 +104,6 @@ class Fofo(Thread):
         self.u = u
         self.bot = datas[u].bot
         self.queue_to_fo = datas[u].queue_to_fo
-        self.id_name_dict = data_repo.id_name_dict
         print('user %s to FOFO' % u)
 
     def run(self):
@@ -133,7 +130,7 @@ class Fofo(Thread):
                                 print('%s(%d) has not passed filter' % (_name, k))
                             else:
                                 print('Steal follower %s' % (str(_name)))
-                                self.id_name_dict[int(_id)] = _name
+                                data.set_id_to_name(_id, _name)
                                 self.queue_to_fo.put(_id)
             except BaseException as e:
                 print(e)
@@ -146,7 +143,6 @@ class StealSuperBrand(Thread):
         self.u = u
         self.bot = datas[u].bot
         self.queue_to_fo = datas[u].queue_to_fo
-        self.id_name_dict = data_repo.id_name_dict
 
     def run(self):
         conditions = secret_reader.load_conditions()
@@ -168,7 +164,7 @@ class StealSuperBrand(Thread):
                         else:
                             print('%s: Steal %d-th follower %s(%s)' % \
                                   (str(datetime.datetime.now()), i, str(id), str(name)))
-                            self.id_name_dict[int(id)] = name
+                            data.set_id_to_name(id, name)
                             self.queue_to_fo.put(id)
 
 
@@ -179,7 +175,6 @@ class StealFoers(Thread):
         self.bot = datas[u].bot
         self.steal_id = utils.get_user_id(steal_name)
         self.queue_to_fo = datas[u].queue_to_fo
-        self.id_name_dict = data_repo.id_name_dict
         print('to steal user %s, id %d' % (steal_name, int(self.steal_id)))
 
     def run(self):
@@ -201,7 +196,7 @@ class StealFoers(Thread):
                 else:
                     print('%s: Steal %d-th follower %s(%s)' % \
                           (str(datetime.datetime.now()), i, str(id), str(name)))
-                    self.id_name_dict[int(id)] = name
+                    data.set_id_to_name(id, name)
                     self.queue_to_fo.put(id)
 
 
@@ -211,7 +206,6 @@ class DoFo(Thread):
         self.username = u
         self.bot = datas[u].bot
         self.queue_to_fo = datas[u].queue_to_fo
-        self.id_name_dict = data_repo.id_name_dict
         self.like_per_fo = datas[u].like_per_fo
         self.comment_pool = datas[u].comment_pool
 
@@ -235,7 +229,7 @@ class DoFo(Thread):
                     # TODO: cool down?
                     continue
 
-                username = self.id_name_dict[int(f)]
+                username = data.get_id_to_name(f)
                 post_ids = utils.get_post_ids(username)
 
                 # to like
