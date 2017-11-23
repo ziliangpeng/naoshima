@@ -5,7 +5,7 @@ from threading import Thread
 
 import data
 import secret_reader
-import utils
+import user_utils
 from filter import Filter
 import data_repo
 from data_repo import datas
@@ -22,14 +22,14 @@ class GenUnfo(Thread):
     def __init__(self, u):
         Thread.__init__(self)
         self.u = u
-        self.user_id = utils.get_user_id(u)
+        self.user_id = user_utils.get_user_id(u)  # TODO: check null
         self.bot = datas[u].bot
         self.queue_to_unfo = datas[u].queue_to_unfo
 
     def run(self):
         while True:
             try:
-                follows = utils.get_follows(self.bot, self.user_id)
+                follows = user_utils.get_follows(self.bot, self.user_id)
                 # followers = utils.get_followers(self.bot, self.user_id)
                 # self.id_name_dict.update(follows)
                 # self.id_name_dict.update(followers)
@@ -76,11 +76,13 @@ class Fofo(Thread):
     def __init__(self, u):
         Thread.__init__(self)
         self.u = u
+        self.uid = user_utils.get_user_id(u)
         self.bot = datas[u].bot
         self.queue_to_fo = datas[u].queue_to_fo
         print('user %s to FOFO' % u)
 
     def run(self):
+        uid = user_utils.get_user_id(self.u)
         conditions = secret_reader.load_conditions()
         k = 0
         loop = 0
@@ -88,11 +90,11 @@ class Fofo(Thread):
             loop += 1
             try:
                 i = 0
-                for id, name in utils.get_all_followers_gen(self.bot, max=200):
+                for id, name in user_utils.get_all_followers_gen(self.bot, self.uid, max=200):
                     i += 1
                     print('starting to steal from %d-th: %s' % (i, name))
                     j = 0
-                    for _id, _name in utils.get_all_followers_gen(self.bot, uid=id, max=100):
+                    for _id, _name in user_utils.get_all_followers_gen(self.bot, id, max=100):
                         j += 1
                         k += 1
                         print('inspecting %d-th foer(%s) of %d-th foer(%s), overall %d-th, %d-th loop' % \
@@ -125,8 +127,8 @@ class StealSuperBrand(Thread):
         while True:
             for brand in BIG_LIST:
                 i = 0
-                brand_id = utils.get_user_id(brand)
-                for id, name in utils.get_all_followers_gen(self.bot, brand_id, BATCH_SIZE):
+                brand_id = user_utils.get_user_id(brand) # TODO: check null
+                for id, name in user_utils.get_all_followers_gen(self.bot, brand_id, BATCH_SIZE):
                     i += 1
                     print('inspecting %d-th foer of %s' % (i, brand))
                     if data.is_followed(self.u, id):
@@ -147,7 +149,7 @@ class StealFoers(Thread):
         Thread.__init__(self)
         self.u = u
         self.bot = datas[u].bot
-        self.steal_id = utils.get_user_id(steal_name)
+        self.steal_id = user_utils.get_user_id(steal_name)  # TODO: check null
         self.queue_to_fo = datas[u].queue_to_fo
         print('to steal user %s, id %d' % (steal_name, int(self.steal_id)))
 
@@ -155,7 +157,7 @@ class StealFoers(Thread):
         conditions = secret_reader.load_conditions()
         i = 0
         skip_head = 0  # hack: skip something already processed
-        for id, name in utils.get_all_followers_gen(self.bot, self.steal_id):
+        for id, name in user_utils.get_all_followers_gen(self.bot, self.steal_id):
             i += 1
             if i < skip_head:
                 print('skip head %d-th followers' % i)
@@ -206,7 +208,7 @@ class DoFo(Thread):
                     continue
 
                 username = data.get_id_to_name(f)
-                post_ids = utils.get_post_ids(username)
+                post_ids = user_utils.get_post_ids(username)
 
                 # to like
                 if len(post_ids) > self.like_per_fo:

@@ -2,7 +2,7 @@ import datetime
 import time
 from datetime import timedelta
 
-import utils
+import user_utils
 
 date = datetime.datetime.now
 
@@ -25,7 +25,10 @@ class Filter:
 
     def max_follows(self, threshold):
         followed_by_count, follows_count = \
-            utils.get_follow_counts(self.name, (0, 0))
+            user_utils.get_follow_counts(self.name)
+        if followed_by_count == None or follows_count == None:
+            print('error occurred when investigating ', self.name)
+            return False
         if follows_count > threshold:
             print('%s: follower %s has %d follows(>%d). It is an overwhelmed stalker' % \
                   (date(), self.name, follows_count, threshold))
@@ -34,7 +37,10 @@ class Filter:
 
     def min_ratio(self, ratio_threshold):
         followed_by_count, follows_count = \
-            utils.get_follow_counts(self.name, (0, 0))
+            user_utils.get_follow_counts(self.name)
+        if followed_by_count == None or follows_count == None:
+            print('error occurred when investigating ', self.name)
+            return False
         if follows_count < followed_by_count * ratio_threshold:
             print('%s: follower %s has %d follows and %d followed_by(<%f). Not likely to follow back' % \
                   (date(), self.name, follows_count, followed_by_count, ratio_threshold))
@@ -42,7 +48,7 @@ class Filter:
         return True
 
     def fresh(self, fresh_threshold):
-        recent_post_epoch = utils.get_recent_post_epoch(self.name, -1)
+        recent_post_epoch = user_utils.get_recent_post_epoch(self.name)
         now_epoch = int(time.time())
         epoch_diff = timedelta(seconds=now_epoch - recent_post_epoch)
         td_threshold = timedelta(seconds=fresh_threshold)

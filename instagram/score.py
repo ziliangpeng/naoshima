@@ -1,7 +1,8 @@
 import requests
 
 import auth
-import utils
+import secret_reader
+# import utils
 import user_utils
 
 score = 0.0
@@ -26,16 +27,6 @@ def get_cached_fo_and_foer_cnt(name):
     return fo_cnt, foer_cnt
 
 
-# def write_cached_fo_and_foer_cnt(name, fo_cnt, foer_cnt):
-#     fo_cnt_filename = FO_CNT_FILE_PATTERN % name
-#     foer_cnt_filename = FOER_CNT_FILE_PATTERN % name
-#     with open(fo_cnt_filename, 'w+') as f:
-#         f.write(str(fo_cnt))
-#     with open(foer_cnt_filename, 'w+') as f:
-#         f.write(str(foer_cnt))
-#     return fo_cnt, foer_cnt
-
-
 def get_fo_and_foer_cnt(u):
     try:
         return get_cached_fo_and_foer_cnt(u)
@@ -45,7 +36,8 @@ def get_fo_and_foer_cnt(u):
     return fo_cnt, foer_cnt  # note: order is reversed
 
 
-for fid, fname in utils.get_all_followers_gen(bot):
+uid = secret_reader.load_user_id()
+for fid, fname in user_utils.get_all_followers_gen(bot, uid):
     fo_cnt, foer_cnt = get_fo_and_foer_cnt(fname)
     if fo_cnt != None and foer_cnt != None:
         score = update_score(score, fo_cnt, foer_cnt)
