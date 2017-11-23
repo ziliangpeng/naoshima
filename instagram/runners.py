@@ -109,7 +109,7 @@ class Fofo(Thread):
                                 data.set_id_to_name(_id, _name)
                                 self.queue_to_fo.put(_id)
             except BaseException as e:
-                print(e)
+                print('error', e)
                 pass
 
 
