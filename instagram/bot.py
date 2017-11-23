@@ -2,7 +2,7 @@ import sys
 import time
 import secret_reader
 
-from runners import GenFo, DoFo, GenUnfo, DoUnfo, StealFoers, Fofo, StealSuperBrand
+from runners import DoFo, GenUnfo, DoUnfo, StealFoers, Fofo, StealSuperBrand
 
 
 username = secret_reader.load_secrets()[0]
