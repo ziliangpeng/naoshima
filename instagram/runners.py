@@ -72,31 +72,6 @@ class DoUnfo(Thread):
                 print(e)
 
 
-class GenFo(Thread):
-    def __init__(self, u):
-        Thread.__init__(self)
-        self.username = u
-        self.bot = datas[u].bot
-        self.queue_to_fo = datas[u].queue_to_fo
-
-    # def run(self):
-    #     while True:
-    #         try:
-    #             n = 100
-    #             fo_ids = random.sample(utils.find_fofo(
-    #                 self.bot, n, self.id_name_dict, self.poked), n)
-    #             for i, f in enumerate(fo_ids):
-    #                 print '%s: #%03d gen follow: %s' % \
-    #                       (str(datetime.datetime.now()),
-    #                        i, self.id_name_dict[f])
-    #                 self.queue_to_fo.put(f)
-    #                 self.poked.add(f)
-    #             time.sleep(10)
-    #         except BaseException as e:
-    #             print 'Error in GenFo'
-    #             print e
-
-
 class Fofo(Thread):
     def __init__(self, u):
         Thread.__init__(self)

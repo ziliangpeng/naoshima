@@ -19,11 +19,7 @@ if __name__ == '__main__':
     t.start()
 
     for cmd in sys.argv[1:]:
-        if cmd == 'fo':
-            t = GenFo(username)
-            t.daemon = True
-            t.start()
-        elif cmd == 'unfo':
+        if cmd == 'unfo':
             t = GenUnfo(username)
             t.daemon = True
             t.start()
