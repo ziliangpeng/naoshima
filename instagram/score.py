@@ -4,6 +4,7 @@ import auth
 import secret_reader
 # import utils
 import user_utils
+import sys
 
 score = 0.0
 bot = auth.auth(log_mod=2)  # no log
@@ -36,7 +37,11 @@ def get_fo_and_foer_cnt(u):
     return fo_cnt, foer_cnt  # note: order is reversed
 
 
-uid = secret_reader.load_user_id()
+if len(sys.argv) > 1:
+    u = sys.argv[1]
+    uid = user_utils.get_user_id(u)
+else:
+    uid = secret_reader.load_user_id()
 for fid, fname in user_utils.get_all_followers_gen(bot, uid):
     fo_cnt, foer_cnt = get_fo_and_foer_cnt(fname)
     if fo_cnt != None and foer_cnt != None:
