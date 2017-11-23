@@ -53,7 +53,6 @@ def get_follows(bot, uid=USER_ID):
         follows = all_data["data"]["user"]["edge_follow"]["edges"]
         ret = {}
         for f in follows:
-            # ret[f["node"]["id"]] = f["node"]["username"]
             i = f["node"]["id"]
             u = f["node"]["username"]
             data.set_id_to_name(i, u)
