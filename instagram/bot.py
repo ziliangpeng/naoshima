@@ -1,39 +1,43 @@
 import sys
 import time
 import secret_reader
+import data_repo
 
 from runners import DoFo, GenUnfo, DoUnfo, StealFoers, Fofo, StealSuperBrand
 
 
-username = secret_reader.load_secrets()[0]
+d = data_repo.datas[0]
+u = d.u
 
 if __name__ == '__main__':
     # Always DoFo
-    t = DoFo(username)
+    t = DoFo(u)
     t.daemon = True
     t.start()
 
     # Always DoUnfo
-    t = DoUnfo(username)
+    t = DoUnfo(u)
     t.daemon = True
     t.start()
 
-    for cmd in sys.argv[1:]:
+    cmds = secret_reader.load_commands()
+
+    for cmd in cmds:
         if cmd == 'unfo':
-            t = GenUnfo(username)
+            t = GenUnfo(u)
             t.daemon = True
             t.start()
         elif cmd.startswith('steal'):
             steal_name = cmd[cmd.index('(') + 1: cmd.index(')')]
-            t = StealFoers(username, steal_name)
+            t = StealFoers(u, steal_name)
             t.daemon = True
             t.start()
         elif cmd == 'fofo':
-            t = Fofo(username)
+            t = Fofo(u)
             t.daemon = True
             t.start()
         elif cmd == 'superbrand' or cmd == 'sb':
-            t = StealSuperBrand(username)
+            t = StealSuperBrand(u)
             t.daemon = True
             t.start()
         else:
