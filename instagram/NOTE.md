@@ -35,3 +35,15 @@ This is an experiment of finding the right audience, improve targeting, market s
 You will produce a lot of content, and you will never be the best, there is no such thing as 'best' in content creation.
 
 But you can always find a lot of audience.
+
+
+## Migration Note - Nov 2017
+
+I did something I find interesting during this month. I needed to re-architect the whole system and adopt many new
+technology and best practices, e.g. better code reusability, storage service, single program multi users, docker
+deployment, etc.
+
+To achieve that, the system needed to be change one step at a time, to progress towards the end goal. Some steps are
+prerequisite of other steps, and the interesting part is to slowly change/roll-out stuff with a master plan.
+
+It always sounds cool to have a master plan.
