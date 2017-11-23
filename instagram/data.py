@@ -52,16 +52,3 @@ def set_followed(u, i):
 def is_followed(u, i):
     return _redis.sismember(NAMESPACE_FOLLOWED + str(u), str(i))
 
-
-# Below is back fill code to put .txt data into redis
-# once ran for every user, below code can be removed
-data_filename = 'followed.txt'
-my_u = secret_reader.load_secrets()[0]
-
-with open(data_filename, 'r+') as fr:
-    for id in fr.readlines():
-        id = id.strip()
-        if not is_followed(my_u, id):
-            print('back filling %s to redis' % (id))
-            set_followed(my_u, id)
-
