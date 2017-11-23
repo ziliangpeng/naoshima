@@ -11,9 +11,6 @@ class Data:
 FO_QUEUE_SIZE = 50
 UNFO_QUEUE_SIZE = 50
 
-queue_to_fo = Queue(FO_QUEUE_SIZE)
-queue_to_unfo = Queue(UNFO_QUEUE_SIZE)
-
 
 datas = {}
 d1 = Data()
