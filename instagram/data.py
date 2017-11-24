@@ -58,5 +58,6 @@ def is_followed(u, i):
 
 
 def set_followed_back(u, i):
+    # TODO: when everyone backfilled followed-back data (by running score.py for everyone), start to record date
     _redis.sadd(NAMESPACE_FOLLOWED_BACK + str(u), str(i))
 
