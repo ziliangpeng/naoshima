@@ -4,6 +4,7 @@ import auth
 import secret_reader
 import user_utils
 import sys
+import time
 import data
 
 score = 0.0
@@ -49,5 +50,9 @@ for fid, fname in user_utils.get_all_followers_gen(bot, uid):
     fo_cnt, foer_cnt = get_fo_and_foer_cnt(fname)
     if fo_cnt != None and foer_cnt != None:
         score = update_score(score, fo_cnt, foer_cnt)
+    # if we run this for every user, and every user has thousands of followers, we will hit rate limit soon and
+    # it does not scale. We relax the algo to calculate score once every day, and put gap between data fetching.
+    # When followers number further grows, we'll need to relax the frequency even more, e.g. calculate once every 2 days
+    time.sleep(1)  # data fetch has a 1s delay, we make it 2s
 
 print('score:', score)
