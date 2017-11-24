@@ -15,6 +15,10 @@ NAMESPACE_ID_NAME_MAP = 'id_to_name:'
 NAMESPACE_POSTED = 'posted:'
 
 
+KEY_POST_ID_CODE_MAP = 'post_id_to_code'
+KEY_POST_ID_TIME_MAP = 'post_id_to_time'
+
+
 # I increased it from 7 days to 30 days. This hurts the accuracy especially freshness but this is fine
 # we are mining user from a huge sea, we may miss some users but greatly improve performance.
 DEFAULT_TTL = 3600 * 24 * 30  # in seconds
@@ -65,7 +69,9 @@ def set_followed_back(u, i):
     _redis.sadd(NAMESPACE_FOLLOWED_BACK + str(u), str(i))
 
 
-def set_posted(u, i):
+def set_posted(u, i, code):
+    _redis.hset(KEY_POST_ID_CODE_MAP, str(i), str(code))
+    _redis.hset(KEY_POST_ID_TIME_MAP, str(i), int(time.time()))
     _redis.sadd(NAMESPACE_POSTED + str(u), str(i))
 
 
