@@ -156,7 +156,14 @@ class StealSimilarTo(Thread):
     def run(self):
         conditions = secret_reader.load_conditions()
         star_queue = Queue()
-        star_queue.put(self.seed_name)
+        star = self.seed_name
+        next_stars = user_utils.related_users(self.bot, star)[:10]
+        random.shuffle(next_stars)
+        print('next stars', next_stars)
+        for ns in next_stars:
+            star_queue.put(ns)
+
+        # star_queue.put(self.seed_name)
         BATCH_SIZE = 500
         MAX_QUEUE_SIZE=100
         while True:
