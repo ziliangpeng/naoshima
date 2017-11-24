@@ -12,6 +12,7 @@ NAMESPACE_FOLLOW_DATE = 'follow_date:'
 NAMESPACE_FOLLOWED_BACK = 'followed_back:'
 NAMESPACE_FOLLOWED_BACK_DATE = 'followed_back_date:'
 NAMESPACE_ID_NAME_MAP = 'id_to_name:'
+NAMESPACE_POSTED = 'posted:'
 
 
 # I increased it from 7 days to 30 days. This hurts the accuracy especially freshness but this is fine
@@ -63,3 +64,10 @@ def set_followed_back(u, i):
     # TODO: when everyone backfilled followed-back data (by running score.py for everyone), start to record date
     _redis.sadd(NAMESPACE_FOLLOWED_BACK + str(u), str(i))
 
+
+def set_posted(u, i):
+    _redis.sadd(NAMESPACE_POSTED + str(u), str(i))
+
+
+def is_posted(u, i):
+    return _redis.sismember(NAMESPACE_POSTED + str(u), str(i))
