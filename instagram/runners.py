@@ -161,7 +161,9 @@ class StealSimilarTo(Thread):
         MAX_QUEUE_SIZE=100
         while True:
             star = star_queue.get()
-            for ns in user_utils.related_users(self.bot, star)[:10]:
+            next_stars = user_utils.related_users(self.bot, star)[:10]
+            random.shuffle(next_stars)
+            for ns in next_stars:
                 if star_queue.qsize() < MAX_QUEUE_SIZE:
                     star_queue.put(ns)
             print('stealing from ', star)
