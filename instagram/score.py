@@ -2,9 +2,9 @@ import requests
 
 import auth
 import secret_reader
-# import utils
 import user_utils
 import sys
+import data
 
 score = 0.0
 bot = auth.auth(log_mod=2)  # no log
@@ -41,8 +41,11 @@ if len(sys.argv) > 1:
     u = sys.argv[1]
     uid = user_utils.get_user_id(u)
 else:
-    uid = secret_reader.load_user_id()
+    u = secret_reader.load_secrets()[0]
+    uid = user_utils.get_user_id(u)
+
 for fid, fname in user_utils.get_all_followers_gen(bot, uid):
+    data.set_followed_back(u, fid)
     fo_cnt, foer_cnt = get_fo_and_foer_cnt(fname)
     if fo_cnt != None and foer_cnt != None:
         score = update_score(score, fo_cnt, foer_cnt)

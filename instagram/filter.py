@@ -66,7 +66,7 @@ class Filter:
             print('error occurred when investigating ', self.u)
             return False
         if follows_count > followed_by_count * ratio_threshold:
-            print('%s: follower %s has %d follows and %d followed_by(<%f). Over-following.' % \
+            print('%s: follower %s has %d follows and %d followed_by(>%f). Over-following.' % \
                   (date(), self.u, follows_count, followed_by_count, ratio_threshold))
             return False
         return True

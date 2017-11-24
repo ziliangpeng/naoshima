@@ -7,6 +7,7 @@ REDIS_DB = 1
 
 NAMESPACE_JSON = 'user_json:'
 NAMESPACE_FOLLOWED = 'followed:'
+NAMESPACE_FOLLOWED_BACK = 'followed_back:'
 NAMESPACE_ID_NAME_MAP = 'id_to_name:'
 
 
@@ -51,4 +52,8 @@ def set_followed(u, i):
 
 def is_followed(u, i):
     return _redis.sismember(NAMESPACE_FOLLOWED + str(u), str(i))
+
+
+def set_followed_back(u, i):
+    _redis.sadd(NAMESPACE_FOLLOWED_BACK + str(u), str(i))
 
