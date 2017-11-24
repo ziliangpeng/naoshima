@@ -8,6 +8,7 @@ import secret_reader
 import user_utils
 from filter import Filter
 import data_repo
+from queue import Queue
 from data_repo import datas
 
 WHITELIST_USER = secret_reader.load_whitelist()
@@ -142,6 +143,45 @@ class StealSuperBrand(Thread):
                                   (str(datetime.datetime.now()), i, str(id), str(name)))
                             data.set_id_to_name(id, name)
                             self.queue_to_fo.put(id)
+
+
+class StealSimilarTo(Thread):
+    def __init__(self, u, seed_name):
+        Thread.__init__(self)
+        self.u = u
+        self.bot = datas[u].bot
+        self.queue_to_fo = datas[u].queue_to_fo
+        self.seed_name = seed_name
+
+    def run(self):
+        conditions = secret_reader.load_conditions()
+        star_queue = Queue()
+        star_queue.put(self.seed_name)
+        BATCH_SIZE = 1000
+        MAX_QUEUE_SIZE=100
+        while True:
+            star = star_queue.get()
+            for ns in user_utils.related_users(self.bot, star)[:20]:
+                if star_queue.qsize() < MAX_QUEUE_SIZE:
+                    star_queue.put(ns)
+            print('stealing from ', star)
+
+            i = 0
+            star_id = user_utils.get_user_id(star) # TODO: check null
+            for id, name in user_utils.get_all_followers_gen(self.bot, star_id, BATCH_SIZE):
+                i += 1
+                print('inspecting %d-th foer of %s' % (i, star))
+                if data.is_followed(self.u, id):
+                    print('%s: Skip %d-th follower %s(%s). Already followed.' % \
+                          (str(datetime.datetime.now()), i, str(id), str(name)))
+                else:
+                    if not Filter(name, conditions).apply():
+                        print('%s(%d) has not passed filter' % (name, i))
+                    else:
+                        print('%s: Steal %d-th follower %s(%s)' % \
+                              (str(datetime.datetime.now()), i, str(id), str(name)))
+                        data.set_id_to_name(id, name)
+                        self.queue_to_fo.put(id)
 
 
 class StealFoers(Thread):

@@ -3,7 +3,7 @@ import time
 import secret_reader
 import data_repo
 
-from runners import DoFo, GenUnfo, DoUnfo, StealFoers, Fofo, StealSuperBrand
+from runners import DoFo, GenUnfo, DoUnfo, StealFoers, Fofo, StealSuperBrand, StealSimilarTo
 
 
 d = data_repo.datas[0]
@@ -27,9 +27,14 @@ if __name__ == '__main__':
             t = GenUnfo(u)
             t.daemon = True
             t.start()
-        elif cmd.startswith('steal'):
+        elif cmd.startswith('steal('):
             steal_name = cmd[cmd.index('(') + 1: cmd.index(')')]
             t = StealFoers(u, steal_name)
+            t.daemon = True
+            t.start()
+        elif cmd.startswith('stealsimilar('):
+            steal_name = cmd[cmd.index('(') + 1: cmd.index(')')]
+            t = StealSimilarTo(u, steal_name)
             t.daemon = True
             t.start()
         elif cmd == 'fofo':

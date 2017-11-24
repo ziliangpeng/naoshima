@@ -41,11 +41,15 @@ def get_user_json(u):
 QUERY_IDs = {
     'follows': 17874545323001329,
     'followers': 17851374694183129,
+    'related_user': 17845312237175864,
 }
 DEFAULT_PAGINATION = 8000
 QUERY = '{"id":"%s","first":%d}'
 QUERY_WITH_CURSOR = '{"id":"%s","first":%d,"after":"%s"}'
 INSTAGRAM_GRAPPHQL_QUERY = 'https://www.instagram.com/graphql/query/?query_id=%d&variables=%s'
+# for URL decode: https://meyerweb.com/eric/tools/dencoder/
+
+# url: https://www.instagram.com/graphql/query/?query_id=17845312237175864&variables=%7B%22id%22%3A%225261744%22%7D
 
 def make_query_cursor(uid, paginate=DEFAULT_PAGINATION, cursor=""):
     return QUERY_WITH_CURSOR % (str(uid), int(paginate), str(cursor))
@@ -101,6 +105,22 @@ def get_all_followers_gen(bot, uid, max=0):
                 yield f["node"]["id"], f["node"]["username"]
                 count += 1
 
+def related_users(bot, u):
+    # example url:
+    # https://www.instagram.com/graphql/query/?query_id=17845312237175864&variables=%7B%22id%22%3A%225261744%22%7D
+    uid = get_user_id(u)
+    variables = make_query_cursor(uid)
+    url = INSTAGRAM_GRAPPHQL_QUERY % \
+          (QUERY_IDs['related_user'],
+           urllib.parse.quote_plus(make_query_cursor(uid)))
+    r = bot.s.get(url)
+    if r.status_code == 200:
+        j = r.json()
+        return [n["node"]["username"] for n in j["data"]["user"]["edge_chaining"]["edges"]]
+    else:
+        return []
+
+
 def get_post_ids(u):
     j = get_user_json(u)
     posts = _json_path(j, ["user", "media", "nodes"])
@@ -137,4 +157,15 @@ def get_followed_by_count(u):
 def get_follow_counts(u):
     return get_followed_by_count(u), get_follows_count(u)
 
+
+if __name__ == '__main__':
+    # tests
+    import auth
+    b = auth.auth()
+    u = 'instagram'
+    print(u)
+    while True:
+        u = related_users(b, u)[0]
+        print('-->', u)
+        time.sleep(10)
 
