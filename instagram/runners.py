@@ -157,11 +157,11 @@ class StealSimilarTo(Thread):
         conditions = secret_reader.load_conditions()
         star_queue = Queue()
         star_queue.put(self.seed_name)
-        BATCH_SIZE = 1000
+        BATCH_SIZE = 500
         MAX_QUEUE_SIZE=100
         while True:
             star = star_queue.get()
-            for ns in user_utils.related_users(self.bot, star)[:20]:
+            for ns in user_utils.related_users(self.bot, star)[:10]:
                 if star_queue.qsize() < MAX_QUEUE_SIZE:
                     star_queue.put(ns)
             print('stealing from ', star)
