@@ -14,7 +14,9 @@ NAMESPACE_FOLLOWED_BACK_DATE = 'followed_back_date:'
 NAMESPACE_ID_NAME_MAP = 'id_to_name:'
 
 
-DEFAULT_TTL = 3600 * 24 * 7  # in seconds
+# I increased it from 7 days to 30 days. This hurts the accuracy especially freshness but this is fine
+# we are mining user from a huge sea, we may miss some users but greatly improve performance.
+DEFAULT_TTL = 3600 * 24 * 30  # in seconds
 
 
 redis_host = secret_reader.load_redis_host()
