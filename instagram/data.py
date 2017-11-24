@@ -1,13 +1,16 @@
 import secret_reader
 import redis
 import json
+import time
 
 REDIS_DB = 1
 
 
 NAMESPACE_JSON = 'user_json:'
 NAMESPACE_FOLLOWED = 'followed:'
+NAMESPACE_FOLLOW_DATE = 'follow_date:'
 NAMESPACE_FOLLOWED_BACK = 'followed_back:'
+NAMESPACE_FOLLOWED_BACK_DATE = 'followed_back_date:'
 NAMESPACE_ID_NAME_MAP = 'id_to_name:'
 
 
@@ -16,7 +19,6 @@ DEFAULT_TTL = 3600 * 24 * 7  # in seconds
 
 redis_host = secret_reader.load_redis_host()
 redis_port = secret_reader.load_redis_port()
-_redis = None
 if redis_host != None and redis_port != None:
     _redis = redis.Redis(redis_host, redis_port, REDIS_DB)
 else:
@@ -47,6 +49,7 @@ def get_id_to_name(i):
 
 
 def set_followed(u, i):
+    _redis.hset(NAMESPACE_FOLLOW_DATE + str(u), str(i), int(time.time()))
     _redis.sadd(NAMESPACE_FOLLOWED + str(u), str(i))
 
 
