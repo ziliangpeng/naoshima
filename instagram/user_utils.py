@@ -12,7 +12,7 @@ CACHED_USER_JSON = pylru.lrucache(1024)
 def get_user_json(u):
     cached_json = data.get_json_by_username(u)
     if cached_json != None:
-        print('user %s json cached' % (u))
+        # print('user %s json cached' % (u))
         return cached_json
     else:
         # TODO: find proper way to do rate limit
