@@ -159,20 +159,23 @@ class StealSimilarTo(Thread):
         star = self.seed_name
         next_stars = user_utils.related_users(self.bot, star)[:10]
         random.shuffle(next_stars)
+        visited = set()
         print('next stars', next_stars)
         for ns in next_stars:
             star_queue.put(ns)
+            visited.add(ns)
 
         # star_queue.put(self.seed_name)
         BATCH_SIZE = 500
-        MAX_QUEUE_SIZE=100
+        MAX_QUEUE_SIZE=1000
         while True:
             star = star_queue.get()
-            next_stars = user_utils.related_users(self.bot, star)[:10]
+            next_stars = user_utils.related_users(self.bot, star)[:50]
             random.shuffle(next_stars)
             for ns in next_stars:
-                if star_queue.qsize() < MAX_QUEUE_SIZE:
+                if ns not in visited and star_queue.qsize() < MAX_QUEUE_SIZE:
                     star_queue.put(ns)
+                    visited.add(ns)
             print('stealing from ', star)
 
             i = 0
