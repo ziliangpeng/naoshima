@@ -10,7 +10,7 @@ METHODS = {
     'whitelist': (["whitelist"], []),
     'conditions': (["conditions"], {}),
     'commands': (["commands"], ["fofo", "unfo"]),
-    'like_per_fo': (["like_per_fo"], 1),
+    'like_per_fo': (["like_per_fo"], 0),
     'comment_pool': (["comments"], []), # [u"これは素晴らしい写真です", u"私はこの写真が好き"]
     'redis_host': (["redis", "host"], None),
     'redis_port': (["redis", "port"], None)
