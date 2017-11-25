@@ -24,7 +24,8 @@ j = r.json()
 saved = j["user"]["saved_media"]["nodes"]
 random.shuffle(saved)
 print(len(saved), 'saved')
-saved = [s for s in saved if s["__typename"] == "GraphImage"] # other types include GraphSidecar and GraphVideo
+saved = [s for s in saved if s["__typename"] in ["GraphImage", "GraphSidecar"]]
+# other types include GraphSidecar and GraphVideo
 print(len(saved), 'GraphImage')
 saved = [s for s in saved if not data.is_posted(u, s["id"])]
 print(len(saved), 'not posted')
