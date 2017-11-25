@@ -8,6 +8,11 @@ import requests
 from lib.postbot import InstagramAPI
 
 
+"""
+graphql url:
+https://www.instagram.com/graphql/query/?query_id=17885113105037631&variables=%7B%22id%22%3A%226575470602%22%2C%22first%22%3A12%2C%22after%22%3A%22AQDiSrivWlEL4I0UzW00KCMhigZwMiPWpYimS2kihXKea8vIRfRaQR40RyTYA0BLHUxaolww2Li3-omro1cwi7kgoM8G5IK3925HrphwyawHFg%22%7D
+"""
+
 # print separator
 print('\n\n' + '<' * 42)
 print(datetime.datetime.now())
@@ -22,7 +27,7 @@ time.sleep(30)
 r = bot.s.get(my_url)
 j = r.json()
 saved = j["user"]["saved_media"]["nodes"]
-random.shuffle(saved)
+# random.shuffle(saved)
 print(len(saved), 'saved')
 saved = [s for s in saved if s["__typename"] in ["GraphImage", "GraphSidecar"]]
 # other types include GraphSidecar and GraphVideo
