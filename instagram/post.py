@@ -30,7 +30,8 @@ saved = [s for s in saved if not data.is_posted(u, s["id"])]
 print(len(saved), 'not posted')
 
 # choose one to post
-chosen = random.choice(saved)
+# chosen = random.choice(saved)
+chosen = saved[-1] # always use the oldest in backlog
 src = chosen["display_src"]
 print('src', src)
 photo_code = chosen["code"]
