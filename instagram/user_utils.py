@@ -42,6 +42,7 @@ QUERY_IDs = {
     'follows': 17874545323001329,
     'followers': 17851374694183129,
     'related_user': 17845312237175864,
+    'saved_media': 17885113105037631,
 }
 DEFAULT_PAGINATION = 8000
 QUERY = '{"id":"%s","first":%d}'
@@ -49,10 +50,44 @@ QUERY_WITH_CURSOR = '{"id":"%s","first":%d,"after":"%s"}'
 INSTAGRAM_GRAPPHQL_QUERY = 'https://www.instagram.com/graphql/query/?query_id=%d&variables=%s'
 # for URL decode: https://meyerweb.com/eric/tools/dencoder/
 
-# url: https://www.instagram.com/graphql/query/?query_id=17845312237175864&variables=%7B%22id%22%3A%225261744%22%7D
+# related user url:
+# https://www.instagram.com/graphql/query/?query_id=17845312237175864&variables=%7B%22id%22%3A%225261744%22%7D
+
+# saved media url:
+# https://www.instagram.com/graphql/query/?query_id=17885113105037631&variables=%7B%22id%22%3A%226575470602%22%2C%22first%22%3A12%2C%22after%22%3A%22AQDiSrivWlEL4I0UzW00KCMhigZwMiPWpYimS2kihXKea8vIRfRaQR40RyTYA0BLHUxaolww2Li3-omro1cwi7kgoM8G5IK3925HrphwyawHFg%22%7D
 
 def make_query_cursor(uid, paginate=DEFAULT_PAGINATION, cursor=""):
     return QUERY_WITH_CURSOR % (str(uid), int(paginate), str(cursor))
+
+def get_saved_medias(bot, uid):
+    class Media:
+        def __init__(self, photo_id, code, typename, url, caption):
+            self.photo_id = photo_id
+            self.code = code
+            self.typename = typename
+            self.url = url
+            self.caption = caption
+
+    def make_media(n):
+        photo_id = n["id"]
+        code = n["shortcode"]
+        typename = n["__typename"]
+        url = n["display_url"]
+        try:
+            caption = n["edge_media_to_caption"]["edges"][0]["node"]["text"]
+        except:
+            caption = ""
+        return Media(photo_id, code, typename, url, caption)
+
+    url = INSTAGRAM_GRAPPHQL_QUERY % \
+          (QUERY_IDs['saved_media'], urllib.parse.quote_plus(make_query_cursor(uid, paginate=100)))
+    r = bot.s.get(url)
+    if r.status_code != 200:
+        return []
+    j = r.json()
+    nodes = [e["node"] for e in j["data"]["user"]["edge_saved_media"]["edges"]]
+    return [make_media(n) for n in nodes]
+
 
 """ special method, not simple reading. """
 def get_follows(bot, uid):
