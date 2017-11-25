@@ -42,7 +42,10 @@ j = r.json()
 owner = j["graphql"]["shortcode_media"]["owner"]["username"]
 print('owner', owner)
 caption = chosen["caption"] or ""
-caption = 'by %s \n' % owner + caption
+caption = 'by %s \n' % owner + \
+          'https://www.instagram.com/p/%s/' % photo_code + \
+          '\n' + \
+          caption
 caption = caption.replace('@', '')  # do not let anyone know
 print(caption)
 
