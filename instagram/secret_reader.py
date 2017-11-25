@@ -9,6 +9,7 @@ METHODS = {
     'user_id': (["id"], None),
     'whitelist': (["whitelist"], []),
     'conditions': (["conditions"], {}),
+    'max_follow': (["max_follow"], 5000),
     'commands': (["commands"], ["fofo", "unfo"]),
     'like_per_fo': (["like_per_fo"], 0),
     'comment_pool': (["comments"], []), # [u"これは素晴らしい写真です", u"私はこの写真が好き"]
