@@ -1,11 +1,16 @@
 import data
 import time
+import datetime
 import auth
 import secret_reader
 import random
 import requests
 from lib.postbot import InstagramAPI
 
+
+# print separator
+print('\n\n' + '<' * 42)
+print(datetime.datetime.now())
 
 # login
 bot = auth.auth()
