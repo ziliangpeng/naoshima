@@ -77,11 +77,11 @@ def by_graphql(bot, u):
     owner = j["graphql"]["shortcode_media"]["owner"]["username"]
     print('owner', owner)
     caption = chosen.caption
-    caption = 'by %s \n' % owner + \
+    caption = 'by @%s \n' % owner + \
               'https://www.instagram.com/p/%s/' % photo_code + \
               '\n' + \
               caption
-    caption = caption.replace('@', '')  # do not let anyone know
+    # caption = caption.replace('@', '')  # do not let anyone know
     print(caption)
     return src, caption, photo_id, photo_code
 
