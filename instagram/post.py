@@ -29,6 +29,7 @@ print(len(saved), 'GraphImage')
 saved = [s for s in saved if not data.is_posted(u, s["id"])]
 print(len(saved), 'not posted')
 
+
 # choose one to post
 # chosen = random.choice(saved)
 chosen = saved[-1] # always use the oldest in backlog
@@ -68,4 +69,4 @@ InstagramAPI.login() # login
 time.sleep(60)
 success = InstagramAPI.uploadPhoto(FILEPATH, caption=caption)
 if success:
-    data.set_posted(u, photo_id)
+    data.set_posted(u, photo_id, photo_code)
