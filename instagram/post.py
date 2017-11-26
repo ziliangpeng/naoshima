@@ -81,7 +81,7 @@ def by_graphql(bot, u):
               'https://www.instagram.com/p/%s/' % photo_code + \
               '\n' + \
               caption
-    # caption = caption.replace('@', '')  # do not let anyone know
+    caption = caption.replace('@', '')  # do not let anyone know
     print(caption)
     return src, caption, photo_id, photo_code
 
