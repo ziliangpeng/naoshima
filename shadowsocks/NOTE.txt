@@ -1,0 +1,33 @@
+url: https://www.linuxbabe.com/linux-server/setup-your-own-shadowsocks-server-on-debian-ubuntu-centos
+
+How to set up shadowsocks (assume ubuntu)
+
+1. install
+
+sudo apt-get install python-pip python-m2crypto
+sudo pip install shadowsocks
+
+
+2. config
+
+sudo vi /etc/shadowsocks.json
+
+{
+"server":"your_server_ip",
+"server_port":8000,
+"local_port":1080,
+"password":"your_passwd",
+"timeout":600,
+"method":"aes-256-cfb"
+}
+
+
+3. start
+sudo ssserver -c /etc/shadowsocks.json -d start
+
+
+
+Note:
+- shadowsocks is not released to pypi any more, can't get 0.9.0 (required by a new version of a dependency)
+- can install from github .zip, but 0.9.0 zip has the wrong version
+- need to download 0.9.0, unzip, modify version number in setup.py, and pip install from directory
