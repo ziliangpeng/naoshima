@@ -1,5 +1,5 @@
 import pylru
-import json5
+import json
 import time
 import requests
 import data
@@ -102,7 +102,7 @@ def get_follows(bot, uid):
             print('error in get follows, error code', r.status_code)
             time.sleep(2)
             continue
-        all_data = json5.loads(r.text)
+        all_data = json.loads(r.text)
         follows = all_data["data"]["user"]["edge_follow"]["edges"]
         ret = {}
         for f in follows:
@@ -129,7 +129,7 @@ def get_all_followers_gen(bot, uid, max=0):
                 print('error in get followers, error code', r.status_code)
                 time.sleep(10)  # retry delay
                 continue
-            all_data = json5.loads(r.text)
+            all_data = json.loads(r.text)
             followers = all_data["data"]["user"]["edge_followed_by"]["edges"]
             if len(followers) == 0:
                 return
