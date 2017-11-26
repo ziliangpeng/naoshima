@@ -1,6 +1,6 @@
 import secret_reader
 import redis
-import json
+import json5
 import time
 
 REDIS_DB = 1

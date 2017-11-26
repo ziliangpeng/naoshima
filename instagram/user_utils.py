@@ -1,5 +1,5 @@
 import pylru
-import json
+import json5
 import time
 import requests
 import data

@@ -1,4 +1,4 @@
-import json
+import json5
 from utils import _json_path
 
 
