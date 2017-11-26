@@ -61,5 +61,5 @@ def load_secrets():
 
 def _load(paths, default=None):
     with open('secret.local', 'r') as f:
-        j = json.loads(f.read())
+        j = json5.loads(f.read())
         return _json_path(j, paths) or default

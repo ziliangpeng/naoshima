@@ -35,13 +35,13 @@ else:
 def get_json_by_username(u):
     j = _redis.get(NAMESPACE_JSON + str(u))
     if j != None:
-        return json.loads(j)
+        return json5.loads(j)
     else:
         return None
 
 
 def set_json_by_username(u, j):
-    _redis.set(NAMESPACE_JSON + str(u), json.dumps(j), DEFAULT_TTL)
+    _redis.set(NAMESPACE_JSON + str(u), json5.dumps(j), DEFAULT_TTL)
 
 
 def set_id_to_name(i, u):
