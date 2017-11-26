@@ -182,6 +182,11 @@ class StealSimilarTo(Thread):
 
             i = 0
             star_id = user_utils.get_user_id(star) # TODO: check null
+            if Filter(star, conditions).apply():
+                print('foing the star itself', star)
+                data.set_id_to_name(star_id, star)
+                self.queue_to_fo.put(star_id)
+
             for id, name in user_utils.get_all_followers_gen(self.bot, star_id, BATCH_SIZE):
                 i += 1
                 print('inspecting %d-th foer of %s' % (i, star))
