@@ -1,6 +1,6 @@
 #!/bin/bash
 
-python3 plot-likes.py \
+python plot-likes.py \
     /data/ig/v_likes.txt \
     /data/ig/eva_likes.txt \
     /data/ig/z_likes.txt \
@@ -10,7 +10,7 @@ python3 plot-likes.py \
     /data/ig/airbnb_likes.txt \
     /data/ig/mc_likes.txt
 
-python3 plot-all.py \
+python plot-all.py \
     /data/ig/v_count.txt \
     /data/ig/eva_count.txt \
     /data/ig/z_count.txt \
