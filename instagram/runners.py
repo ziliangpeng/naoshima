@@ -53,7 +53,10 @@ class GenUnfo(Thread):
             except BaseException as e:
                 print('Error in GenUnfo')
                 print(e)
-                traceback.print_tb(e)
+                try:
+                    traceback.print_tb(e)
+                except:
+                    pass
 
 
 class DoUnfo(Thread):
