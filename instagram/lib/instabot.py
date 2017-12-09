@@ -68,6 +68,7 @@ class InstaBot:
                  login,
                  password,
                  log_mod=0,
+                 session=None,
                  proxy=""):
 
         self.bot_start = datetime.datetime.now()
@@ -94,7 +95,27 @@ class InstaBot:
         log_string = 'Instabot v1.1.0 started at %s:\n' % \
                      (now_time.strftime("%d.%m.%Y %H:%M"))
         self.write_log(log_string)
-        self.login()
+        if session:
+            self.recover_from_session(session)
+        if not self.login_status:
+            self.login()
+
+    def recover_from_session(self, session):
+        self.write_log('Trying to recover from saved session')
+        self.s = session
+        r = self.s.get('https://www.instagram.com/')
+        finder = r.text.find(self.user_login)
+        if finder != -1:
+            ui = UserInfo()
+            self.user_id = ui.get_user_id_by_login(self.user_login)
+            self.login_status = True
+            log_string = '%s login success!' % (self.user_login)
+            self.write_log(log_string)
+        else:
+            self.login_status = False
+            self.write_log('Login error! Not able to recover from saved session!')
+
+
 
     def login(self):
         log_string = 'Trying to login as %s...\n' % (self.user_login)
