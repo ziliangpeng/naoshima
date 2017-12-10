@@ -119,11 +119,8 @@ class InstaBot:
 
         r = self.s.get(self.url)
         self.s.headers.update({'X-CSRFToken': r.cookies['csrftoken']})
-        time.sleep(5 * random.random())
         self.csrftoken = r.cookies['csrftoken']  #login.cookies['csrftoken']
-        time.sleep(5 * random.random())
 
-        r = self.s.get('https://www.instagram.com/')
         finder = r.text.find(self.user_login)
         if finder != -1:
             ui = UserInfo()
