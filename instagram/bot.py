@@ -1,6 +1,6 @@
 import sys
 import time
-import secret_reader
+import config_reader
 import data_repo
 
 from runners import DoFo, GenUnfo, DoUnfo, StealFoers, Fofo, StealSuperBrand, StealSimilarTo
@@ -20,7 +20,7 @@ if __name__ == '__main__':
     t.daemon = True
     t.start()
 
-    cmds = secret_reader.load_commands()
+    cmds = config_reader.load_commands()
 
     for cmd in cmds:
         if cmd == 'unfo':

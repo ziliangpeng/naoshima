@@ -5,14 +5,14 @@ from threading import Thread
 import traceback
 
 import data
-import secret_reader
+import config_reader
 import user_utils
 from filter import Filter
 import data_repo
 from queue import Queue
 from data_repo import datas
 
-WHITELIST_USER = secret_reader.load_whitelist()
+WHITELIST_USER = config_reader.load_whitelist()
 
 # TODO:
 # 1. follow followers' followers
@@ -35,7 +35,7 @@ class GenUnfo(Thread):
                 # followers = utils.get_followers(self.bot, self.user_id)
                 # self.id_name_dict.update(follows)
                 # self.id_name_dict.update(followers)
-                if len(follows) < secret_reader.load_min_follow():
+                if len(follows) < config_reader.load_min_follow():
                     print('Only %d follows. Pause.' % len(follows))
                     time.sleep(60 * 30)
                     continue
@@ -89,7 +89,7 @@ class Fofo(Thread):
 
     def run(self):
         uid = user_utils.get_user_id(self.u)
-        conditions = secret_reader.load_conditions()
+        conditions = config_reader.load_conditions()
         k = 0
         loop = 0
         while True:
@@ -127,7 +127,7 @@ class StealSuperBrand(Thread):
         self.queue_to_fo = datas[u].queue_to_fo
 
     def run(self):
-        conditions = secret_reader.load_conditions()
+        conditions = config_reader.load_conditions()
         BIG_LIST = ['instagram', 'apple', 'liuwenlw', 'london']
         BATCH_SIZE = 1000
         while True:
@@ -159,7 +159,7 @@ class StealSimilarTo(Thread):
         self.seed_name = seed_name
 
     def run(self):
-        conditions = secret_reader.load_conditions()
+        conditions = config_reader.load_conditions()
         star_queue = Queue()
         star = self.seed_name
         next_stars = user_utils.related_users(self.bot, star)[:10]
@@ -216,7 +216,7 @@ class StealFoers(Thread):
         print('to steal user %s, id %d' % (steal_name, int(self.steal_id)))
 
     def run(self):
-        conditions = secret_reader.load_conditions()
+        conditions = config_reader.load_conditions()
         i = 0
         skip_head = 0  # hack: skip something already processed
         for id, name in user_utils.get_all_followers_gen(self.bot, self.steal_id):

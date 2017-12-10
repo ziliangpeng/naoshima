@@ -1,7 +1,7 @@
 import requests
 
 import auth
-import secret_reader
+import config_reader
 import user_utils
 import sys
 import time
@@ -42,7 +42,7 @@ if len(sys.argv) > 1:
     u = sys.argv[1]
     uid = user_utils.get_user_id(u)
 else:
-    u = secret_reader.load_secrets()[0]
+    u = config_reader.load_secrets()[0]
     uid = user_utils.get_user_id(u)
 
 for fid, fname in user_utils.get_all_followers_gen(bot, uid):

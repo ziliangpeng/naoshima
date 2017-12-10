@@ -2,7 +2,7 @@ import data
 import time
 import datetime
 import auth
-import secret_reader
+import config_reader
 import user_utils
 import random
 import requests
@@ -94,7 +94,7 @@ if __name__ == '__main__':
 
     # login
     bot = auth.auth()
-    u = secret_reader.load_secrets()[0]
+    u = config_reader.load_secrets()[0]
 
     # src, caption, photo_id, photo_code = by_url(bot, u)
     src, caption, photo_id, photo_code = by_graphql(bot, u)
@@ -108,7 +108,7 @@ if __name__ == '__main__':
     # upload file
     time.sleep(30)
     print('posting...')
-    user, pwd = secret_reader.load_secrets()
+    user, pwd = config_reader.load_secrets()
     InstagramAPI = InstagramAPI(user, pwd)
     InstagramAPI.login() # login
 

@@ -1,4 +1,4 @@
-import secret_reader
+import config_reader
 import redis
 import json
 import time
@@ -25,8 +25,8 @@ KEY_POST_ID_TIME_MAP = 'post_id_to_time'
 DEFAULT_TTL = 3600 * 24 * 30  # in seconds
 
 
-redis_host = secret_reader.load_redis_host()
-redis_port = secret_reader.load_redis_port()
+redis_host = config_reader.load_redis_host()
+redis_port = config_reader.load_redis_port()
 if redis_host != None and redis_port != None:
     _redis = redis.Redis(redis_host, redis_port, REDIS_DB)
 else:
