@@ -3,6 +3,7 @@
 
 import json5
 import sys
+
 from utils import _json_path
 
 
@@ -25,7 +26,11 @@ METHODS = {
 for k, (paths, default) in METHODS.items():
     def make_f(_paths, _default):
         return lambda: _load(_paths, _default)
+
+    def make_redis_f(_paths, _default):
+        return lambda u: _load_from_redis(u, _paths, _default)
     setattr(m, 'load_' + k, make_f(paths, default))
+    setattr(m, 'redis_load_' + k, make_redis_f(paths, default))
 
 
 def load_secrets():
@@ -70,6 +75,12 @@ def _load(paths, default=None):
         return _json_path(j, paths) or default
 
 
+def _load_from_redis(u, paths, default=None):
+    import data
+    j = data.get_latest_config(u)
+    return _json_path(j, paths) or default
+
+
 # publish a config file to redis
 def publish(filename):
     import time
@@ -82,7 +93,7 @@ def publish(filename):
         u = j.get('login')
         # TODO: check integrity of config
 
-        if u == None:
+        if u is None:
             raise Exception("login should present")
         else:
             j['published_time'] = int(time.time())

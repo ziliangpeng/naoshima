@@ -15,6 +15,7 @@ NAMESPACE_FOLLOWED_BACK_DATE = 'followed_back_date:'
 NAMESPACE_ID_NAME_MAP = 'id_to_name:'
 NAMESPACE_POSTED = 'posted:'
 NAMESPACE_CONFIG = 'config:'
+NAMESPACE_USER_TO_FOLLOW = 'user_to_follow:'
 
 KEY_ID_SAVED_SESSIONS_MAP = 'sessions'
 KEY_POST_ID_CODE_MAP = 'post_id_to_code'
@@ -57,6 +58,23 @@ def set_config(u: str, config: dict):
         j = json.dumps(config)
         _redis.rpush(key, j)
         return True
+
+
+def add_user_to_follow(u, to_follow_id, score):
+    key = NAMESPACE_USER_TO_FOLLOW + u
+    # the redis command have (score, key) format, but python implementation accidentally swapped the 2 args
+    # so in python we have to use (key, score)
+    _redis.zadd(key, to_follow_id, score)  # This can automatically update the score if exist
+    pass
+
+
+def get_user_to_follow(u):
+    key = NAMESPACE_USER_TO_FOLLOW + u
+    # To do a ZPOP, we 1) get largest element, 2) remove it from redis
+    # This is not atomic, but we have only one consumer for each sorted set so it's fine
+    to_fo_id = _redis.zrange(key, -1, -1)  # get the element with largest score
+    _redis.zrem(key, to_fo_id)
+    return to_fo_id
 
 
 def get_json_by_username(u):
