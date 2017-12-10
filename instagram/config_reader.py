@@ -9,7 +9,7 @@ m = __import__(__name__)
 METHODS = {
     'login': (["login"], None),
     'password': (["password"], None),
-    'user_id': (["id"], None),
+    # 'user_id': (["id"], None),
     'whitelist': (["whitelist"], []),
     'conditions': (["conditions"], {}),
     'max_follow': (["max_follow"], 5000),
