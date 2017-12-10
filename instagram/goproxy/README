@@ -1,0 +1,7 @@
+# A Golang proxy for fetching Instagram user profile
+
+
+- centralized server for fetching user profile http://www.instagram.com/username/?__a=1
+- centralized rate limit (e.g. 2 pages per seconds)
+- retry logic, other business code won't worry about retry
+- redis cache logic, other part won't need
