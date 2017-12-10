@@ -2,6 +2,7 @@ import secret_reader
 import redis
 import json
 import time
+import pickle
 
 REDIS_DB = 1
 
@@ -14,7 +15,7 @@ NAMESPACE_FOLLOWED_BACK_DATE = 'followed_back_date:'
 NAMESPACE_ID_NAME_MAP = 'id_to_name:'
 NAMESPACE_POSTED = 'posted:'
 
-
+KEY_ID_SAVED_SESSIONS_MAP = 'sessions'
 KEY_POST_ID_CODE_MAP = 'post_id_to_code'
 KEY_POST_ID_TIME_MAP = 'post_id_to_time'
 
@@ -42,6 +43,20 @@ def get_json_by_username(u):
 
 def set_json_by_username(u, j):
     _redis.set(NAMESPACE_JSON + str(u), json.dumps(j), DEFAULT_TTL)
+
+
+def save_session(name, s):
+    print(type(s))
+    _redis.hset(KEY_ID_SAVED_SESSIONS_MAP, name, pickle.dumps(s))
+
+def get_session(name):
+    pickled_session = _redis.hget(KEY_ID_SAVED_SESSIONS_MAP, name)
+    if pickled_session:
+        try:
+            return pickle.loads(pickled_session)
+        except Exception as e:
+            print('Exception in unpickling a session object:', e)
+    return None
 
 
 def set_id_to_name(i, u):
