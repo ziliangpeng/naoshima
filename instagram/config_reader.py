@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import json5
+import sys
 from utils import _json_path
 
 
@@ -67,3 +68,32 @@ def _load(paths, default=None):
     with open('secret.local', 'r') as f:
         j = json5.loads(f.read())
         return _json_path(j, paths) or default
+
+
+# publish a config file to redis
+def publish(filename):
+    import time
+    import os.path
+    import json
+    import data
+
+    with open(filename, 'r') as f:
+        j = json5.loads(f.read())
+        u = j.get('login')
+        # TODO: check integrity of config
+
+        if u == None:
+            raise Exception("login should present")
+        else:
+            j['published_time'] = int(time.time())
+            j['modified_time'] = int(os.path.getmtime(filename))
+            print("The new config json is:\n")
+            print(json.dumps(j, indent=4))
+
+            if data.set_config(u, j):
+                print("Upload complete")
+
+
+if __name__ == '__main__':
+    filename = sys.argv[1]
+    publish(filename)

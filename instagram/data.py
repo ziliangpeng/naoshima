@@ -14,6 +14,7 @@ NAMESPACE_FOLLOWED_BACK = 'followed_back:'
 NAMESPACE_FOLLOWED_BACK_DATE = 'followed_back_date:'
 NAMESPACE_ID_NAME_MAP = 'id_to_name:'
 NAMESPACE_POSTED = 'posted:'
+NAMESPACE_CONFIG = 'config:'
 
 KEY_ID_SAVED_SESSIONS_MAP = 'sessions'
 KEY_POST_ID_CODE_MAP = 'post_id_to_code'
@@ -33,12 +34,34 @@ else:
     raise Exception("redis config must present!")
 
 
+def get_latest_config(u: str) -> dict:
+    key = NAMESPACE_CONFIG + u
+    j = _redis.lindex(key, -1)
+    return _load_json_if_exist(j)
+
+
+def get_all_config(u: str):
+    raise NotImplementedError()
+
+
+def set_config(u: str, config: dict):
+    key = NAMESPACE_CONFIG + u
+    latest_config = get_latest_config(u)
+    if latest_config is not None and latest_config.get('modified_time') == config.get('modified_time'):
+        print("The new config match the existing config. Not uploading")
+        return False
+    else:
+        if latest_config is None:
+            print("No previous config for", u)
+        print("Uploading new config for", u)
+        j = json.dumps(config)
+        _redis.rpush(key, j)
+        return True
+
+
 def get_json_by_username(u):
     j = _redis.get(NAMESPACE_JSON + str(u))
-    if j is not None:
-        return json.loads(j)
-    else:
-        return None
+    return _load_json_if_exist(j)
 
 
 def set_json_by_username(u, j):
@@ -93,3 +116,10 @@ def set_posted(u, i, code):
 
 def is_posted(u, i):
     return _redis.sismember(NAMESPACE_POSTED + str(u), str(i))
+
+
+def _load_json_if_exist(j):
+    if j is not None:
+        return json.loads(j)
+    else:
+        return None
