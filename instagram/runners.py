@@ -35,7 +35,7 @@ class GenUnfo(Thread):
                 # followers = utils.get_followers(self.bot, self.user_id)
                 # self.id_name_dict.update(follows)
                 # self.id_name_dict.update(followers)
-                if len(follows) < secret_reader.load_max_follow():
+                if len(follows) < secret_reader.load_min_follow():
                     print('Only %d follows. Pause.' % len(follows))
                     time.sleep(60 * 30)
                     continue
