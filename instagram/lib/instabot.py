@@ -36,9 +36,10 @@ class InstaBot:
     url_media_detail = 'https://www.instagram.com/p/%s/?__a=1'
     url_user_detail = 'https://www.instagram.com/%s/?__a=1'
 
-    user_agent = ("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 "
-                  "(KHTML, like Gecko) Chrome/48.0.2564.103 Safari/537.36")
-    accept_language = 'ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4'
+    # user_agent = ("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 "
+    #               "(KHTML, like Gecko) Chrome/48.0.2564.103 Safari/537.36")
+    user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36"
+    accept_language = 'en-US,en;q=0.9'
 
     # If instagram ban you - query return 400 error.
     error_400 = 0
@@ -103,6 +104,25 @@ class InstaBot:
     def recover_from_session(self, session):
         self.write_log('Trying to recover from saved session')
         self.s = session
+        self.s.headers.update({
+            'Accept-Encoding': 'gzip, deflate',
+            'Accept-Language': self.accept_language,
+            'Connection': 'keep-alive',
+            'Content-Length': '0',
+            'Host': 'www.instagram.com',
+            'Origin': 'https://www.instagram.com',
+            'Referer': 'https://www.instagram.com/',
+            'User-Agent': self.user_agent,
+            'X-Instagram-AJAX': '1',
+            'X-Requested-With': 'XMLHttpRequest'
+        })
+
+        r = self.s.get(self.url)
+        self.s.headers.update({'X-CSRFToken': r.cookies['csrftoken']})
+        time.sleep(5 * random.random())
+        self.csrftoken = r.cookies['csrftoken']  #login.cookies['csrftoken']
+        time.sleep(5 * random.random())
+
         r = self.s.get('https://www.instagram.com/')
         finder = r.text.find(self.user_login)
         if finder != -1:
