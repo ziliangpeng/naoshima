@@ -16,6 +16,7 @@ https://www.instagram.com/graphql/query/?query_id=17885113105037631&variables=%7
 
 ACCEPT_TYPES = ["GraphImage", "GraphSidecar"]
 
+
 def by_url(bot, u):
     my_url = 'https://www.instagram.com/%s/?__a=1' % u
 
@@ -32,10 +33,9 @@ def by_url(bot, u):
     saved = [s for s in saved if not data.is_posted(u, s["id"])]
     print(len(saved), 'not posted')
 
-
     # choose one to post
     # chosen = random.choice(saved)
-    chosen = saved[-1] # always use the oldest in backlog
+    chosen = saved[-1]  # always use the oldest in backlog
     src = chosen["display_src"]
     print('src', src)
     photo_code = chosen["code"]
@@ -65,7 +65,7 @@ def by_graphql(bot, u):
     saved = [s for s in saved if not data.is_posted(u, s.photo_id)]
     print(len(saved), 'not posted')
     pass
-    chosen = saved[-1] # always use the oldest in backlog
+    chosen = saved[-1]  # always use the oldest in backlog
     src = chosen.url
     print('src', src)
     photo_code = chosen.code
@@ -84,7 +84,6 @@ def by_graphql(bot, u):
     caption = caption.replace('@', '')  # do not let anyone know
     print(caption)
     return src, caption, photo_id, photo_code
-
 
 
 if __name__ == '__main__':
@@ -110,7 +109,7 @@ if __name__ == '__main__':
     print('posting...')
     user, pwd = config_reader.load_secrets()
     InstagramAPI = InstagramAPI(user, pwd)
-    InstagramAPI.login() # login
+    InstagramAPI.login()  # login
 
     time.sleep(60)
     success = InstagramAPI.uploadPhoto(FILEPATH, caption=caption)

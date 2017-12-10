@@ -37,7 +37,7 @@ for fo_data_file in sys.argv[1:]:
                 foer_cnt = parse_foer(foer_str)
                 sub_date_list.append(date)
                 data_dict[date] = foer_cnt
-            except:
+            except BaseException:
                 pass
 
     data_list.append(data_dict)

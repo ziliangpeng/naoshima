@@ -28,21 +28,20 @@ class Filter:
 
     def has_lang(self, lang):
         langs = lang_utils.langs(self.u)
-        speaks_lang= lang in [l.lang for l in langs]
+        speaks_lang = lang in [l.lang for l in langs]
         if not speaks_lang:
             print('User %s does not speak %s' % (self.u, lang))
             return False
         return True
 
-
     def max_follows(self, threshold):
         followed_by_count, follows_count = \
             user_utils.get_follow_counts(self.u)
-        if followed_by_count == None or follows_count == None:
+        if followed_by_count is None or follows_count is None:
             print('error occurred when investigating ', self.u)
             return False
         if follows_count > threshold:
-            print('%s: follower %s has %d follows(>%d). It is an overwhelmed stalker' % \
+            print('%s: follower %s has %d follows(>%d). It is an overwhelmed stalker' %
                   (date(), self.u, follows_count, threshold))
             return False
         return True
@@ -50,11 +49,11 @@ class Filter:
     def min_ratio(self, ratio_threshold):
         followed_by_count, follows_count = \
             user_utils.get_follow_counts(self.u)
-        if followed_by_count == None or follows_count == None:
+        if followed_by_count is None or follows_count is None:
             print('error occurred when investigating ', self.u)
             return False
         if follows_count < followed_by_count * ratio_threshold:
-            print('%s: follower %s has %d follows and %d followed_by(<%f). Not likely to follow back' % \
+            print('%s: follower %s has %d follows and %d followed_by(<%f). Not likely to follow back' %
                   (date(), self.u, follows_count, followed_by_count, ratio_threshold))
             return False
         return True
@@ -62,11 +61,11 @@ class Filter:
     def max_ratio(self, ratio_threshold):
         followed_by_count, follows_count = \
             user_utils.get_follow_counts(self.u)
-        if followed_by_count == None or follows_count == None:
+        if followed_by_count is None or follows_count is None:
             print('error occurred when investigating ', self.u)
             return False
         if follows_count > followed_by_count * ratio_threshold:
-            print('%s: follower %s has %d follows and %d followed_by(>%f). Over-following.' % \
+            print('%s: follower %s has %d follows and %d followed_by(>%f). Over-following.' %
                   (date(), self.u, follows_count, followed_by_count, ratio_threshold))
             return False
         return True
@@ -77,7 +76,7 @@ class Filter:
         epoch_diff = timedelta(seconds=now_epoch - recent_post_epoch)
         td_threshold = timedelta(seconds=fresh_threshold)
         if epoch_diff > td_threshold:
-            print('%s: follower %s posted %s ago. longer than %s' % \
+            print('%s: follower %s posted %s ago. longer than %s' %
                   (date(), self.u, epoch_diff, td_threshold))
             return False
         return True

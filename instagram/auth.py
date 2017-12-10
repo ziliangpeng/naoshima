@@ -12,15 +12,15 @@ def auth(log_mod=0, session=None):
 
     if session:
         print('auth: using session in param to create bot')
-        bot =  InstaBot(login=login, password=password, session=session, log_mod=log_mod)
+        bot = InstaBot(login=login, password=password, session=session, log_mod=log_mod)
     else:
         saved_session = data.get_session(login)
         if saved_session:
             print('auth: using session in redis to create bot')
-            bot =  InstaBot(login=login, password=password, session=saved_session, log_mod=log_mod)
+            bot = InstaBot(login=login, password=password, session=saved_session, log_mod=log_mod)
         else:
             print('auth: using user/password to create bot')
-            bot =  InstaBot(login=login, password=password, log_mod=log_mod)
+            bot = InstaBot(login=login, password=password, log_mod=log_mod)
 
     if bot.login_status:
         print('auth: done. saving session into redis')

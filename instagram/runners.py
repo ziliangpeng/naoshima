@@ -45,7 +45,7 @@ class GenUnfo(Thread):
                 to_unfo = random.sample(filtered_user_ids, n)
                 random.shuffle(to_unfo)
                 for i, f in enumerate(to_unfo):
-                    print('%s: #%03d gen unfollow: %s' % \
+                    print('%s: #%03d gen unfollow: %s' %
                           (str(datetime.datetime.now()),
                            i, data.get_id_to_name(f)))
                     self.queue_to_unfo.put(f)
@@ -55,7 +55,7 @@ class GenUnfo(Thread):
                 print(e)
                 try:
                     traceback.print_tb(e)
-                except:
+                except BaseException:
                     pass
 
 
@@ -103,7 +103,7 @@ class Fofo(Thread):
                     for _id, _name in user_utils.get_all_followers_gen(self.bot, id, max=100):
                         j += 1
                         k += 1
-                        print('inspecting %d-th foer(%s) of %d-th foer(%s), overall %d-th, %d-th loop' % \
+                        print('inspecting %d-th foer(%s) of %d-th foer(%s), overall %d-th, %d-th loop' %
                               (j, _name, i, name, k, loop))
                         if data.is_followed(self.u, _id):
                             print('Already followed.')
@@ -133,18 +133,18 @@ class StealSuperBrand(Thread):
         while True:
             for brand in BIG_LIST:
                 i = 0
-                brand_id = user_utils.get_user_id(brand) # TODO: check null
+                brand_id = user_utils.get_user_id(brand)  # TODO: check null
                 for id, name in user_utils.get_all_followers_gen(self.bot, brand_id, BATCH_SIZE):
                     i += 1
                     print('inspecting %d-th foer of %s' % (i, brand))
                     if data.is_followed(self.u, id):
-                        print('%s: Skip %d-th follower %s(%s). Already followed.' % \
+                        print('%s: Skip %d-th follower %s(%s). Already followed.' %
                               (str(datetime.datetime.now()), i, str(id), str(name)))
                     else:
                         if not Filter(name, conditions).apply():
                             print('%s(%d) has not passed filter' % (name, i))
                         else:
-                            print('%s: Steal %d-th follower %s(%s)' % \
+                            print('%s: Steal %d-th follower %s(%s)' %
                                   (str(datetime.datetime.now()), i, str(id), str(name)))
                             data.set_id_to_name(id, name)
                             self.queue_to_fo.put(id)
@@ -172,7 +172,7 @@ class StealSimilarTo(Thread):
 
         # star_queue.put(self.seed_name)
         BATCH_SIZE = 500
-        MAX_QUEUE_SIZE=1000
+        MAX_QUEUE_SIZE = 1000
         while True:
             star = star_queue.get()
             next_stars = user_utils.related_users(self.bot, star)[:50]
@@ -184,7 +184,7 @@ class StealSimilarTo(Thread):
             print('stealing from ', star)
 
             i = 0
-            star_id = user_utils.get_user_id(star) # TODO: check null
+            star_id = user_utils.get_user_id(star)  # TODO: check null
             if Filter(star, conditions).apply():
                 print('foing the star itself', star)
                 data.set_id_to_name(star_id, star)
@@ -194,13 +194,13 @@ class StealSimilarTo(Thread):
                 i += 1
                 print('inspecting %d-th foer of %s' % (i, star))
                 if data.is_followed(self.u, id):
-                    print('%s: Skip %d-th follower %s(%s). Already followed.' % \
+                    print('%s: Skip %d-th follower %s(%s). Already followed.' %
                           (str(datetime.datetime.now()), i, str(id), str(name)))
                 else:
                     if not Filter(name, conditions).apply():
                         print('%s(%d) has not passed filter' % (name, i))
                     else:
-                        print('%s: Steal %d-th follower %s(%s)' % \
+                        print('%s: Steal %d-th follower %s(%s)' %
                               (str(datetime.datetime.now()), i, str(id), str(name)))
                         data.set_id_to_name(id, name)
                         self.queue_to_fo.put(id)
@@ -226,13 +226,13 @@ class StealFoers(Thread):
                 continue
 
             if data.is_followed(self.u, id):
-                print('%s: Skip %d-th follower %s(%s). Already followed.' % \
+                print('%s: Skip %d-th follower %s(%s). Already followed.' %
                       (str(datetime.datetime.now()), i, str(id), str(name)))
             else:
                 if not Filter(name, conditions).apply():
                     print('%s(%d) has not passed filter' % (name, i))
                 else:
-                    print('%s: Steal %d-th follower %s(%s)' % \
+                    print('%s: Steal %d-th follower %s(%s)' %
                           (str(datetime.datetime.now()), i, str(id), str(name)))
                     data.set_id_to_name(id, name)
                     self.queue_to_fo.put(id)

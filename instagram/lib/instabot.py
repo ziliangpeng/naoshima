@@ -119,7 +119,7 @@ class InstaBot:
 
         r = self.s.get(self.url)
         self.s.headers.update({'X-CSRFToken': r.cookies['csrftoken']})
-        self.csrftoken = r.cookies['csrftoken']  #login.cookies['csrftoken']
+        self.csrftoken = r.cookies['csrftoken']  # login.cookies['csrftoken']
 
         finder = r.text.find(self.user_login)
         if finder != -1:
@@ -131,8 +131,6 @@ class InstaBot:
         else:
             self.login_status = False
             self.write_log('Login error! Not able to recover from saved session!')
-
-
 
     def login(self):
         log_string = 'Trying to login as %s...\n' % (self.user_login)
@@ -203,7 +201,7 @@ class InstaBot:
             logout = self.s.post(self.url_logout, data=logout_post)
             self.write_log("Logout success!")
             self.login_status = False
-        except:
+        except BaseException:
             self.write_log("Logout error!")
 
     def like(self, media_id):
@@ -214,7 +212,7 @@ class InstaBot:
                 like = self.s.post(url_likes)
                 last_liked_media_id = media_id
                 self.like_counter += 1
-            except:
+            except BaseException:
                 self.write_log("Except on like!")
                 like = 0
             return like
@@ -225,7 +223,7 @@ class InstaBot:
             url_unlike = self.url_unlike % (media_id)
             try:
                 unlike = self.s.post(url_unlike)
-            except:
+            except BaseException:
                 self.write_log("Except on unlike!")
                 unlike = 0
             return unlike
@@ -243,7 +241,7 @@ class InstaBot:
                                                         self.comments_counter)
                     self.write_log(log_string)
                 return comment
-            except:
+            except BaseException:
                 self.write_log("Except on comment!")
         return False
 
@@ -259,7 +257,7 @@ class InstaBot:
                                                         self.follow_counter)
                     self.write_log(log_string)
                 return follow
-            except:
+            except BaseException:
                 self.write_log("Except on follow!")
         return False
 
@@ -275,7 +273,7 @@ class InstaBot:
                                                         self.unfollow_counter)
                     self.write_log(log_string)
                 return unfollow
-            except:
+            except BaseException:
                 self.write_log("Exept on unfollow!")
         return False
 

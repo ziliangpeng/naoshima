@@ -3,7 +3,9 @@ import json
 import time
 import requests
 import data
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 from utils import _json_path
 
 CACHED_USER_JSON = pylru.lrucache(1024)
@@ -11,7 +13,7 @@ CACHED_USER_JSON = pylru.lrucache(1024)
 
 def get_user_json(u):
     cached_json = data.get_json_by_username(u)
-    if cached_json != None:
+    if cached_json is not None:
         # print('user %s json cached' % (u))
         return cached_json
     else:
@@ -56,8 +58,10 @@ INSTAGRAM_GRAPPHQL_QUERY = 'https://www.instagram.com/graphql/query/?query_id=%d
 # saved media url:
 # https://www.instagram.com/graphql/query/?query_id=17885113105037631&variables=%7B%22id%22%3A%226575470602%22%2C%22first%22%3A12%2C%22after%22%3A%22AQDiSrivWlEL4I0UzW00KCMhigZwMiPWpYimS2kihXKea8vIRfRaQR40RyTYA0BLHUxaolww2Li3-omro1cwi7kgoM8G5IK3925HrphwyawHFg%22%7D
 
+
 def make_query_cursor(uid, paginate=DEFAULT_PAGINATION, cursor=""):
     return QUERY_WITH_CURSOR % (str(uid), int(paginate), str(cursor))
+
 
 def get_saved_medias(bot, uid):
     class Media:
@@ -75,12 +79,12 @@ def get_saved_medias(bot, uid):
         url = n["display_url"]
         try:
             caption = n["edge_media_to_caption"]["edges"][0]["node"]["text"]
-        except:
+        except BaseException:
             caption = ""
         return Media(photo_id, code, typename, url, caption)
 
     url = INSTAGRAM_GRAPPHQL_QUERY % \
-          (QUERY_IDs['saved_media'], urllib.parse.quote_plus(make_query_cursor(uid, paginate=100)))
+        (QUERY_IDs['saved_media'], urllib.parse.quote_plus(make_query_cursor(uid, paginate=100)))
     r = bot.s.get(url)
     if r.status_code != 200:
         return []
@@ -90,13 +94,15 @@ def get_saved_medias(bot, uid):
 
 
 """ special method, not simple reading. """
+
+
 def get_follows(bot, uid):
     # TODO: this method need refactoring
     time.sleep(3)  # initial delay
     for retry in range(5):
         time.sleep(2)  # retry delay
         url = INSTAGRAM_GRAPPHQL_QUERY % \
-              (QUERY_IDs['follows'], urllib.parse.quote_plus(make_query_cursor(uid)))
+            (QUERY_IDs['follows'], urllib.parse.quote_plus(make_query_cursor(uid)))
         r = bot.s.get(url)
         if r.status_code != 200:
             print('error in get follows, error code', r.status_code)
@@ -113,7 +119,10 @@ def get_follows(bot, uid):
         return ret
     raise BaseException("Fail to get follows")
 
+
 """ this is a special method """
+
+
 def get_all_followers_gen(bot, uid, max=0):
     # TODO: require refactoring
     count = 0
@@ -122,8 +131,8 @@ def get_all_followers_gen(bot, uid, max=0):
         while True:
             time.sleep(3)  # initial delay
             url = INSTAGRAM_GRAPPHQL_QUERY % \
-                  (QUERY_IDs['followers'],
-                   urllib.parse.quote_plus(make_query_cursor(uid, 500, cursor)))
+                (QUERY_IDs['followers'],
+                 urllib.parse.quote_plus(make_query_cursor(uid, 500, cursor)))
             r = bot.s.get(url)
             if r.status_code != 200:
                 print('error in get followers, error code', r.status_code)
@@ -140,14 +149,15 @@ def get_all_followers_gen(bot, uid, max=0):
                 yield f["node"]["id"], f["node"]["username"]
                 count += 1
 
+
 def related_users(bot, u):
     # example url:
     # https://www.instagram.com/graphql/query/?query_id=17845312237175864&variables=%7B%22id%22%3A%225261744%22%7D
     uid = get_user_id(u)
     variables = make_query_cursor(uid)
     url = INSTAGRAM_GRAPPHQL_QUERY % \
-          (QUERY_IDs['related_user'],
-           urllib.parse.quote_plus(make_query_cursor(uid)))
+        (QUERY_IDs['related_user'],
+         urllib.parse.quote_plus(make_query_cursor(uid)))
     r = bot.s.get(url)
     if r.status_code == 200:
         j = r.json()
@@ -163,6 +173,8 @@ def get_post_ids(u):
 
 
 """ Returns recent epoch date or -1 """
+
+
 def get_recent_post_epoch(u):
     j = get_user_json(u)
     posts = _json_path(j, ["user", "media", "nodes"])
@@ -203,4 +215,3 @@ if __name__ == '__main__':
         u = related_users(b, u)[0]
         print('-->', u)
         time.sleep(10)
-

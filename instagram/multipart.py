@@ -25,7 +25,7 @@ configure_photo_url = 'https://www.instagram.com/create/configure/'
 epoch = int(time.time() * 1000)
 files = {
     'upload_id': (None, str(epoch), None),
-    'photo': ('photo.jpg', jpg_content, 'application/octet-stream'),#'image/jpeg'),
+    'photo': ('photo.jpg', jpg_content, 'application/octet-stream'),  # 'image/jpeg'),
     'media_type': (None, '1', None)
 }
 # data = {
@@ -38,13 +38,13 @@ print('epoch', epoch)
 # print('sleeping for epoch')
 # time.sleep(10)
 
-req = requests.Request('POST', upload_photo_url, files=files)  #, data=data)
+req = requests.Request('POST', upload_photo_url, files=files)  # , data=data)
 prepared = req.prepare()
 print('request headers', prepared.headers)
 # print('request body', prepared.body)
 bot.s.headers['referer'] = 'https://www.instagram.com/create/style/'
 print('session headers', bot.s.headers)
-r = bot.s.post(upload_photo_url, files=files)  #, data=data)
+r = bot.s.post(upload_photo_url, files=files)  # , data=data)
 print('status code', r.status_code)
 print('headers', r.headers)
 print('body', r.text)
@@ -55,7 +55,7 @@ print('body', r.text)
 print('starting to configure photo')
 # tag = 'airbnb'
 # payload = 'upload_id=%d&caption=123' % (epoch)
-payload = {'upload_id': epoch}#, 'caption': 'test'}
+payload = {'upload_id': epoch}  # , 'caption': 'test'}
 print('payload', payload)
 # r = bot.s.post(configure_photo_url, data=payload)
 # req = requests.Request('POST', configure_photo_url, data=payload)

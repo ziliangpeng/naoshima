@@ -27,7 +27,7 @@ DEFAULT_TTL = 3600 * 24 * 30  # in seconds
 
 redis_host = config_reader.load_redis_host()
 redis_port = config_reader.load_redis_port()
-if redis_host != None and redis_port != None:
+if redis_host is not None and redis_port is not None:
     _redis = redis.Redis(redis_host, redis_port, REDIS_DB)
 else:
     raise Exception("redis config must present!")
@@ -35,7 +35,7 @@ else:
 
 def get_json_by_username(u):
     j = _redis.get(NAMESPACE_JSON + str(u))
-    if j != None:
+    if j is not None:
         return json.loads(j)
     else:
         return None
@@ -48,6 +48,7 @@ def set_json_by_username(u, j):
 def save_session(name, s):
     print(type(s))
     _redis.hset(KEY_ID_SAVED_SESSIONS_MAP, name, pickle.dumps(s))
+
 
 def get_session(name):
     pickled_session = _redis.hget(KEY_ID_SAVED_SESSIONS_MAP, name)
@@ -67,7 +68,7 @@ def get_id_to_name(i):
     ret = _redis.get(NAMESPACE_ID_NAME_MAP + str(i))
     if not ret:
         raise BaseException("id-name mapping for %s should present" % (i))
-    return ret.decode()  #byte array to string
+    return ret.decode()  # byte array to string
 
 
 def set_followed(u, i):

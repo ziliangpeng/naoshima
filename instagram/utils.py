@@ -1,5 +1,6 @@
 from typing import List
 
+
 def _check_not_null(o):
     if o is None:
         raise BaseException("object cannot be None")
