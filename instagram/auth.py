@@ -1,5 +1,6 @@
 import secret_reader
 import requests
+import sys
 from requests.cookies import RequestsCookieJar
 from lib.instabot import InstaBot
 from http import cookiejar
@@ -41,3 +42,8 @@ def auth_from_cookies_file(filename, log_mod=0):
     session.cookies = requests_cookies
     return auth(log_mod=log_mod, session=session)
 
+
+if __name__ == '__main__':
+    # upload cookies from file to redis
+    filename = sys.argv[1]
+    auth_from_cookies_file(filename)
