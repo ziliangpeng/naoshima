@@ -4,6 +4,7 @@ import time
 import config_reader
 import data
 import user_utils
+from logs import logger
 from data_repo import datas
 from threading import Thread
 
@@ -37,9 +38,8 @@ class ActorBase(Thread):
         try:
             self.act()
         except Exception as e:
-            print("Error Type", type(e))
-            print("Error Args", e.args)
-            print(e)
+            logger.error(type(e))
+            logger.error(e)
 
     def compute_score(self):
         return int(time.time()) + random.randint(-self.RANDOM_RANGE, self.RANDOM_RANGE)
@@ -58,11 +58,11 @@ class GenFoFoActor(ActorBase):
             for fofoer_id, fofoer_name in user_utils.get_all_followers_gen(
                     self.bot, foer_id, max=self.FO_PER_FO_LIMIT):
                 if data.is_followed(self.u, fofoer_id):
-                    print('Already followed.')
+                    logger.info("Already followed %s. Skip.", fofoer_name)
                 elif not Filter(fofoer_name, conditions).apply():
-                    print('%s has not passed filter' % (fofoer_name))
+                    logger.info('%s has not passed filter', fofoer_name)
                 else:
-                    print('Steal follower %s, %s' % (str(fofoer_name), str(fofoer_id)))
+                    logger.info('Steal follower %s, %s', fofoer_name, fofoer_id)
                     data.set_id_to_name(fofoer_id, fofoer_name)
                     score = self.compute_score()
                     data.add_user_to_follow(self.u, fofoer_id, score)
