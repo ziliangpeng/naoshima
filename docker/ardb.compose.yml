@@ -1,0 +1,9 @@
+version: '3'
+services:
+  ardb:
+    image: lupino/ardb-server
+    container_name: ardb-server
+    ports:
+     - "6379:16379"
+    volumes:
+     - /data/ardb:/var/lib/ardb
