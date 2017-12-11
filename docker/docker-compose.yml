@@ -5,9 +5,16 @@ services:
     image: lupino/ardb-server
     container_name: ardb-server
     ports:
-     - "6379:16379"
+      - "6379:16379"
     volumes:
-     - /data/ardb:/var/lib/ardb
+      - /data/ardb:/var/lib/ardb
+  mysql:
+    image: mysql/mysql-server:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    container_name: mysql-server
+    volumes:
+      - /data/mysql:/var/lib/mysql
   oneoff:
     # docker-compose run --rm oneoff whoami
     image: ubuntu
