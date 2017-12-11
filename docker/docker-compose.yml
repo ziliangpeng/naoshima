@@ -1,9 +1,14 @@
 version: '3'
 services:
   ardb:
+    # docker-compose up -d ardb
     image: lupino/ardb-server
     container_name: ardb-server
     ports:
      - "6379:16379"
     volumes:
      - /data/ardb:/var/lib/ardb
+  oneoff:
+    # docker-compose run --rm oneoff whoami
+    image: ubuntu
+    container_name: one-off-test
