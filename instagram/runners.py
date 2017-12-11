@@ -1,4 +1,5 @@
 import datetime
+import logs
 import random
 import time
 from threading import Thread
@@ -13,6 +14,8 @@ from queue import Queue
 from data_repo import datas
 
 WHITELIST_USER = config_reader.load_whitelist()
+
+logger = logs.logger
 
 # TODO:
 # 1. follow followers' followers
@@ -36,7 +39,7 @@ class GenUnfo(Thread):
                 # self.id_name_dict.update(follows)
                 # self.id_name_dict.update(followers)
                 if len(follows) < config_reader.load_min_follow():
-                    print('Only %d follows. Pause.' % len(follows))
+                    logger.info("Only %d follows. Pause.", len(follows))
                     time.sleep(60 * 30)
                     continue
 
@@ -45,14 +48,12 @@ class GenUnfo(Thread):
                 to_unfo = random.sample(filtered_user_ids, n)
                 random.shuffle(to_unfo)
                 for i, f in enumerate(to_unfo):
-                    print('%s: #%03d gen unfollow: %s' %
-                          (str(datetime.datetime.now()),
-                           i, data.get_id_to_name(f)))
+                    logger.info('#%03d gen unfollow: %s', i, data.get_id_to_name(f))
                     self.queue_to_unfo.put(f)
                 time.sleep(10)
             except BaseException as e:
-                print('Error in GenUnfo')
-                print(e)
+                logger.error('Error in GenUnfo')
+                logger.error(e)
                 try:
                     traceback.print_tb(e)
                 except BaseException:
@@ -74,8 +75,8 @@ class DoUnfo(Thread):
                 self.bot.unfollow(f)
                 time.sleep(24 * 3600 / daily_rate)
             except BaseException as e:
-                print('Error in DoUnfo')
-                print(e)
+                logger.error('Error in DoUnfo')
+                logger.error(e)
 
 
 class Fofo(Thread):
@@ -85,7 +86,7 @@ class Fofo(Thread):
         self.uid = user_utils.get_user_id(u)
         self.bot = datas[u].bot
         self.queue_to_fo = datas[u].queue_to_fo
-        print('user %s to FOFO' % u)
+        logger.info('user %s to FOFO', u)
 
     def run(self):
         uid = user_utils.get_user_id(self.u)
@@ -98,25 +99,24 @@ class Fofo(Thread):
                 i = 0
                 for id, name in user_utils.get_all_followers_gen(self.bot, self.uid, max=200):
                     i += 1
-                    print('starting to steal from %d-th: %s' % (i, name))
+                    logger.info('starting to steal from %d-th: %s', i, name)
                     j = 0
                     for _id, _name in user_utils.get_all_followers_gen(self.bot, id, max=100):
                         j += 1
                         k += 1
-                        print('inspecting %d-th foer(%s) of %d-th foer(%s), overall %d-th, %d-th loop' %
-                              (j, _name, i, name, k, loop))
+                        logger.info('inspecting %d-th foer(%s) of %d-th foer(%s), overall %d-th, %d-th loop',
+                                    j, _name, i, name, k, loop)
                         if data.is_followed(self.u, _id):
-                            print('Already followed.')
+                            logger.info('Already followed %s.', _name)
                         else:
                             if not Filter(_name, conditions).apply():
-                                print('%s(%d) has not passed filter' % (_name, k))
+                                logger.info('%s(%d) has not passed filter', _name, k)
                             else:
-                                print('Steal follower %s' % (str(_name)))
+                                logger.info('Steal follower %s', _name)
                                 data.set_id_to_name(_id, _name)
                                 self.queue_to_fo.put(_id)
             except BaseException as e:
-                print('error', e)
-                pass
+                logger.error('error', e)
 
 
 class StealSuperBrand(Thread):
@@ -165,7 +165,7 @@ class StealSimilarTo(Thread):
         next_stars = user_utils.related_users(self.bot, star)[:10]
         random.shuffle(next_stars)
         visited = set()
-        print('next stars', next_stars)
+        logger.info('next stars %s', next_stars)
         for ns in next_stars:
             star_queue.put(ns)
             visited.add(ns)
@@ -181,27 +181,26 @@ class StealSimilarTo(Thread):
                 if ns not in visited and star_queue.qsize() < MAX_QUEUE_SIZE:
                     star_queue.put(ns)
                     visited.add(ns)
-            print('stealing from ', star)
+            logger.info('stealing from %s', star)
 
             i = 0
             star_id = user_utils.get_user_id(star)  # TODO: check null
             if Filter(star, conditions).apply():
-                print('foing the star itself', star)
+                logger.info('foing the star itself %s', star)
                 data.set_id_to_name(star_id, star)
                 self.queue_to_fo.put(star_id)
 
             for id, name in user_utils.get_all_followers_gen(self.bot, star_id, BATCH_SIZE):
                 i += 1
-                print('inspecting %d-th foer of %s' % (i, star))
+                logger.info('inspecting %d-th foer of %s', i, star)
                 if data.is_followed(self.u, id):
-                    print('%s: Skip %d-th follower %s(%s). Already followed.' %
-                          (str(datetime.datetime.now()), i, str(id), str(name)))
+                    logger.info('Skip %d-th follower %s(%s). Already followed.',
+                                i, str(id), str(name))
                 else:
                     if not Filter(name, conditions).apply():
-                        print('%s(%d) has not passed filter' % (name, i))
+                        logger.info('%s(%d) has not passed filter', name, i)
                     else:
-                        print('%s: Steal %d-th follower %s(%s)' %
-                              (str(datetime.datetime.now()), i, str(id), str(name)))
+                        logger.info('Steal %d-th follower %s(%s)', i, str(id), str(name))
                         data.set_id_to_name(id, name)
                         self.queue_to_fo.put(id)
 
@@ -265,7 +264,7 @@ class DoFo(Thread):
                 if r.status_code == 200:
                     data.set_followed(self.u, f)
                 else:
-                    print('fail to follow, stats code:', r.status_code)
+                    logger.info('fail to follow, stats code: %d', r.status_code)
                     # TODO: cool down?
                     continue
 
@@ -277,33 +276,32 @@ class DoFo(Thread):
                     post_ids = random.sample(post_ids, self.like_per_fo)
                 if like_cooldown_remain <= 0:
                     for post_id in post_ids:
-                        print('like user(%s) post %d' % (username, int(post_id)))
+                        logger.info('like user(%s) post %d', username, int(post_id))
                         r = self.bot.like(post_id)
                         if r.status_code == 200:
                             like_cooldown = DEFAULT_LIKE_COOLDOWN
                             like_cooldown_remain = 0
                         else:
-                            print('fail to like. status code %d' % r.status_code)
-                            # print(r.text)
+                            logger.info('fail to like. status code %d', r.status_code)
                             like_cooldown *= 1.2
-                            print('like cool down gap increased to', like_cooldown)
+                            logger.info('like cool down gap increased to %d', like_cooldown)
                             like_cooldown_remain = like_cooldown
-                            print('start like cool down for', like_cooldown)
+                            logger.info('start like cool down for %d', like_cooldown)
                             break
                 else:
-                    print('remain like cooldown', like_cooldown_remain)
+                    logger.info('remain like cooldown %d', like_cooldown_remain)
                     like_cooldown_remain -= 1
 
                 # to comment
                 if post_ids and self.comment_pool:
                     post_id = random.choice(post_ids)
                     comment = random.choice(self.comment_pool)
-                    print('comment %s on %s' % (comment, str(post_id)))
+                    logger.info('comment %s on %s', comment, str(post_id))
                     self.bot.comment(post_id, comment)
 
             except BaseException as e:
-                print('Error in DoFo')
-                print(e)
+                logger.error('Error in DoFo')
+                logger.error(e)
             finally:
                 # slow down
                 time.sleep(24 * 3600 / daily_rate)
