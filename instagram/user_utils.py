@@ -84,7 +84,7 @@ def get_saved_medias(bot, uid):
         return Media(photo_id, code, typename, url, caption)
 
     url = INSTAGRAM_GRAPPHQL_QUERY % \
-        (QUERY_IDs['saved_media'], urllib.parse.quote_plus(make_query_cursor(uid, paginate=100)))
+        (QUERY_IDs['saved_media'], urllib.parse.quote_plus(make_query_cursor(uid, paginate=200)))
     r = bot.s.get(url)
     if r.status_code != 200:
         return []
