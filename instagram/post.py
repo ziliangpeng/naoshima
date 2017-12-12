@@ -86,8 +86,16 @@ def by_graphql(bot, u):
     return src, caption, photo_id, photo_code
 
 
+def hashtagify_word(w):
+    if w.startswith('#'):
+        return w
+    if w.startswith('http://www.instagram.com'):
+        return w
+    return '#' + w
+
+
 def hashtagify(s):
-    return ' '.join(['#' + w for w in s.split()])
+    return ' '.join([hashtagify_word(w) for w in s.split()])
 
 
 def transform(s):
