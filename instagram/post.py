@@ -86,6 +86,15 @@ def by_graphql(bot, u):
     return src, caption, photo_id, photo_code
 
 
+def hashtagify(s):
+    return ' '.join(['#' + w for w in s.split()])
+
+
+def transform(s):
+    lines = s.split('\n')
+    return '\n'.join([hashtagify(line) for line in lines])
+
+
 if __name__ == '__main__':
     # print separator
     print('\n\n' + '<' * 42)
@@ -97,6 +106,7 @@ if __name__ == '__main__':
 
     # src, caption, photo_id, photo_code = by_url(bot, u)
     src, caption, photo_id, photo_code = by_graphql(bot, u)
+    caption = transform(caption)
 
     # download file
     FILEPATH = '/data/ig_tmp.jpg'
