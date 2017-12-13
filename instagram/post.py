@@ -89,7 +89,7 @@ def by_graphql(bot, u):
 def hashtagify_word(w):
     if w.startswith('#'):
         return w
-    if w.startswith('http://www.instagram.com'):
+    if w.startswith('https://www.instagram.com'):
         return w
     return '#' + w
 
