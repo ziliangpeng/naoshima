@@ -133,3 +133,5 @@ if __name__ == '__main__':
     success = InstagramAPI.uploadPhoto(FILEPATH, caption=caption)
     if success:
         data.set_posted(u, photo_id, photo_code)
+    else:
+        print('error posting...')
