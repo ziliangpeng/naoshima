@@ -100,7 +100,9 @@ def hashtagify(s):
 
 def transform(s):
     lines = s.split('\n')
-    return '\n'.join([hashtagify(line) for line in lines])
+    first_line = lines[0]  # first line is 'by xxx', do not hashtagify it
+    remain_lines  = '\n'.join([hashtagify(line) for line in lines[1:]])
+    return first_line + '\n' + remain_lines
 
 
 if __name__ == '__main__':
