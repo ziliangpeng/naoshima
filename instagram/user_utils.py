@@ -1,4 +1,3 @@
-import pylru
 import json
 import time
 import requests
@@ -7,9 +6,6 @@ import urllib.request
 import urllib.parse
 import urllib.error
 from utils import _json_path
-
-CACHED_USER_JSON = pylru.lrucache(1024)
-
 
 def get_user_json(u):
     cached_json = data.get_json_by_username(u)

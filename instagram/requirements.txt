@@ -1,8 +1,7 @@
-redis==2.10.6
+langdetect==1.0.7
 json5==0.6.0
 requests==2.18.4
-langdetect==1.0.7
-pylru==1.0.9
+redis==2.10.6
 lib==3.0.0
 plotly==2.2.3
 typing==3.6.2
