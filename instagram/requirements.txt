@@ -1,11 +1,8 @@
-certifi==2017.11.5
-chardet==3.0.4
-idna==2.6
-leveldb==0.194
-pylru==1.0.9
-requests==2.18.4
-urllib3==1.22
-wrapt==1.10.11
-json5==0.6.0
 redis==2.10.6
+json5==0.6.0
+requests==2.18.4
 langdetect==1.0.7
+pylru==1.0.9
+lib==3.0.0
+plotly==2.2.3
+typing==3.6.2
