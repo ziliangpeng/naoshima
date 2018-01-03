@@ -56,11 +56,11 @@ def _related_tags(*target_tags):
     return counted_tags
 
 
-def all_related(tag):
+def all_related(tag, blacklist=[]):
     return [x[0] for x in _related_tags(tag)]
 
 
-def top_related(tags, k):
+def top_related(tags, k, blacklist=[]):
     return [x[0] for x in _related_tags(*tags)[:k]]
 
 
