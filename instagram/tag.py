@@ -56,6 +56,7 @@ def _related_tags(*target_tags):
     return counted_tags
 
 
+# TODO: add max_count to filter tags
 def all_related(tag, blacklist=[]):
     return [x[0] for x in _related_tags(tag)]
 
