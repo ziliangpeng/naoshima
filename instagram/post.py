@@ -6,6 +6,7 @@ import config_reader
 import user_utils
 import random
 import requests
+import tag
 from lib.postbot import InstagramAPI
 
 
@@ -101,7 +102,7 @@ def hashtagify(s):
 def transform(s):
     lines = s.split('\n')
     first_line = lines[0]  # first line is 'by xxx', do not hashtagify it
-    remain_lines  = '\n'.join([hashtagify(line) for line in lines[1:]])
+    remain_lines = '\n'.join([hashtagify(line) for line in lines[1:]])
     return first_line + '\n' + remain_lines
 
 
@@ -115,8 +116,8 @@ if __name__ == '__main__':
     u = config_reader.load_secrets()[0]
 
     # src, caption, photo_id, photo_code = by_url(bot, u)
-    src, caption, photo_id, photo_code = by_graphql(bot, u)
-    caption = transform(caption)
+    src, original_caption, photo_id, photo_code = by_graphql(bot, u)
+    caption = transform(original_caption)
 
     # download file
     FILEPATH = '/data/ig_tmp.jpg'
@@ -137,3 +138,15 @@ if __name__ == '__main__':
         data.set_posted(u, photo_id, photo_code)
     else:
         print('error posting...')
+
+    # comment
+    time.sleep(60)
+    print('commenting...')
+    my_url = 'https://www.instagram.com/%s/?__a=1' % u
+
+    j = user_utils.get_user_json(u)
+    latest_media = j['user']['media']['nodes'][0]
+    code = latest_media['code']
+    tags = tag.tags_from_caption(original_caption)
+    related_tags = tag.top_related(tags, 42)
+    bot.comment(code, ' '.join(related_tags))

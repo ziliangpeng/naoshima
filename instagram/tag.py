@@ -3,20 +3,40 @@ import sys
 from collections import Counter
 
 
-def _related_tags(target_tag):
-    url = 'https://www.instagram.com/explore/tags/%s/?__a=1' % (target_tag)
-    r = requests.get(url)
-    j = r.json()
-    captions = [n['node']['edge_media_to_caption']['edges'][0]['node']['text'] for n in j['graphql']['hashtag']['edge_hashtag_to_media']['edges']]
-    tags = filter(lambda x: x.startswith('#'), '\n'.join(captions).split())
+def _extract_caption(node):
+    edges = node['node']['edge_media_to_caption']['edges']
+    if len(edges) == 0:
+        return ''
+    else:
+        return edges[0]['node']['text']
+
+
+def tags_from_caption(caption):
+    tags = filter(lambda x: x.startswith('#'), caption.split())
     normalized_tags = []
     for tag in tags:
         subtags = tag.split('#')
         for subtag in subtags:
             subtag = subtag.strip()
-            if subtag != '' and subtag != target_tag:
+            if subtag != '':
                 normalized_tags.append('#' + subtag)
-    counted_tags = list(Counter(normalized_tags).items())
+    return normalized_tags
+
+
+def _related_tags(*target_tags):
+    normalized_tags = []
+    for target_tag in target_tags:
+        url = 'https://www.instagram.com/explore/tags/%s/?__a=1' % (target_tag)
+        r = requests.get(url)
+        j = r.json()
+        nodes = j['graphql']['hashtag']['edge_hashtag_to_media']['edges']
+        captions = [_extract_caption(n) for n in nodes]
+        for caption in captions:
+            normalized_tags += tags_from_caption(caption)
+    counter = Counter(normalized_tags)
+    for target_tag in target_tags:
+        counter.pop('#' + target_tag)
+    counted_tags = list(counter.items())
     counted_tags.sort(key=lambda x: x[1], reverse=True)
     return counted_tags
 
@@ -24,10 +44,11 @@ def _related_tags(target_tag):
 def all_related(tag):
     return [x[0] for x in _related_tags(tag)]
 
-def top_related(tag, k):
-    return [x[0] for x in _related_tags(tag)[:k]]
+
+def top_related(tags, k):
+    return [x[0] for x in _related_tags(*tags)[:k]]
 
 
 if __name__ == '__main__':
-    tag = sys.argv[1]
-    print(top_related(tag, 15))
+    tags = sys.argv[1:]
+    print(top_related(tags, 15))

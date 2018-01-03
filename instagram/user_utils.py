@@ -7,6 +7,7 @@ import urllib.parse
 import urllib.error
 from utils import _json_path
 
+
 def get_user_json(u):
     cached_json = data.get_json_by_username(u)
     if cached_json is not None:
