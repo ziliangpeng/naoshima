@@ -148,5 +148,7 @@ if __name__ == '__main__':
     latest_media = j['user']['media']['nodes'][0]
     code = latest_media['code']
     tags = tag.tags_from_caption(original_caption)
+    if len(tags) == 0:
+        tags = tag.tags_from_caption(caption)
     related_tags = tag.top_related(tags, 42)
     bot.comment(code, ' '.join(related_tags))
