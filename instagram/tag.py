@@ -1,6 +1,7 @@
 import requests
 import sys
 from collections import Counter
+from logs import logger
 
 
 def _extract_caption(node):
@@ -24,18 +25,32 @@ def tags_from_caption(caption):
 
 
 def _related_tags(*target_tags):
+    target_tags = [t.replace('#', '') for t in target_tags]
     normalized_tags = []
     for target_tag in target_tags:
         url = 'https://www.instagram.com/explore/tags/%s/?__a=1' % (target_tag)
+        logger.info("explore tags. url is %s", url)
         r = requests.get(url)
-        j = r.json()
+        logger.info("explore tags. response encoding is %s", r.encoding)
+        if r.status_code == 200:
+            try:
+                j = r.json()
+            except Exception:
+                logger.error("explore tags. error in parsing json")
+                continue
+        else:
+            logger.warn("explore tags. status code: %d", r.status_code)
+            continue
         nodes = j['graphql']['hashtag']['edge_hashtag_to_media']['edges']
         captions = [_extract_caption(n) for n in nodes]
         for caption in captions:
             normalized_tags += tags_from_caption(caption)
     counter = Counter(normalized_tags)
     for target_tag in target_tags:
-        counter.pop('#' + target_tag)
+        try:
+            counter.pop('#' + target_tag)
+        except KeyError:
+            logger.error("hashtag %s should be in dict but not", target_tag)
     counted_tags = list(counter.items())
     counted_tags.sort(key=lambda x: x[1], reverse=True)
     return counted_tags

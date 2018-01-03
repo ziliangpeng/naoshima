@@ -8,6 +8,7 @@ import random
 import requests
 import tag
 from lib.postbot import InstagramAPI
+from logs import logger
 
 
 """
@@ -126,29 +127,42 @@ if __name__ == '__main__':
         f.write(r.content)
 
     # upload file
-    time.sleep(30)
+    time.sleep(10)
     print('posting...')
     user, pwd = config_reader.load_secrets()
     InstagramAPI = InstagramAPI(user, pwd)
     InstagramAPI.login()  # login
 
-    time.sleep(60)
-    success = InstagramAPI.uploadPhoto(FILEPATH, caption=caption)
+    time.sleep(10)
+    success = InstagramAPI.uploadPhoto(FILEPATH, caption=original_caption)
     if success:
         data.set_posted(u, photo_id, photo_code)
     else:
         print('error posting...')
 
     # comment
-    time.sleep(60)
+    time.sleep(5)
     print('commenting...')
     my_url = 'https://www.instagram.com/%s/?__a=1' % u
-
-    j = user_utils.get_user_json(u)
+    logger.info("my url is %s", my_url)
+    r = bot.s.get(my_url)
+    j = r.json()
     latest_media = j['user']['media']['nodes'][0]
-    code = latest_media['code']
+    image_id = latest_media['id']
+    logger.info("New image id is %s", image_id)
     tags = tag.tags_from_caption(original_caption)
     if len(tags) == 0:
         tags = tag.tags_from_caption(caption)
-    related_tags = tag.top_related(tags, 42)
-    bot.comment(code, ' '.join(related_tags))
+    related_tags = tag.top_related(tags, 27)
+    logger.info("related tags are %s", str(related_tags))
+    while related_tags:
+        logger.info("Attempting to comment with %d tags", len(related_tags))
+        power_comment = ' '.join(related_tags)
+        logger.info("power comment is %s", power_comment)
+        comment_response = bot.comment(image_id, power_comment)
+        if comment_response.status_code == 200:
+            logger.info("comment success")
+            break
+        else:
+            logger.info("comment fail with status code %d", comment_response.status_code)
+        related_tags.pop(-1)
