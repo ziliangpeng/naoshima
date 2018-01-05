@@ -1,7 +1,44 @@
-import requests
+import itertools
 import sys
+import time
 from collections import Counter
+
+import requests
+from retrying import retry
+
 from logs import logger
+from utils import _json_path
+
+
+@retry
+def get_tag_json(tag):
+    url = 'https://www.instagram.com/explore/tags/%s/?__a=1' % (tag)
+    print(url)
+    retry_delay = 5
+    while True:
+        r = requests.get(url)
+        if r.status_code == 200:
+            j = r.json()
+            # data.set_json_by_username(u, j)
+            return j
+        elif r.status_code == 429:
+            print('status code', r.status_code)
+            print('get json failed. sleeping for %d s' % (retry_delay))
+            time.sleep(retry_delay)
+            retry_delay = int(retry_delay * 1.2)  # exponentially increase delay
+        else:
+            print('status code', r.status_code)
+            break
+    # raise BaseException("Fail to get user json")
+    print("Unable to get tag json. Returning {}")
+    return {}
+
+
+def get_tag_count(tag):
+    tag = tag.replace('#', '')
+    j = get_tag_json(tag)
+    count = _json_path(j, ["graphql", "hashtag", "edge_hashtag_to_media", "count"])
+    return count and count or 0
 
 
 def _extract_caption(node):
@@ -61,10 +98,13 @@ def all_related(tag, blacklist=[]):
     return [x[0] for x in _related_tags(tag)]
 
 
-def top_related(tags, k, blacklist=[]):
-    return [x[0] for x in _related_tags(*tags)[:k]]
+def top_related(tags, k, blacklist=[], max_count=0):
+    all_tags = [x[0] for x in _related_tags(*tags)]
+    if max_count > 0:
+        all_tags = filter(lambda t: get_tag_count(t) < max_count, all_tags)
+    return list(itertools.islice(all_tags, k))
 
 
 if __name__ == '__main__':
     tags = sys.argv[1:]
-    print(top_related(tags, 15))
+    print(top_related(tags, 15, max_count=1000000))

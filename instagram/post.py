@@ -153,7 +153,7 @@ if __name__ == '__main__':
     tags = tag.tags_from_caption(original_caption)
     if len(tags) == 0:
         tags = tag.tags_from_caption(caption)
-    related_tags = tag.top_related(tags, 27)
+    related_tags = tag.top_related(tags, 27, max_count=2000000)
     logger.info("related tags are %s", str(related_tags))
     while related_tags:
         logger.info("Attempting to comment with %d tags", len(related_tags))
