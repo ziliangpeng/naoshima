@@ -1,0 +1,10 @@
+version: '3'
+services:
+  reckless:
+    # docker-compose up -d reckless
+    build: .
+    container_name: reckless
+    ports:
+      - "80:80"
+    volumes:
+      - /data/reckless:/reckless/static/data
