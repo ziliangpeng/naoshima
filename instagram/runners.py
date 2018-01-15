@@ -210,12 +210,8 @@ class StealFoers(StealBase):
 
     def run(self):
         i = 0
-        skip_head = 0  # hack: skip something already processed
         for id, name in user_utils.get_all_followers_gen(self.bot, self.steal_id):
             i += 1
-            if i < skip_head:
-                print('skip head %d-th followers' % i)
-                continue
 
             if data.is_followed(self.u, id):
                 print('%s: Skip %d-th follower %s(%s). Already followed.' %
