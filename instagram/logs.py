@@ -1,12 +1,17 @@
 import logging
 
-formatter = logging.Formatter('[%(asctime)s] - %(levelname)s - [%(module)s:%(funcName)s:%(lineno)d] - %(message)s')
+import data_repo
+
+d = data_repo.datas[0]
+u = d.u
+
+formatter = logging.Formatter(u + ': [%(asctime)s] - %(levelname)s - [%(module)s:%(funcName)s:%(lineno)d] - %(message)s')
 
 sh = logging.StreamHandler()
 sh.setLevel(logging.INFO)
 sh.setFormatter(formatter)
 
-fh = logging.FileHandler('/data/instagram.log')
+fh = logging.FileHandler('/data/instagram-%s.log' % u)
 fh.setLevel(logging.DEBUG)
 fh.setFormatter(formatter)
 
