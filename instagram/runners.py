@@ -86,6 +86,7 @@ class StealBase(Thread):
         self.uid = user_utils.get_user_id(u)
         self.bot = datas[u].bot
         self.queue_to_fo = datas[u].queue_to_fo
+        self.conditions = config_reader.load_conditions()
 
 
 class Fofo(StealBase):
@@ -95,7 +96,6 @@ class Fofo(StealBase):
 
     def run(self):
         uid = user_utils.get_user_id(self.u)
-        conditions = config_reader.load_conditions()
         k = 0
         loop = 0
         while True:
@@ -114,7 +114,7 @@ class Fofo(StealBase):
                         if data.is_followed(self.u, _id):
                             logger.info('Already followed %s.', _name)
                         else:
-                            if not Filter(_name, conditions).apply():
+                            if not Filter(_name, self.conditions).apply():
                                 logger.info('%s(%d) has not passed filter', _name, k)
                             else:
                                 logger.info('Steal follower %s', _name)
@@ -129,7 +129,6 @@ class StealSuperBrand(StealBase):
         super().__init__(u)
 
     def run(self):
-        conditions = config_reader.load_conditions()
         BIG_LIST = ['instagram', 'apple', 'liuwenlw', 'london']
         BATCH_SIZE = 1000
         while True:
@@ -143,7 +142,7 @@ class StealSuperBrand(StealBase):
                         print('%s: Skip %d-th follower %s(%s). Already followed.' %
                               (str(datetime.datetime.now()), i, str(id), str(name)))
                     else:
-                        if not Filter(name, conditions).apply():
+                        if not Filter(name, self.conditions).apply():
                             print('%s(%d) has not passed filter' % (name, i))
                         else:
                             print('%s: Steal %d-th follower %s(%s)' %
@@ -158,7 +157,6 @@ class StealSimilarTo(StealBase):
         self.seed_name = seed_name
 
     def run(self):
-        conditions = config_reader.load_conditions()
         star_queue = Queue()
         star = self.seed_name
         next_stars = user_utils.related_users(self.bot, star)[:10]
@@ -184,7 +182,7 @@ class StealSimilarTo(StealBase):
 
             i = 0
             star_id = user_utils.get_user_id(star)  # TODO: check null
-            if Filter(star, conditions).apply():
+            if Filter(star, self.conditions).apply():
                 logger.info('foing the star itself %s', star)
                 data.set_id_to_name(star_id, star)
                 self.queue_to_fo.put(star_id)
@@ -196,7 +194,7 @@ class StealSimilarTo(StealBase):
                     logger.info('Skip %d-th follower %s(%s). Already followed.',
                                 i, str(id), str(name))
                 else:
-                    if not Filter(name, conditions).apply():
+                    if not Filter(name, self.conditions).apply():
                         logger.info('%s(%d) has not passed filter', name, i)
                     else:
                         logger.info('Steal %d-th follower %s(%s)', i, str(id), str(name))
@@ -211,7 +209,6 @@ class StealFoers(StealBase):
         print('to steal user %s, id %d' % (steal_name, int(self.steal_id)))
 
     def run(self):
-        conditions = config_reader.load_conditions()
         i = 0
         skip_head = 0  # hack: skip something already processed
         for id, name in user_utils.get_all_followers_gen(self.bot, self.steal_id):
@@ -224,7 +221,7 @@ class StealFoers(StealBase):
                 print('%s: Skip %d-th follower %s(%s). Already followed.' %
                       (str(datetime.datetime.now()), i, str(id), str(name)))
             else:
-                if not Filter(name, conditions).apply():
+                if not Filter(name, self.conditions).apply():
                     print('%s(%d) has not passed filter' % (name, i))
                 else:
                     print('%s: Steal %d-th follower %s(%s)' %
