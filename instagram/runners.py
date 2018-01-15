@@ -196,6 +196,7 @@ class DoFo(Thread):
 
     def run(self):
         daily_rate = config_reader.load_follow_per_day()
+        logger.info("Daily rate is %d", daily_rate)
         # TODO: extract all cooldown logic into separate module
         DEFAULT_LIKE_COOLDOWN = 100
         DEFAULT_COMMENT_COOLDOWN = 100
@@ -205,6 +206,10 @@ class DoFo(Thread):
         comment_cooldown_remain = 0
         while True:
             try:
+                if config_reader.load_incremental_daily_rate():
+                    daily_rate += 0.01
+                    logger.info("Daily rate increased to %f", daily_rate)
+
                 # TODO: this is not UniqueQueue any more so possibly there's double-following, not a big deal
                 # but can use a fix
                 f = self.queue_to_fo.get()
@@ -212,7 +217,7 @@ class DoFo(Thread):
                 if r.status_code == 200:
                     data.set_followed(self.u, f)
                 else:
-                    logger.info('fail to follow, stats code: %d', r.status_code)
+                    logger.error('Fail to follow, stats code: %d', r.status_code)
                     # TODO: cool down?
                     continue
 
