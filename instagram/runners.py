@@ -79,13 +79,18 @@ class DoUnfo(Thread):
                 logger.error(e)
 
 
-class Fofo(Thread):
+class StealBase(Thread):
     def __init__(self, u):
         Thread.__init__(self)
         self.u = u
         self.uid = user_utils.get_user_id(u)
         self.bot = datas[u].bot
         self.queue_to_fo = datas[u].queue_to_fo
+
+
+class Fofo(StealBase):
+    def __init__(self, u):
+        super().__init__(u)
         logger.info('user %s to FOFO', u)
 
     def run(self):
@@ -119,12 +124,9 @@ class Fofo(Thread):
                 logger.error('error', e)
 
 
-class StealSuperBrand(Thread):
+class StealSuperBrand(StealBase):
     def __init__(self, u):
-        Thread.__init__(self)
-        self.u = u
-        self.bot = datas[u].bot
-        self.queue_to_fo = datas[u].queue_to_fo
+        super().__init__(u)
 
     def run(self):
         conditions = config_reader.load_conditions()
@@ -150,12 +152,9 @@ class StealSuperBrand(Thread):
                             self.queue_to_fo.put(id)
 
 
-class StealSimilarTo(Thread):
+class StealSimilarTo(StealBase):
     def __init__(self, u, seed_name):
-        Thread.__init__(self)
-        self.u = u
-        self.bot = datas[u].bot
-        self.queue_to_fo = datas[u].queue_to_fo
+        super().__init__(u)
         self.seed_name = seed_name
 
     def run(self):
@@ -205,13 +204,10 @@ class StealSimilarTo(Thread):
                         self.queue_to_fo.put(id)
 
 
-class StealFoers(Thread):
+class StealFoers(StealBase):
     def __init__(self, u, steal_name):
-        Thread.__init__(self)
-        self.u = u
-        self.bot = datas[u].bot
+        super().__init__(u)
         self.steal_id = user_utils.get_user_id(steal_name)  # TODO: check null
-        self.queue_to_fo = datas[u].queue_to_fo
         print('to steal user %s, id %d' % (steal_name, int(self.steal_id)))
 
     def run(self):
