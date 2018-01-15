@@ -247,7 +247,7 @@ class DoFo(Thread):
         self.comment_pool = datas[u].comment_pool
 
     def run(self):
-        daily_rate = 999
+        daily_rate = config_reader.load_follow_per_day()
         # TODO: extract all cooldown logic into separate module
         DEFAULT_LIKE_COOLDOWN = 100
         DEFAULT_COMMENT_COOLDOWN = 100
