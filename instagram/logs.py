@@ -5,7 +5,8 @@ import data_repo
 d = data_repo.datas[0]
 u = d.u
 
-formatter = logging.Formatter(u + ': [%(asctime)s] - %(levelname)s - [%(module)s:%(funcName)s:%(lineno)d] - %(message)s')
+u_format = '(%s): ' % (u)
+formatter = logging.Formatter(u_format + '[%(asctime)s] - %(levelname)s - [%(module)s:%(funcName)s:%(lineno)d] - %(message)s')
 
 sh = logging.StreamHandler()
 sh.setLevel(logging.INFO)
