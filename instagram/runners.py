@@ -1,4 +1,7 @@
 import datetime
+
+import itertools
+
 import logs
 import random
 import time
@@ -9,7 +12,6 @@ import data
 import config_reader
 import user_utils
 from filter import Filter
-import data_repo
 from queue import Queue
 from data_repo import datas
 
@@ -88,67 +90,49 @@ class StealBase(Thread):
         self.queue_to_fo = datas[u].queue_to_fo
         self.conditions = config_reader.load_conditions()
 
+    def run(self):
+        for id, name, msg in self.generate():
+            logger.info("Candidate %s: %s", name.ljust(16), msg)
+            if data.is_followed(self.u, id):
+                logger.debug("Already followed.")
+            else:
+                if not Filter(name, self.conditions).apply():
+                    logger.debug("Has not passed filter")
+                else:
+                    logger.info("Good to steal! %s" % (name))
+                    data.set_id_to_name(id, name)
+                    self.queue_to_fo.put(id)
+
 
 class Fofo(StealBase):
     def __init__(self, u):
         super().__init__(u)
         logger.info('user %s to FOFO', u)
 
-    def run(self):
-        uid = user_utils.get_user_id(self.u)
-        k = 0
-        loop = 0
-        while True:
-            loop += 1
-            try:
-                i = 0
-                for id, name in user_utils.get_all_followers_gen(self.bot, self.uid, max=200):
-                    i += 1
-                    logger.info('starting to steal from %d-th: %s', i, name)
-                    j = 0
-                    for _id, _name in user_utils.get_all_followers_gen(self.bot, id, max=100):
-                        j += 1
-                        k += 1
-                        logger.info('inspecting %d-th foer(%s) of %d-th foer(%s), overall %d-th, %d-th loop',
-                                    j, _name, i, name, k, loop)
-                        if data.is_followed(self.u, _id):
-                            logger.info('Already followed %s.', _name)
-                        else:
-                            if not Filter(_name, self.conditions).apply():
-                                logger.info('%s(%d) has not passed filter', _name, k)
-                            else:
-                                logger.info('Steal follower %s', _name)
-                                data.set_id_to_name(_id, _name)
-                                self.queue_to_fo.put(_id)
-            except BaseException as e:
-                logger.error('error', e)
+    def generate(self):
+        LEVEL_ONE_CAP = 200
+        LEVEL_TWO_CAP = 100
+        overall_cnt = 0
+        for loop_cnt in itertools.count():
+            for i, (id, name) in enumerate(user_utils.get_all_followers_gen(self.bot, self.uid, max=LEVEL_ONE_CAP)):
+                for j, (_id, _name) in enumerate(user_utils.get_all_followers_gen(self.bot, id, max=LEVEL_TWO_CAP)):
+                    overall_cnt += 1
+                    message = "%d-th foer of %d-th foer(%s). Overall %d. loop %d." % (j, i, name, overall_cnt, loop_cnt)
+                    yield _id, _name, message
+
 
 
 class StealSuperBrand(StealBase):
     def __init__(self, u):
         super().__init__(u)
 
-    def run(self):
-        BIG_LIST = ['instagram', 'apple', 'liuwenlw', 'london']
+    def generate(self):
         BATCH_SIZE = 1000
-        while True:
-            for brand in BIG_LIST:
-                i = 0
-                brand_id = user_utils.get_user_id(brand)  # TODO: check null
-                for id, name in user_utils.get_all_followers_gen(self.bot, brand_id, BATCH_SIZE):
-                    i += 1
-                    print('inspecting %d-th foer of %s' % (i, brand))
-                    if data.is_followed(self.u, id):
-                        print('%s: Skip %d-th follower %s(%s). Already followed.' %
-                              (str(datetime.datetime.now()), i, str(id), str(name)))
-                    else:
-                        if not Filter(name, self.conditions).apply():
-                            print('%s(%d) has not passed filter' % (name, i))
-                        else:
-                            print('%s: Steal %d-th follower %s(%s)' %
-                                  (str(datetime.datetime.now()), i, str(id), str(name)))
-                            data.set_id_to_name(id, name)
-                            self.queue_to_fo.put(id)
+        BIG_LIST = ['instagram', 'apple', 'liuwenlw', 'london']
+        brand_id_list = [user_utils.get_user_id(b) for b in BIG_LIST]
+        for brand, brand_id in itertools.cycle(zip(BIG_LIST, brand_id_list)):
+            for i, (id, name) in enumerate(user_utils.get_all_followers_gen(self.bot, brand_id, BATCH_SIZE)):
+                yield id, name, "%d-th follower of super brand(%s)" % (i, brand)
 
 
 class StealSimilarTo(StealBase):
@@ -156,9 +140,11 @@ class StealSimilarTo(StealBase):
         super().__init__(u)
         self.seed_name = seed_name
 
-    def run(self):
+    def generate_star(self):
+        MAX_QUEUE_SIZE = 1000
         star_queue = Queue()
         star = self.seed_name
+        star_queue.put(star)
         next_stars = user_utils.related_users(self.bot, star)[:10]
         random.shuffle(next_stars)
         visited = set()
@@ -166,10 +152,6 @@ class StealSimilarTo(StealBase):
         for ns in next_stars:
             star_queue.put(ns)
             visited.add(ns)
-
-        # star_queue.put(self.seed_name)
-        BATCH_SIZE = 500
-        MAX_QUEUE_SIZE = 1000
         while True:
             star = star_queue.get()
             next_stars = user_utils.related_users(self.bot, star)[:50]
@@ -178,52 +160,29 @@ class StealSimilarTo(StealBase):
                 if ns not in visited and star_queue.qsize() < MAX_QUEUE_SIZE:
                     star_queue.put(ns)
                     visited.add(ns)
-            logger.info('stealing from %s', star)
+            yield star
 
-            i = 0
+    def generate(self):
+        BATCH_SIZE = 500
+        for star in self.generate_star():
             star_id = user_utils.get_user_id(star)  # TODO: check null
-            if Filter(star, self.conditions).apply():
-                logger.info('foing the star itself %s', star)
-                data.set_id_to_name(star_id, star)
-                self.queue_to_fo.put(star_id)
+            yield star_id, star, "This is a star!"
 
-            for id, name in user_utils.get_all_followers_gen(self.bot, star_id, BATCH_SIZE):
-                i += 1
-                logger.info('inspecting %d-th foer of %s', i, star)
-                if data.is_followed(self.u, id):
-                    logger.info('Skip %d-th follower %s(%s). Already followed.',
-                                i, str(id), str(name))
-                else:
-                    if not Filter(name, self.conditions).apply():
-                        logger.info('%s(%d) has not passed filter', name, i)
-                    else:
-                        logger.info('Steal %d-th follower %s(%s)', i, str(id), str(name))
-                        data.set_id_to_name(id, name)
-                        self.queue_to_fo.put(id)
+            for i, (id, name) in enumerate(user_utils.get_all_followers_gen(self.bot, star_id, BATCH_SIZE)):
+                yield id, name, "%d-th follower of star(%s)" % (i, star)
 
 
 class StealFoers(StealBase):
     def __init__(self, u, steal_name):
         super().__init__(u)
+        self.steal_name = steal_name
         self.steal_id = user_utils.get_user_id(steal_name)  # TODO: check null
         print('to steal user %s, id %d' % (steal_name, int(self.steal_id)))
 
-    def run(self):
-        i = 0
-        for id, name in user_utils.get_all_followers_gen(self.bot, self.steal_id):
-            i += 1
-
-            if data.is_followed(self.u, id):
-                print('%s: Skip %d-th follower %s(%s). Already followed.' %
-                      (str(datetime.datetime.now()), i, str(id), str(name)))
-            else:
-                if not Filter(name, self.conditions).apply():
-                    print('%s(%d) has not passed filter' % (name, i))
-                else:
-                    print('%s: Steal %d-th follower %s(%s)' %
-                          (str(datetime.datetime.now()), i, str(id), str(name)))
-                    data.set_id_to_name(id, name)
-                    self.queue_to_fo.put(id)
+    def generate(self):
+        for i, (id, name) in enumerate(user_utils.get_all_followers_gen(self.bot, self.steal_id)):
+            yield id, name, "The %d-th follower of user(%s)" % (i, self.steal_name)
+        logger.info("Enumerated all followers of %s. My task is done!" % (self.steal_name))
 
 
 class DoFo(Thread):
