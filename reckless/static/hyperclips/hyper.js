@@ -1,9 +1,0 @@
-demandBoost = 100;
-wireSupply = 5000;
-marketingEffectiveness = 10;
-margin = 25.00
-clipperBoost = 100;
-megaClipperBoost = 100;
-factoryBoost = 1000;
-droneBoost = 1000;
-giftPeriod = 5000;
