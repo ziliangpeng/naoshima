@@ -18,7 +18,7 @@ class hyperclips:
 
 
 if __name__ == "__main__":
-    print 'Starting server...'
+    print('Starting server...')
     app = web.application(urls, globals())
     app.internalerror = web.debugerror
     app.run()
