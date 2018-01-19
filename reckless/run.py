@@ -3,7 +3,8 @@ import web
 
 urls = (
     '/', 'index',
-    '/hyperclips', 'hyperclips'
+    '/hyperclips', 'hyperclips',
+    '/sex', 'index'
 )
 
 
