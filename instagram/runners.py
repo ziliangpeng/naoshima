@@ -172,6 +172,17 @@ class StealSimilarTo(StealBase):
                 yield id, name, "%d-th follower of star(%s)" % (i, star)
 
 
+class Similar(StealSimilarTo):
+    def __init__(self, u, seed_name):
+        super().__init__(u, seed_name)
+
+    def generate(self):
+        for star in self.generate_star():
+            star_id = user_utils.get_user_id(star)  # TODO: check null
+            yield star_id, star, "This is a star!"
+
+
+
 class StealFoers(StealBase):
     def __init__(self, u, steal_name):
         super().__init__(u)

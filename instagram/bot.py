@@ -3,7 +3,7 @@ import time
 import config_reader
 import data_repo
 
-from runners import DoFo, GenUnfo, DoUnfo, StealFoers, Fofo, StealSuperBrand, StealSimilarTo
+from runners import DoFo, GenUnfo, DoUnfo, StealFoers, Fofo, StealSuperBrand, StealSimilarTo, Similar
 
 
 d = data_repo.datas[0]
@@ -35,6 +35,11 @@ if __name__ == '__main__':
         elif cmd.startswith('stealsimilar('):
             steal_name = cmd[cmd.index('(') + 1: cmd.index(')')]
             t = StealSimilarTo(u, steal_name)
+            t.daemon = True
+            t.start()
+        elif cmd.startswith('similar('):
+            steal_name = cmd[cmd.index('(') + 1: cmd.index(')')]
+            t = Similar(u, steal_name)
             t.daemon = True
             t.start()
         elif cmd == 'fofo':
