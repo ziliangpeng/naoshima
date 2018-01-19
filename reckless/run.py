@@ -4,13 +4,18 @@ import web
 urls = (
     '/', 'index',
     '/hyperclips', 'hyperclips',
-    '/sex', 'index'
+    '/sex', 'sex'
 )
 
 
 class index:
     def GET(self):
         raise web.seeother('/static/main.html')
+
+
+class sex:
+    def GET(self):
+        raise web.seeother('/static/sex.html')
 
 
 class hyperclips:
