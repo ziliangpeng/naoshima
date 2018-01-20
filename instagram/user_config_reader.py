@@ -2,12 +2,19 @@
 # -*- coding: utf-8 -*-
 
 import json5
-import sys
 
 from utils import _json_path
 
 
-user_key = sys.argv[1]
+def parse_user_key():
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-u', type=str)
+    args, unknown = parser.parse_known_args()
+    return args.u
+
+
+user_key = parse_user_key()
 
 m = __import__(__name__)
 METHODS = {
