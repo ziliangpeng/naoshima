@@ -1,0 +1,8 @@
+version: '3'
+services:
+  bot:
+    # docker-compose up -d bot let
+    build: .
+    container_name: instagram-bot
+    volumes:
+      - /data/instagram:/data/instagram
