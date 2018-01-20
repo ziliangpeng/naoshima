@@ -1,0 +1,29 @@
+{
+  'jon': {
+    "login": "jon_snow",
+    "password": "i_kn0w_noth1n5",
+    "whitelist": ["dragon"],
+    "conditions": {
+      "fresh": 1000000,
+      "min_ratio": 1.4,
+      "max_follows": 2000
+    },
+    "commands": [
+      "unfo",
+      "fofo"
+    ],
+    "actors": [
+      "hourly": [
+        "fofo",
+      ],
+      "minutely": [
+        "dofo",
+        "dounfo",
+      ],
+    ]
+    "like_per_fo": 3,
+    "comments": [
+      "これは素晴らしい写真です",
+    ],
+  }
+}
