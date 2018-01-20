@@ -1,4 +1,3 @@
-import config_reader
 import redis
 import json
 import time

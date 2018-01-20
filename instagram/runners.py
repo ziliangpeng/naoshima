@@ -9,13 +9,13 @@ from threading import Thread
 import traceback
 
 import data
-import config_reader
+import user_config_reader
 import user_utils
 from filter import Filter
 from queue import Queue
 from data_repo import d0
 
-WHITELIST_USER = config_reader.load_whitelist()
+WHITELIST_USER = user_config_reader.load_whitelist()
 
 logger = logs.logger
 
@@ -40,7 +40,7 @@ class GenUnfo(Thread):
                 # followers = utils.get_followers(self.bot, self.user_id)
                 # self.id_name_dict.update(follows)
                 # self.id_name_dict.update(followers)
-                if len(follows) < config_reader.load_min_follow():
+                if len(follows) < user_config_reader.load_min_follow():
                     logger.info("Only %d follows. Pause.", len(follows))
                     time.sleep(60 * 30)
                     continue
@@ -88,7 +88,7 @@ class StealBase(Thread):
         self.uid = user_utils.get_user_id(u)
         self.bot = d0.bot
         self.queue_to_fo = d0.queue_to_fo
-        self.conditions = config_reader.load_conditions()
+        self.conditions = user_config_reader.load_conditions()
 
     def run(self):
         for id, name, msg in self.generate():
@@ -205,7 +205,7 @@ class DoFo(Thread):
         self.comment_pool = d0.comment_pool
 
     def run(self):
-        daily_rate = config_reader.load_follow_per_day()
+        daily_rate = user_config_reader.load_follow_per_day()
         logger.info("Daily rate is %d", daily_rate)
         # TODO: extract all cooldown logic into separate module
         DEFAULT_LIKE_COOLDOWN = 100
@@ -216,7 +216,7 @@ class DoFo(Thread):
         comment_cooldown_remain = 0
         while True:
             try:
-                if config_reader.load_incremental_daily_rate():
+                if user_config_reader.load_incremental_daily_rate():
                     daily_rate += 0.01
                     logger.info("Daily rate increased to %f", daily_rate)
 

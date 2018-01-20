@@ -1,7 +1,7 @@
 import random
 import time
 
-import config_reader
+import user_config_reader
 import data
 import user_utils
 from logs import logger
@@ -52,7 +52,7 @@ class GenFoFoActor(ActorBase):
         ActorBase.__init__(self, u)
 
     def act(self):
-        conditions = config_reader.redis_load_conditions(self.u)
+        conditions = user_config_reader.redis_load_conditions()
         total_generated = 0
         for foer_id, foer_name in user_utils.get_all_followers_gen(self.bot, self.uid):
             for fofoer_id, fofoer_name in user_utils.get_all_followers_gen(

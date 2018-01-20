@@ -1,5 +1,4 @@
 import auth
-import config_reader
 import user_config_reader
 import user_utils
 from queue import Queue

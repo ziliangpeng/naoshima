@@ -1,4 +1,4 @@
-import config_reader
+import user_config_reader
 import requests
 import sys
 from requests.cookies import RequestsCookieJar
@@ -8,7 +8,7 @@ import data
 
 
 def auth(log_mod=0, session=None):
-    login, password = config_reader.load_secrets()
+    login, password = user_config_reader.load_secrets()
 
     if session:
         print('auth: using session in param to create bot')
