@@ -4,6 +4,8 @@ import json
 import time
 import pickle
 
+import storage_config_reader
+
 REDIS_DB = 1
 
 
@@ -27,8 +29,8 @@ KEY_POST_ID_TIME_MAP = 'post_id_to_time'
 DEFAULT_TTL = 3600 * 24 * 30  # in seconds
 
 
-redis_host = config_reader.load_redis_host()
-redis_port = config_reader.load_redis_port()
+redis_host = storage_config_reader.load_redis_host()
+redis_port = storage_config_reader.load_redis_port()
 if redis_host is not None and redis_port is not None:
     _redis = redis.Redis(redis_host, redis_port, REDIS_DB)
 else:
