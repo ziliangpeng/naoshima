@@ -21,8 +21,6 @@ METHODS = {
     'commands': (["commands"], ["fofo", "unfo"]),
     'like_per_fo': (["like_per_fo"], 0),
     'comment_pool': (["comments"], []),  # [u"これは素晴らしい写真です", u"私はこの写真が好き"]
-    'redis_host': (["redis", "host"], None),
-    'redis_port': (["redis", "port"], None)
 }
 
 for k, (paths, default) in METHODS.items():
@@ -62,13 +60,6 @@ def load_secrets():
 # def load_comment_pool():
 #     return _load(["comments"], [u"これは素晴らしい写真です", u"私はこの写真が好き"])
 
-
-# def load_redis_host():
-#     return _load(["redis", "host"])
-
-
-# def load_redis_port():
-#     return _load(["redis", "port"])
 
 
 def _load(paths, default=None):
