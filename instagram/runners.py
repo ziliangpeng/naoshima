@@ -117,9 +117,9 @@ class Fofo(StealBase):
             for i, (id, name) in enumerate(user_utils.get_all_followers_gen(self.bot, self.uid, max=LEVEL_ONE_CAP)):
                 for j, (_id, _name) in enumerate(user_utils.get_all_followers_gen(self.bot, id, max=LEVEL_TWO_CAP)):
                     overall_cnt += 1
-                    message = "%d-th foer of %d-th foer(%s). Overall %d. loop %d." % (j, i, name, overall_cnt, loop_cnt)
+                    message = "%d-th foer of %d-th foer(%s). Overall %d. loop %d." % (j,
+                                                                                      i, name, overall_cnt, loop_cnt)
                     yield _id, _name, message
-
 
 
 class StealSuperBrand(StealBase):
@@ -180,7 +180,6 @@ class Similar(StealSimilarTo):
         for star in self.generate_star():
             star_id = user_utils.get_user_id(star)  # TODO: check null
             yield star_id, star, "This is a star!"
-
 
 
 class StealFoers(StealBase):

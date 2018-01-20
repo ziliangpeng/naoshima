@@ -61,7 +61,6 @@ def load_secrets():
 #     return _load(["comments"], [u"これは素晴らしい写真です", u"私はこの写真が好き"])
 
 
-
 def _load(paths, default=None):
     with open('secret.local', 'r') as f:
         j = json5.loads(f.read())
