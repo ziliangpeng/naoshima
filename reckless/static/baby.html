@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" dir="ltr">
+
+<head>
+    <title>Baby</title>
+    <!-- Global Site Tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-107348923-1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+
+    gtag('config', 'UA-107348923-1');
+  </script>
+
+    <style>
+  html, body {
+      height: 100%;
+      margin:0;
+      padding:0;
+  }
+  body {
+      background-image:url('bg.jpg');
+      background-repeat:no-repeat;
+      background-size:100%;
+      background-position: bottom;
+      background-color: rgb(242,242,242)
+  }
+  a {
+    text-decoration: none
+  }
+  </style>
+</head>
+<body>
+
+<table width="100%" height="100%">
+    <tr>
+        <td align="center" valign="middle">
+            <div id="clockz"></div>
+        </td>
+    </tr>
+
+</table>
+<script language="JavaScript">
+function tick(){
+  var today=new Date();
+  var fertilize=new Date(2017,11,21,0,0,0);
+	
+  del = today-fertilize;
+  day=Math.ceil(del/(1000*3600*24));
+  week = Math.floor(day / 7)
+  day = day % 7
+  document.getElementById('clockz').innerHTML="期待宝宝 第 " + week + " 周 第 " + day + " 天 ";
+}
+tick();
+</script>
+</body>
+</html>

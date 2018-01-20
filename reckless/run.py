@@ -4,7 +4,8 @@ import web
 urls = (
     '/', 'index',
     '/hyperclips', 'hyperclips',
-    '/sex', 'sex'
+    '/sex', 'sex',
+    '/baby', 'baby'
 )
 
 
@@ -17,6 +18,10 @@ class sex:
     def GET(self):
         raise web.seeother('/static/sex.html')
 
+
+class baby:
+    def GET(self):
+        raise web.seeother('/static/baby.html')
 
 class hyperclips:
     def GET(self):
