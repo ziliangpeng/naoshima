@@ -5,7 +5,7 @@ import config_reader
 import data
 import user_utils
 from logs import logger
-from data_repo import datas
+from data_repo import d0
 from threading import Thread
 
 from filter import Filter
@@ -31,7 +31,7 @@ class ActorBase(Thread):
     def __init__(self, u):
         Thread.__init__(self)
         self.u = u
-        self.bot = datas[u].bot
+        self.bot = d0.bot
         self.uid = self.bot.user_id
 
     def run(self):

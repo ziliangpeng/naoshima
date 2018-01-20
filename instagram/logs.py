@@ -2,7 +2,7 @@ import logging
 
 import data_repo
 
-d = data_repo.datas[0]
+d = data_repo.d0
 u = d.u
 
 u_format = '(%s): ' % (u)

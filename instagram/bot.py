@@ -6,7 +6,7 @@ import data_repo
 from runners import DoFo, GenUnfo, DoUnfo, StealFoers, Fofo, StealSuperBrand, StealSimilarTo, Similar
 
 
-d = data_repo.datas[0]
+d = data_repo.d0
 u = d.u
 
 if __name__ == '__main__':

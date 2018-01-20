@@ -13,7 +13,7 @@ import config_reader
 import user_utils
 from filter import Filter
 from queue import Queue
-from data_repo import datas
+from data_repo import d0
 
 WHITELIST_USER = config_reader.load_whitelist()
 
@@ -30,8 +30,8 @@ class GenUnfo(Thread):
         Thread.__init__(self)
         self.u = u
         self.user_id = user_utils.get_user_id(u)  # TODO: check null
-        self.bot = datas[u].bot
-        self.queue_to_unfo = datas[u].queue_to_unfo
+        self.bot = d0.bot
+        self.queue_to_unfo = d0.queue_to_unfo
 
     def run(self):
         while True:
@@ -66,8 +66,8 @@ class DoUnfo(Thread):
     def __init__(self, u):
         Thread.__init__(self)
         self.u = u
-        self.bot = datas[u].bot
-        self.queue_to_unfo = datas[u].queue_to_unfo
+        self.bot = d0.bot
+        self.queue_to_unfo = d0.queue_to_unfo
 
     def run(self):
         daily_rate = 1000
@@ -86,8 +86,8 @@ class StealBase(Thread):
         Thread.__init__(self)
         self.u = u
         self.uid = user_utils.get_user_id(u)
-        self.bot = datas[u].bot
-        self.queue_to_fo = datas[u].queue_to_fo
+        self.bot = d0.bot
+        self.queue_to_fo = d0.queue_to_fo
         self.conditions = config_reader.load_conditions()
 
     def run(self):
@@ -199,10 +199,10 @@ class DoFo(Thread):
     def __init__(self, u):
         Thread.__init__(self)
         self.u = u
-        self.bot = datas[u].bot
-        self.queue_to_fo = datas[u].queue_to_fo
-        self.like_per_fo = datas[u].like_per_fo
-        self.comment_pool = datas[u].comment_pool
+        self.bot = d0.bot
+        self.queue_to_fo = d0.queue_to_fo
+        self.like_per_fo = d0.like_per_fo
+        self.comment_pool = d0.comment_pool
 
     def run(self):
         daily_rate = config_reader.load_follow_per_day()
