@@ -6,3 +6,7 @@ services:
     container_name: instagram-bot
     volumes:
       - /data/instagram:/data/instagram
+    # links is deprecated. we want to migrate to docker's user defined network.
+    # we may also provision ardb inside here (bot own its data storage)
+    links:
+     - ardb:redis
