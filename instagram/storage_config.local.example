@@ -1,0 +1,10 @@
+{
+  "redis": {
+    "host": "xxx",
+    "port": 6379,
+  },
+  "mysql": {
+    "host": "xxx",
+    "port": 1234,
+  }
+}
