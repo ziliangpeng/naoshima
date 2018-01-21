@@ -1,6 +1,6 @@
 import logging
 
-import data_repo
+from mylib import data_repo
 
 d = data_repo.d0
 u = d.u

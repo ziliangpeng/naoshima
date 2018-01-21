@@ -1,10 +1,7 @@
 import datetime
-import logs
+from mylib import logs, user_utils, lang_utils
 import time
 from datetime import timedelta
-
-import user_utils
-import lang_utils
 
 date = datetime.datetime.now
 

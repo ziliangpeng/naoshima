@@ -1,5 +1,5 @@
 import json5
-from utils import _json_path
+from mylib.utils import _json_path
 
 m = __import__(__name__)
 METHODS = {

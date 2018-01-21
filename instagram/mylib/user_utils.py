@@ -1,11 +1,10 @@
 import json
 import time
 import requests
-import data
 import urllib.request
 import urllib.parse
 import urllib.error
-from utils import _json_path
+from mylib.utils import _json_path
 
 
 def get_user_json(u):
@@ -204,7 +203,8 @@ def get_follow_counts(u):
 
 if __name__ == '__main__':
     # tests
-    import auth
+    from mylib import auth, data
+
     b = auth.auth()
     u = 'instagram'
     print(u)

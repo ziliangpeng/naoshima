@@ -1,11 +1,6 @@
-import requests
-
-import auth
-import user_config_reader
-import user_utils
+from mylib import user_config_reader, auth, user_utils, data
 import sys
 import time
-import data
 
 score = 0.0
 bot = auth.auth(log_mod=2)  # no log

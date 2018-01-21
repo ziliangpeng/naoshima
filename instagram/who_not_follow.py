@@ -1,5 +1,4 @@
-import auth
-import utils
+from mylib import utils, auth
 
 bot = auth.auth()
 follows = utils.get_follows(bot)

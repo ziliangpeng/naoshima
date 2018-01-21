@@ -3,7 +3,7 @@ import json
 import time
 import pickle
 
-import storage_config_reader
+from mylib import storage_config_reader
 
 REDIS_DB = 1
 
