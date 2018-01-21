@@ -6,6 +6,8 @@ ADD . instagram/
 
 WORKDIR "/instagram"
 
+RUN cp storage_config.local.docker storage_config.local
+
 RUN pip install -r requirements.txt
 
-ENTRYPOINT ["python", "--version"]
+ENTRYPOINT ["python", "bot.py", "-u"]

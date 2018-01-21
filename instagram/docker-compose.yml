@@ -1,9 +1,15 @@
 version: '3'
 services:
+  ardb:
+    # docker-compose up -d ardb
+    image: lupino/ardb-server
+    container_name: ardb-server
+    ports:
+      - "6379:16379"
+    volumes:
+      - /data/ig-ardb:/var/lib/ardb
   bot:
-    # docker-compose up -d bot let
     build: .
-    container_name: instagram-bot
     volumes:
       - /data/instagram:/data/instagram
     # links is deprecated. we want to migrate to docker's user defined network.
