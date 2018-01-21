@@ -1,9 +1,10 @@
-from mylib import user_config_reader, data
+import user_config_reader
 import requests
 import sys
 from requests.cookies import RequestsCookieJar
 from lib.instabot import InstaBot
 from http import cookiejar
+import data
 
 
 def auth(log_mod=0, session=None):

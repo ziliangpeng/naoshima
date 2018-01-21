@@ -1,7 +1,9 @@
+import sys
 import time
-from mylib import data_repo, user_config_reader
+import user_config_reader
+import data_repo
 
-from mylib.runners import DoFo, GenUnfo, DoUnfo, StealFoers, Fofo, StealSuperBrand, StealSimilarTo, Similar
+from runners import DoFo, GenUnfo, DoUnfo, StealFoers, Fofo, StealSuperBrand, StealSimilarTo, Similar
 
 
 d = data_repo.d0

@@ -1,4 +1,4 @@
-from mylib import auth
+import auth
 import time
 import requests
 

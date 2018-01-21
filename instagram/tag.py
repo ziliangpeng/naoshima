@@ -6,8 +6,8 @@ from collections import Counter
 import requests
 from retrying import retry
 
-from mylib.logs import logger
-from mylib.utils import _json_path
+from logs import logger
+from utils import _json_path
 
 
 @retry

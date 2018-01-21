@@ -1,14 +1,19 @@
+import datetime
+
 import itertools
 
-from mylib import logs, user_config_reader, user_utils, data
+import logs
 import random
 import time
 from threading import Thread
 import traceback
 
-from mylib.filter import Filter
+import data
+import user_config_reader
+import user_utils
+from filter import Filter
 from queue import Queue
-from mylib.data_repo import d0
+from data_repo import d0
 
 WHITELIST_USER = user_config_reader.load_whitelist()
 

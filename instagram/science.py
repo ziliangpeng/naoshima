@@ -3,7 +3,9 @@ import sys
 import plotly.graph_objs as go
 import plotly.offline as py
 
-from mylib import utils, auth, user_utils
+import auth
+import utils
+import user_utils
 
 
 def gen():

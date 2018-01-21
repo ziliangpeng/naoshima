@@ -1,10 +1,14 @@
+import data
 import time
 import datetime
-from mylib import auth, config_reader, user_utils, data
+import auth
+import config_reader
+import user_utils
+import random
 import requests
 import tag
 from lib.postbot import InstagramAPI
-from mylib.logs import logger
+from logs import logger
 
 
 """

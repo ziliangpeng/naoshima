@@ -1,4 +1,6 @@
-from mylib import user_config_reader, auth, user_utils
+import auth
+import user_config_reader
+import user_utils
 from queue import Queue
 
 

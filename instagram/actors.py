@@ -1,12 +1,14 @@
 import random
 import time
 
-from mylib import user_config_reader, user_utils, data
-from mylib.logs import logger
-from mylib.data_repo import d0
+import user_config_reader
+import data
+import user_utils
+from logs import logger
+from data_repo import d0
 from threading import Thread
 
-from mylib.filter import Filter
+from filter import Filter
 
 """
 This file contains the actors that act on cron of trigger fashion. This is to distinguish the difference between this
