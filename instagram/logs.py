@@ -14,15 +14,20 @@ sh = logging.StreamHandler()
 sh.setLevel(logging.INFO)
 sh.setFormatter(formatter)
 
-fh = logging.FileHandler('/data/instagram-%s.log' % u)
+fh = logging.FileHandler('/data/ig/logs/instagram-%s.log' % u)
 fh.setLevel(logging.DEBUG)
 fh.setFormatter(formatter)
 
+
+fh2 = logging.FileHandler('/data/ig/logs/instagram.log')
+fh2.setLevel(logging.DEBUG)
+fh2.setFormatter(formatter)
 
 logger = logging.getLogger('InstagramBot')
 logger.setLevel(logging.DEBUG)
 logger.addHandler(sh)
 logger.addHandler(fh)
+logger.addHandler(fh2)
 
 
 def main():
