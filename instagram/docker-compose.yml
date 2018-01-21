@@ -11,9 +11,97 @@ services:
   bot:
     build: .
     volumes:
-      - /data/instagram:/data/instagram
+      - /data/ig:/data/ig
     # links is deprecated. we want to migrate to docker's user defined network.
     # we may also provision ardb inside here (bot own its data storage)
+    links:
+     - ardb:redis
+  z-bot:
+    build: .
+    volumes:
+      - /data/ig:/data/ig
+    entrypoint:
+      - "python"
+      - "bot.py"
+      - "-u"
+      - "z"
+    links:
+     - ardb:redis
+  airbnb-bot:
+    build: .
+    volumes:
+      - /data/ig:/data/ig
+    entrypoint:
+      - "python"
+      - "bot.py"
+      - "-u"
+      - "airbnb"
+    links:
+     - ardb:redis
+  v-bot:
+    build: .
+    volumes:
+      - /data/ig:/data/ig
+    entrypoint:
+      - "python"
+      - "bot.py"
+      - "-u"
+      - "v"
+    links:
+     - ardb:redis
+  mc-bot:
+    build: .
+    volumes:
+      - /data/ig:/data/ig
+    entrypoint:
+      - "python"
+      - "bot.py"
+      - "-u"
+      - "mc"
+    links:
+     - ardb:redis
+  hix-bot:
+    build: .
+    volumes:
+      - /data/ig:/data/ig
+    entrypoint:
+      - "python"
+      - "bot.py"
+      - "-u"
+      - "hix"
+    links:
+     - ardb:redis
+  newdone-bot:
+    build: .
+    volumes:
+      - /data/ig:/data/ig
+    entrypoint:
+      - "python"
+      - "bot.py"
+      - "-u"
+      - "newdone"
+    links:
+     - ardb:redis
+  let-bot:
+    build: .
+    volumes:
+      - /data/ig:/data/ig
+    entrypoint:
+      - "python"
+      - "bot.py"
+      - "-u"
+      - "let"
+    links:
+     - ardb:redis
+  eva-bot:
+    build: .
+    volumes:
+      - /data/ig:/data/ig
+    entrypoint:
+      - "python"
+      - "bot.py"
+      - "-u"
+      - "eva"
     links:
      - ardb:redis
 
