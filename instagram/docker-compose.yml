@@ -16,3 +16,27 @@ services:
     # we may also provision ardb inside here (bot own its data storage)
     links:
      - ardb:redis
+
+#We need a way to achieve the following:
+#- one click to bring up all of the several accounts on prod
+#- one click to bring up another account on dev
+#
+#Existing tools:
+#- runit service
+#  - auto start after reboot
+#  - can monitor status of each
+#  - make sure always up, and exactly one instance
+#- docker-compose run
+#  - parameterizable of service definition
+#  - need to manually run (cannot survive reboot)
+#  - will have N instance if run N times
+#- docker-compose up
+#  - not parameteriable
+#  - exactly one instance
+#  - need manually run (cannot survive reboot)
+#
+#Solution:
+#- runit + compose run
+#  - one docker-compose service, several runit service
+#- docker-compose up
+#  - need to run individually for each account, unless prod and dev have different difinition file
