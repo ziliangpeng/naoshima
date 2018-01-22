@@ -17,6 +17,7 @@ class Filter:
         self.conditions = conditions
         self.methods = {
             'max_follows': self.max_follows,
+            'max_followers': self.max_followers,
             'min_ratio': self.min_ratio,
             'max_ratio': self.max_ratio,
             'has_lang': self.has_lang,
@@ -45,6 +46,18 @@ class Filter:
             return False
         if follows_count > threshold:
             logger.debug('follower %s has %d follows(>%d). It is an overwhelmed stalker',
+                         self.u, follows_count, threshold)
+            return False
+        return True
+
+    def max_followers(self, threshold):
+        followed_by_count, follows_count = \
+            user_utils.get_follow_counts(self.u)
+        if followed_by_count is None or follows_count is None:
+            logger.info('error occurred when investigating %s', self.u)
+            return False
+        if followed_by_count > threshold:
+            logger.debug('follower %s has %d followers(>%d). It is a mini-celebrity :-)',
                          self.u, follows_count, threshold)
             return False
         return True
