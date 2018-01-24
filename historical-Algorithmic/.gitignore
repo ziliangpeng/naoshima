@@ -1,0 +1,16 @@
+a.out
+.DS_Store
+
+Codeforces/All/*
+SRM/app/*
+SRM/All/*
+
+*.in
+
+*.out
+
+SRM/sync.sh
+
+*.swp
+
+timus/1363.cpp
