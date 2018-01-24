@@ -27,6 +27,7 @@ B_DIR="/tmp/b_repo"
 
 git clone $B_REPO $B_DIR
 cd $B_DIR
+git checkout -b "v--migrate-$1"
 git remote add repo-A-branch $A_DIR
 git pull repo-A-branch master --allow-unrelated-histories
 git remote rm repo-A-branch
