@@ -1,4 +1,8 @@
 # All the .jar files
 *.jar
 
+# external mysql lib
 mysql-connector-java-5.1.44/*
+
+# jooq generated files
+src/main/java/com/jooq/gen
