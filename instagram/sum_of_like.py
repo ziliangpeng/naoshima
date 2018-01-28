@@ -1,6 +1,7 @@
 import requests
 import sys
 from user_utils import _json_path
+from datadog import statsd
 
 u = sys.argv[1]
 
@@ -12,6 +13,7 @@ if r.status_code == 200:
     j = r.json()
     posts = _json_path(j, ["user", "media", "nodes"])
     likes = [_json_path(p, ["likes", "count"]) for p in posts]
+    statsd.gauge('naoshima.ig.likes', sum(likes), tags=["user:"+u])
     print(sum(likes))
 else:
     pass
