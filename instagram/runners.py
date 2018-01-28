@@ -6,6 +6,7 @@ import logs
 import random
 import time
 from threading import Thread
+from retrying import retry
 import traceback
 
 import data
@@ -33,6 +34,7 @@ class GenUnfo(Thread):
         self.bot = d0.bot
         self.queue_to_unfo = d0.queue_to_unfo
 
+    @retry
     def run(self):
         while True:
             try:
@@ -69,6 +71,7 @@ class DoUnfo(Thread):
         self.bot = d0.bot
         self.queue_to_unfo = d0.queue_to_unfo
 
+    @retry
     def run(self):
         daily_rate = 1000
         while True:
@@ -90,6 +93,7 @@ class StealBase(Thread):
         self.queue_to_fo = d0.queue_to_fo
         self.conditions = user_config_reader.load_conditions()
 
+    @retry
     def run(self):
         for id, name, msg in self.generate():
             logger.info("Candidate %s: %s", name.ljust(16), msg)
@@ -204,6 +208,7 @@ class DoFo(Thread):
         self.like_per_fo = d0.like_per_fo
         self.comment_pool = d0.comment_pool
 
+    @retry
     def run(self):
         daily_rate = user_config_reader.load_follow_per_day()
         logger.info("Daily rate is %d", daily_rate)
