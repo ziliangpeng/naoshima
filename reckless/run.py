@@ -19,10 +19,6 @@ class sex:
         raise web.seeother('/static/sex.html')
 
 
-class baby:
-    def GET(self):
-        raise web.seeother('/static/baby.html')
-
 class hyperclips:
     def GET(self):
         raise web.seeother('/static/hyperclips/hyper.html')
