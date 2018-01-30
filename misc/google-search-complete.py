@@ -16,7 +16,7 @@ def get_completion(keyword):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--test")
+    parser.add_argument("--test", action='store_true')
     parser.add_argument("--key", type=str)
     args = parser.parse_args()
 
