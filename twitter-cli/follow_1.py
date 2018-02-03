@@ -40,7 +40,7 @@ for l in tweepy.Cursor(api.lists_memberships, screen_name=name).items():  # list
                     print("already followed", user.id, user.name, "before")
                     continue
                 last_tweeted = user.status.created_at
-                if last_tweeted < datetime.now() - timedelta(days = 3):
+                if last_tweeted < datetime.now() - timedelta(days=3):
                     print('User %s last tweeted at %s, is too old' % (user.name, last_tweeted))
                 else:
                     print(datetime.now(), "To follow user:", i, user.id, user.name)

@@ -1,9 +1,6 @@
 import tweepy
 from auth import api
-import time
 import sys
-from datetime import datetime, timedelta
-import followed
 import itertools
 
 cnt = int(sys.argv[1])
