@@ -1,3 +1,4 @@
+import itertools
 import tweepy
 from auth import api
 import time
@@ -25,8 +26,9 @@ for l in tweepy.Cursor(api.lists_memberships, screen_name=name).items():  # list
         continue
 
     list_id = l.id
+    MAX_FROM_LIST = 128
     try:
-        for user in list(tweepy.Cursor(api.list_members, list_id=list_id).items()):
+        for user in itertools.islice(tweepy.Cursor(api.list_members, list_id=list_id).items(), MAX_FROM_LIST):
             try:
                 if int(user.id) in following_ids:
                     print("already following", user.id, user.name)
