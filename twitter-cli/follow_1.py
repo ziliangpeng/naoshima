@@ -19,6 +19,7 @@ print('username is', name)
 i = 0
 for l in tweepy.Cursor(api.lists_memberships, screen_name=name).items():  # lists a user is added to
     print("List:", l.name)
+    print("size:", l.member_count)
     c = input('follow?:')
     if c.strip() != 'y':
         continue
