@@ -17,4 +17,17 @@ def auth():
     return tweepy.API(auth)
 
 
+def reauth():
+    ck, cs, at, ats = load_secrets()
+    auth = tweepy.OAuthHandler(ck, cs)
+    url = auth.get_authorization_url(access_type='Write')
+    print(url)
+    pin = input('PIN: ').strip()
+    access_token = auth.get_access_token(pin)
+    print(access_token)
+
 api = auth()
+
+
+if __name__ == '__main__':
+    reauth()
