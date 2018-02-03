@@ -17,7 +17,7 @@ print("found", len(following_ids), "following")
 name = sys.argv[1]
 print('username is', name)
 i = 0
-for l in list(tweepy.Cursor(api.lists_memberships, screen_name=name).items()):  # lists a user is added to
+for l in tweepy.Cursor(api.lists_memberships, screen_name=name).items():  # lists a user is added to
     print("List:", l.name)
     c = input('follow?:')
     if c.strip() != 'y':
