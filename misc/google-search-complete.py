@@ -12,7 +12,7 @@ def get_completion(keyword):
     URL = 'https://www.google.com/complete/search?gs_ri=psy-ab&q=' + keyword
     r = requests.get(URL)
     j = r.json()
-    print(keyword, map(html.unescape, [match[0] for match in j[1]]))
+    print(keyword, list(map(html.unescape, [match[0] for match in j[1]])))
 
 
 if __name__ == '__main__':
