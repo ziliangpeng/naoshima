@@ -7,14 +7,15 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	username := r.URL.Path[1:]
-	url := fmt.Sprintf("https://www.instagram.com/%s/?__a=1", username)
+	path := r.URL.Path[1:]
+	query := r.URL.Query()
+	url := fmt.Sprintf("https://www.instagram.com/%s?%s", path, query)
 	resp, _ := http.Get(url)
 
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
 
-	fmt.Printf(string(body))
+	fmt.Println(url)
 	fmt.Fprintf(w, string(body))
 }
 
