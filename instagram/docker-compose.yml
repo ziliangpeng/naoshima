@@ -108,6 +108,17 @@ services:
       - "eva"
     links:
      - ardb:redis
+  eaxy-bot:
+    build: .
+    volumes:
+      - /data/ig:/data/ig
+    entrypoint:
+      - "python"
+      - "bot.py"
+      - "-u"
+      - "eaxy"
+    links:
+     - ardb:redis
 
 #We need a way to achieve the following:
 #- one click to bring up all of the several accounts on prod
