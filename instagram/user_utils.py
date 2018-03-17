@@ -165,7 +165,7 @@ def related_users(bot, u):
 
 def get_post_ids(u):
     j = get_user_json(u)
-    posts = _json_path(j, ["user", "media", "nodes"])
+    posts = _json_path(j, ['graphql', "user", "media", "nodes"])
     return [int(x["id"]) for x in posts]
 
 
@@ -174,28 +174,28 @@ def get_post_ids(u):
 
 def get_recent_post_epoch(u):
     j = get_user_json(u)
-    posts = _json_path(j, ["user", "media", "nodes"])
+    posts = _json_path(j, ['graphql', "user", "media", "nodes"])
     return posts and int(posts[0]["date"]) or -1
 
 
 def get_biography(u):
     j = get_user_json(u)
-    return _json_path(j, ["user", "biography"])
+    return _json_path(j, ['graphql', "user", "biography"])
 
 
 def get_user_id(u):
     j = get_user_json(u)
-    return int(_json_path(j, ["user", "id"]))
+    return int(_json_path(j, ['graphql', "user", "id"]))
 
 
 def get_follows_count(u):
     j = get_user_json(u)
-    return int(_json_path(j, ["user", "follows", "count"]))
+    return int(_json_path(j, ['graphql', "user", "follows", "count"]))
 
 
 def get_followed_by_count(u):
     j = get_user_json(u)
-    return int(_json_path(j, ["user", "followed_by", "count"]))
+    return int(_json_path(j, ['graphql', "user", "followed_by", "count"]))
 
 
 def get_follow_counts(u):
