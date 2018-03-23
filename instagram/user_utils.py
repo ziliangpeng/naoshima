@@ -165,8 +165,8 @@ def related_users(bot, u):
 
 def get_post_ids(u):
     j = get_user_json(u)
-    posts = _json_path(j, ['graphql', "user", "media", "nodes"])
-    return [int(x["id"]) for x in posts]
+    posts = _json_path(j, ['graphql', "user", "edge_owner_to_timeline_media", "edges"])
+    return [int(x["node"]["id"]) for x in posts]
 
 
 """ Returns recent epoch date or -1 """
@@ -174,8 +174,8 @@ def get_post_ids(u):
 
 def get_recent_post_epoch(u):
     j = get_user_json(u)
-    posts = _json_path(j, ['graphql', "user", "media", "nodes"])
-    return posts and int(posts[0]["date"]) or -1
+    posts = _json_path(j, ['graphql', "user", "edge_owner_to_timeline_media", "edges"])
+    return posts and int(posts[0]["node"]["date"]) or -1
 
 
 def get_biography(u):
