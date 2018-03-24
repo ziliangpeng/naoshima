@@ -2,11 +2,14 @@ FROM python:3.6.4-slim
 
 MAINTAINER Victor Peng version: 0.1
 
+# Only copy the requirements.txt for pip install, so caching works better
+ADD requirements.txt instagram/requirements.txt
+
+RUN pip install -r instagram/requirements.txt
+
 ADD . instagram/
 
 WORKDIR "/instagram"
-
-RUN pip install -r requirements.txt
 
 RUN cp storage_config.local.docker storage_config.local
 
