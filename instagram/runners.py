@@ -108,7 +108,7 @@ class StealBase(Thread):
                         data.set_id_to_name(id, name)
                         self.queue_to_fo.put(id)
         except Exception as e:
-            logger.error(e)
+            logger.error(repr(e))
             raise e
 
 

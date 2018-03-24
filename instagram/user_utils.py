@@ -175,7 +175,7 @@ def get_post_ids(u):
 def get_recent_post_epoch(u):
     j = get_user_json(u)
     posts = _json_path(j, ['graphql', "user", "edge_owner_to_timeline_media", "edges"])
-    return posts and int(posts[0]["node"]["date"]) or -1
+    return posts and int(posts[0]["node"]["taken_at_timestamp"]) or -1
 
 
 def get_biography(u):
@@ -190,12 +190,12 @@ def get_user_id(u):
 
 def get_follows_count(u):
     j = get_user_json(u)
-    return int(_json_path(j, ['graphql', "user", "follows", "count"]))
+    return int(_json_path(j, ['graphql', "user", "edge_follow", "count"]))
 
 
 def get_followed_by_count(u):
     j = get_user_json(u)
-    return int(_json_path(j, ['graphql', "user", "followed_by", "count"]))
+    return int(_json_path(j, ['graphql', "user", "edge_followed_by", "count"]))
 
 
 def get_follow_counts(u):
