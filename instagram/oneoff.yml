@@ -1,0 +1,10 @@
+version: '3'
+
+# TODO: compose supports 'extends', so we can abstract common bot logic into gneral-bot service
+# TODO: compose supports `-f` to load different config files. Can implement some one-off jobs in another file
+# TODO: maybe can use environment variable (either Dockerfile level or compose level) to customize one bot service
+services:
+  # docker-compose -f oneoff.yml run likes tokyo
+  likes:
+    build: .
+    entrypoint: python sum_of_like.py
