@@ -95,17 +95,21 @@ class StealBase(Thread):
 
     @retry
     def run(self):
-        for id, name, msg in self.generate():
-            logger.info("Candidate %s: %s", name.ljust(16), msg)
-            if data.is_followed(self.u, id):
-                logger.debug("Already followed.")
-            else:
-                if not Filter(name, self.conditions).apply():
-                    logger.debug("Has not passed filter")
+        try:
+            for id, name, msg in self.generate():
+                logger.info("Candidate %s: %s", name.ljust(16), msg)
+                if data.is_followed(self.u, id):
+                    logger.debug("Already followed.")
                 else:
-                    logger.info("Good to steal! %s" % (name))
-                    data.set_id_to_name(id, name)
-                    self.queue_to_fo.put(id)
+                    if not Filter(name, self.conditions).apply():
+                        logger.debug("Has not passed filter")
+                    else:
+                        logger.info("Good to steal! %s" % (name))
+                        data.set_id_to_name(id, name)
+                        self.queue_to_fo.put(id)
+        except Exception as e:
+            logger.error(e)
+            raise e
 
 
 class Fofo(StealBase):
