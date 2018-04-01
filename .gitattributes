@@ -1,0 +1,2 @@
+# exclude stockholm
+historical/historical-toy2/react-rails/stockholm/**/* linguist-generated=true
