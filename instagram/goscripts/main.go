@@ -51,8 +51,10 @@ func readLikesStats(username string) {
 func main() {
 	var task string
 	var username string
+	var saveToRedis bool
 	flag.StringVar(&task, "t", "likes", "task to scripting")
 	flag.StringVar(&username, "u", "instagram", "username to scripting")
+	flag.BoolVar(&saveToRedis, "r", false, "save result to Redis")
 	flag.Parse()
 
 	if task == "likes" {
