@@ -5,6 +5,6 @@ version: '3'
 # TODO: maybe can use environment variable (either Dockerfile level or compose level) to customize one bot service
 services:
   # docker-compose -f oneoff.yml run likes tokyo
-  likes:
+  sum_of_likes:
     build: .
     entrypoint: python sum_of_like.py
