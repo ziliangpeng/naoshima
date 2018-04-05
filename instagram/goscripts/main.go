@@ -34,8 +34,7 @@ func readFollowStats(username string) {
 	followedBy := getMapKeyGeneral(dat, "graphql", "user", "edge_followed_by", "count").(float64)
 	follow := getMapKeyGeneral(dat, "graphql", "user", "edge_follow", "count").(float64)
 
-	fmt.Println(int64(followedBy))
-	fmt.Println(int64(follow))
+	fmt.Println(int64(followedBy), int64(follow))
 }
 
 func readLikesStats(username string) {
