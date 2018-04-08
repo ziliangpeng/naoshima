@@ -4,6 +4,9 @@
 # Bazel
 bazel-*
 
+# Protobuf generated files
+*.pb.go
+
 # IntelliJ
 .idea
 
