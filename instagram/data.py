@@ -87,12 +87,12 @@ def get_user_to_follow(u):
 
 
 def get_json_by_username(u):
-    j = _redis.get(NAMESPACE_JSON + str(u))
+    j = _redis_cache.get(NAMESPACE_JSON + str(u))
     return _load_json_if_exist(j)
 
 
 def set_json_by_username(u, j):
-    _redis.set(NAMESPACE_JSON + str(u), json.dumps(j), DEFAULT_TTL)
+    _redis_cache.set(NAMESPACE_JSON + str(u), json.dumps(j), DEFAULT_TTL)
 
 
 def save_session(name, s):
