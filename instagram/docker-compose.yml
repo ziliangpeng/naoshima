@@ -15,6 +15,8 @@ services:
   ardb-cache:
     image: lupino/ardb-server
     container_name: ardb-server-cache
+    ports:
+      - "16379:16379"
     volumes:
       - /data/ig-ardb-cache:/var/lib/ardb
   bot:
