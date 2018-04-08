@@ -6,6 +6,7 @@ import pickle
 import storage_config_reader
 
 REDIS_DB = 1
+REDIS_CACHE_DB = 3
 
 
 NAMESPACE_JSON = 'user_json:'
@@ -36,6 +37,12 @@ if redis_host is not None and redis_port is not None:
 else:
     raise Exception("redis config must present!")
 
+redis_cache_host = storage_config_reader.load_redis_cache_host()
+redis_cache_port = storage_config_reader.load_redis_cache_port()
+if redis_cache_host is not None and redis_cache_port is not None:
+    _redis_cache = redis.Redis(redis_cache_host, redis_cache_port, REDIS_CACHE_DB)
+else:
+    raise Exception("redis-cache config must present!")
 
 def get_latest_config(u: str) -> dict:
     key = NAMESPACE_CONFIG + u
