@@ -27,7 +27,8 @@ KEY_POST_ID_TIME_MAP = 'post_id_to_time'
 # I increased it from 7 days to 30 days. This hurts the accuracy especially freshness but this is fine
 # we are mining user from a huge sea, we may miss some users but greatly improve performance.
 # Update(2018-01-23): 7 days should be enough
-DEFAULT_TTL = 3600 * 24 * 7  # in seconds
+# Update(2018-04-08): 1 day is more than enough
+DEFAULT_TTL = 3600 * 24 * 1  # in seconds
 
 
 redis_host = storage_config_reader.load_redis_host()
