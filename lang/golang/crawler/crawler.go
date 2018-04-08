@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
@@ -28,10 +30,15 @@ func crawlOne(queue chan string, url string) {
 		return
 	}
 
+	if resp.StatusCode != 200 {
+		fmt.Println("Not 200:", resp.StatusCode, url)
+	}
+
 	b := resp.Body
 	defer b.Close() // close Body when the function returns
 
 	links := util.ParseLinks(b)
+	io.Copy(ioutil.Discard, resp.Body)
 	mergeQueue(queue, links)
 
 	return
