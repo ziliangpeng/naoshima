@@ -28,6 +28,7 @@ KEY_POST_ID_TIME_MAP = 'post_id_to_time'
 # we are mining user from a huge sea, we may miss some users but greatly improve performance.
 # Update(2018-01-23): 7 days should be enough
 # Update(2018-04-08): 1 day is more than enough
+# Update(2018-04-08): fuck it. 1 hour
 DEFAULT_TTL = 3600 * 24 * 1  # in seconds
 
 
