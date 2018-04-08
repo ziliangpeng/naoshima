@@ -6,4 +6,6 @@ ADD . /app
 
 WORKDIR "/app"
 
-ENTRYPOINT ["go", "run", "main.go"]
+RUN go build main.go
+
+ENTRYPOINT ["./main"]
