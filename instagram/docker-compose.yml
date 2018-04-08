@@ -12,6 +12,11 @@ services:
       - "6379:16379"
     volumes:
       - /data/ig-ardb:/var/lib/ardb
+  ardb-cache:
+    image: lupino/ardb-server
+    container_name: ardb-server-cache
+    volumes:
+      - /data/ig-ardb-cache:/var/lib/ardb
   bot:
     build: .
     volumes:
@@ -20,6 +25,7 @@ services:
     # we may also provision ardb inside here (bot own its data storage)
     links:
      - ardb:redis
+     - ardb-cache:redis-cache
   z-bot:
     build: .
     volumes:
@@ -31,6 +37,7 @@ services:
       - "z"
     links:
      - ardb:redis
+     - ardb-cache:redis-cache
   airbnb-bot:
     build: .
     volumes:
@@ -42,6 +49,7 @@ services:
       - "airbnb"
     links:
      - ardb:redis
+     - ardb-cache:redis-cache
   v-bot:
     build: .
     volumes:
@@ -53,6 +61,7 @@ services:
       - "v"
     links:
      - ardb:redis
+     - ardb-cache:redis-cache
   mc-bot:
     build: .
     volumes:
@@ -64,6 +73,7 @@ services:
       - "mc"
     links:
      - ardb:redis
+     - ardb-cache:redis-cache
   hix-bot:
     build: .
     volumes:
@@ -75,6 +85,7 @@ services:
       - "hix"
     links:
      - ardb:redis
+     - ardb-cache:redis-cache
   newdone-bot:
     build: .
     volumes:
@@ -86,6 +97,7 @@ services:
       - "newdone"
     links:
      - ardb:redis
+     - ardb-cache:redis-cache
   let-bot:
     build: .
     volumes:
@@ -97,6 +109,7 @@ services:
       - "let"
     links:
      - ardb:redis
+     - ardb-cache:redis-cache
   eva-bot:
     build: .
     volumes:
@@ -108,6 +121,7 @@ services:
       - "eva"
     links:
      - ardb:redis
+     - ardb-cache:redis-cache
   eaxy-bot:
     build: .
     volumes:
@@ -119,6 +133,7 @@ services:
       - "eaxy"
     links:
      - ardb:redis
+     - ardb-cache:redis-cache
   likes:
     build: ./goscripts
     entrypoint:
@@ -131,9 +146,7 @@ services:
   follow:
     build: ./goscripts
     entrypoint:
-      - "go"
-      - "run"
-      - "main.go"
+      - "./main"
       - "-t"
       - "follow"
       - "-u"
