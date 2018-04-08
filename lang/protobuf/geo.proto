@@ -1,0 +1,25 @@
+// [START declaration]
+syntax = "proto3";
+package geo;
+
+// import "google/protobuf/timestamp.proto";
+// [END declaration]
+
+// [START java_declaration]
+option java_package = "com.naoshima.geo";
+option java_outer_classname = "Geology";
+// [END java_declaration]
+
+// [START messages]
+message City {
+  string name = 1;
+  int32 population = 2;
+  Nation nation = 3;
+}
+
+message Nation {
+  string name = 1;
+  string continent = 2;
+}
+
+// [END messages]
