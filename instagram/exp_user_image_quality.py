@@ -13,7 +13,7 @@ def quality(uname):
     avg = sum(dim) / len(dim)
     maxi = max(dim)
     dim.sort()
-    med = dim[len(dim)/2]
+    med = dim[int(len(dim)/2)]
     return avg, maxi, med
 
 u = sys.argv[1]
