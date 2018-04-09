@@ -174,9 +174,15 @@ def get_post_ids(u):
 
 def get_recent_post_epoch(u):
     j = get_user_json(u)
+    # TODO: user get_recent_posts to get posts
     posts = _json_path(j, ['graphql', "user", "edge_owner_to_timeline_media", "edges"])
     return posts and int(posts[0]["node"]["taken_at_timestamp"]) or -1
 
+
+def get_recent_posts(u):
+    j = get_user_json(u)
+    posts = _json_path(j, ['graphql', "user", "edge_owner_to_timeline_media", "edges"])
+    return posts
 
 def get_biography(u):
     j = get_user_json(u)

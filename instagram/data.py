@@ -136,6 +136,10 @@ def set_followed_back(u, i):
     # TODO: when everyone backfilled followed-back data (by running score.py for everyone), start to record date
     _redis.sadd(NAMESPACE_FOLLOWED_BACK + str(u), str(i))
 
+# return a iterator of integers
+def get_followed_back(u):
+    return map(int, _redis.smembers(NAMESPACE_FOLLOWED_BACK + str(u)))
+
 
 def set_posted(u, i, code):
     _redis.hset(KEY_POST_ID_CODE_MAP, str(i), str(code))
