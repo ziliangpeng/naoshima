@@ -10,7 +10,11 @@ def quality(uname):
         h = p['node']['dimensions']['height']
         w = p['node']['dimensions']['width']
         dim.append(max(h, w))
-    return sum(dim) / len(dim)
+    avg = sum(dim) / len(dim)
+    max = max(dim)
+    dim.sort()
+    med = dim[len(dim)/2]
+    return avg, max, med
 
 u = sys.argv[1]
 for uid in data.get_followed_back(u):
