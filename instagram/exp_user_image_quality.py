@@ -14,7 +14,10 @@ def quality(uname):
 
 u = sys.argv[1]
 for uid in data.get_followed_back(u):
-    uname = data.get_id_to_name(uid)
-    print("https://www.instagram.com/%s/" % uname, quality(uname))
+    try:
+        uname = data.get_id_to_name(uid)
+        print("https://www.instagram.com/%s/" % uname, quality(uname))
+    except BaseException as e:
+        print(e)
 
 
