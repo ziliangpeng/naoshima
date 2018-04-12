@@ -1,6 +1,7 @@
 import json
 import time
 import requests
+import fetcher
 import data
 import urllib.request
 import urllib.parse
@@ -16,21 +17,21 @@ def get_user_json(u):
     else:
         # TODO: find proper way to do rate limit
         time.sleep(1)  # initial delay
-        url = 'https://www.instagram.com/%s/?__a=1' % u
+        # url = 'https://www.instagram.com/%s/?__a=1' % u
         retry_delay = 5
         while True:
-            r = requests.get(url)
-            if r.status_code == 200:
-                j = r.json()
+            status_code, j = fetcher.get_user_json(u)
+            # r = requests.get(url)
+            if status_code == 200:
                 data.set_json_by_username(u, j)
                 return j
-            elif r.status_code == 429:
-                print('status code', r.status_code)
+            elif status_code == 429:
+                print('status code', status_code)
                 print('get json failed. sleeping for %d s' % (retry_delay))
                 time.sleep(retry_delay)
                 retry_delay = int(retry_delay * 1.2)  # exponentially increase delay
             else:
-                print('status code', r.status_code)
+                print('status code', status_code)
                 break
     # raise BaseException("Fail to get user json")
     print("Unable to get user json. Returning {}")

@@ -3,6 +3,7 @@
 
 import json
 
+import fetcher
 import requests
 
 
@@ -39,9 +40,10 @@ class UserInfo:
         return False
 
     def get_user_id_by_login(self, user_name):
-        url_info = self.url_user_info % (user_name)
-        info = self.s.get(url_info)
-        all_data = json.loads(info.text)
+        # url_info = self.url_user_info % (user_name)
+        # info = self.s.get(url_info)
+        # all_data = json.loads(info.text)
+        status_code, all_data = fetcher.get_user_json(user_name)
         id_user = all_data['graphql']['user']['id']
         return id_user
 
