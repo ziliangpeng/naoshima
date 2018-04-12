@@ -43,7 +43,7 @@ class UserInfo:
         # url_info = self.url_user_info % (user_name)
         # info = self.s.get(url_info)
         # all_data = json.loads(info.text)
-        status_code, all_data = fetcher.get_user_json(user_name)
+        status_code, all_data = fetcher.get_user_json(user_name, self.s)
         id_user = all_data['graphql']['user']['id']
         return id_user
 
