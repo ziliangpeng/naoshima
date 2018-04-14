@@ -2,6 +2,8 @@ FROM ubuntu:18.04
 
 MAINTAINER Victor Peng version: 0.1
 
+# Mostly fork from https://hub.docker.com/r/lupino/ardb-server/~/dockerfile/
+
 RUN apt-get update && \
     apt-get install -y git make gcc g++ automake autoconf libbz2-dev libz-dev wget
 
