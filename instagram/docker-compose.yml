@@ -16,7 +16,7 @@ services:
     image: expert/ardb
     container_name: ardb-server-cache
     ports:
-      - "16379:16379"
+      - "26379:16379"
     volumes:
       - /data/ig-ardb-cache-2:/ardb_home
   bot:
