@@ -49,6 +49,7 @@ services:
     links:
      - ardb:redis
      - ardb-cache:redis-cache
+     - ardb-cache-2:redis-cache-2
   airbnb-bot:
     build: .
     volumes:
@@ -61,6 +62,7 @@ services:
     links:
      - ardb:redis
      - ardb-cache:redis-cache
+     - ardb-cache-2:redis-cache-2
   v-bot:
     build: .
     volumes:
@@ -73,6 +75,7 @@ services:
     links:
      - ardb:redis
      - ardb-cache:redis-cache
+     - ardb-cache-2:redis-cache-2
   mc-bot:
     build: .
     volumes:
@@ -85,6 +88,7 @@ services:
     links:
      - ardb:redis
      - ardb-cache:redis-cache
+     - ardb-cache-2:redis-cache-2
   hix-bot:
     build: .
     volumes:
@@ -97,6 +101,7 @@ services:
     links:
      - ardb:redis
      - ardb-cache:redis-cache
+     - ardb-cache-2:redis-cache-2
   newdone-bot:
     build: .
     volumes:
@@ -109,6 +114,7 @@ services:
     links:
      - ardb:redis
      - ardb-cache:redis-cache
+     - ardb-cache-2:redis-cache-2
   let-bot:
     build: .
     volumes:
@@ -121,6 +127,7 @@ services:
     links:
      - ardb:redis
      - ardb-cache:redis-cache
+     - ardb-cache-2:redis-cache-2
   eva-bot:
     build: .
     volumes:
@@ -133,6 +140,7 @@ services:
     links:
      - ardb:redis
      - ardb-cache:redis-cache
+     - ardb-cache-2:redis-cache-2
   eaxy-bot:
     build: .
     volumes:
@@ -145,6 +153,7 @@ services:
     links:
      - ardb:redis
      - ardb-cache:redis-cache
+     - ardb-cache-2:redis-cache-2
   likes:
     build: ./goscripts
     entrypoint:
