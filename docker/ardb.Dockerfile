@@ -20,7 +20,9 @@ RUN sed -e 's@home.*@home /var/lib/ardb@' \
 
 RUN echo 'trusted-ip *.*.*.*' >> /etc/ardb.conf
 
+RUN mv /etc/ardb.conf /etc/reckless-ardb.conf
+
 WORKDIR /var/lib/ardb
 
 EXPOSE 16379
-ENTRYPOINT /usr/bin/ardb-server /etc/ardb.conf
+ENTRYPOINT /usr/bin/ardb-server /etc/reckless-ardb.conf
