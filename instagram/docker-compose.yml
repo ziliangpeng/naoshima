@@ -13,8 +13,15 @@ services:
     volumes:
       - /data/ig-ardb:/var/lib/ardb
   ardb-cache:
-    image: expert/ardb
+    image: lupino/ardb-server
     container_name: ardb-server-cache
+    ports:
+      - "16379:16379"
+    volumes:
+      - /data/ig-ardb-cache:/var/lib/ardb
+  ardb-cache-2:
+    image: expert/ardb
+    container_name: ardb-server-cache-2
     ports:
       - "26379:16379"
     volumes:
