@@ -28,6 +28,12 @@ services:
       - "26379:16379"
     volumes:
       - /data/ig-ardb-cache-2:/var/lib/ardb
+  redis:
+    image: redis:2.8
+    container_name: redis-fun
+     - ardb:redis
+     - ardb-cache:redis-cache
+     - ardb-cache-2:redis-cache-2
   bot:
     build: .
     volumes:
