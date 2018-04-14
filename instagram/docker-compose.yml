@@ -20,12 +20,14 @@ services:
     volumes:
       - /data/ig-ardb-cache:/var/lib/ardb
   ardb-cache-2:
-    image: expert/ardb
+    build:
+      context: ../docker
+      dockerfile: ardb.Dockerfile
     container_name: ardb-server-cache-2
     ports:
       - "26379:16379"
     volumes:
-      - /data/ig-ardb-cache-2:/ardb_home
+      - /data/ig-ardb-cache-2:/var_lib_ardb
   bot:
     build: .
     volumes:
