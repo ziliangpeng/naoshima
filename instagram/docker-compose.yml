@@ -31,9 +31,10 @@ services:
   redis:
     image: redis:2.8
     container_name: redis-fun
-     - ardb:redis
-     - ardb-cache:redis-cache
-     - ardb-cache-2:redis-cache-2
+    links:
+      - ardb:redis
+      - ardb-cache:redis-cache
+      - ardb-cache-2:redis-cache-2
   bot:
     build: .
     volumes:
