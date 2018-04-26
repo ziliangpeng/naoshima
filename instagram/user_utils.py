@@ -44,10 +44,17 @@ QUERY_IDs = {
     'related_user': 17845312237175864,
     'saved_media': 17885113105037631,
 }
+QUERY_HASHs = {
+    'follows': '58712303d941c6855d4e888c5f0cd22f',
+    'followers': '37479f2b8209594dde7facb0d904896a',
+    'related_user': 'fake',
+    'saved_media': 'fake',
+}
 DEFAULT_PAGINATION = 8000
 QUERY = '{"id":"%s","first":%d}'
 QUERY_WITH_CURSOR = '{"id":"%s","first":%d,"after":"%s"}'
-INSTAGRAM_GRAPPHQL_QUERY = 'https://www.instagram.com/graphql/query/?query_id=%d&variables=%s'
+# INSTAGRAM_GRAPPHQL_QUERY = 'https://www.instagram.com/graphql/query/?query_id=%d&variables=%s'
+INSTAGRAM_GRAPPHQL_QUERY = 'https://www.instagram.com/graphql/query/?query_hash=%s&variables=%s'
 # for URL decode: https://meyerweb.com/eric/tools/dencoder/
 
 # related user url:
@@ -100,7 +107,7 @@ def get_follows(bot, uid):
     for retry in range(5):
         time.sleep(2)  # retry delay
         url = INSTAGRAM_GRAPPHQL_QUERY % \
-            (QUERY_IDs['follows'], urllib.parse.quote_plus(make_query_cursor(uid)))
+            (QUERY_HASHs['follows'], urllib.parse.quote_plus(make_query_cursor(uid)))
         r = bot.s.get(url)
         if r.status_code != 200:
             print('error in get follows, error code', r.status_code)
@@ -129,7 +136,7 @@ def get_all_followers_gen(bot, uid, max=0):
         while True:
             time.sleep(3)  # initial delay
             url = INSTAGRAM_GRAPPHQL_QUERY % \
-                (QUERY_IDs['followers'],
+                (QUERY_HASHs['followers'],
                  urllib.parse.quote_plus(make_query_cursor(uid, 500, cursor)))
             r = bot.s.get(url)
             if r.status_code != 200:
