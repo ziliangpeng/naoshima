@@ -3,7 +3,7 @@ import time
 import user_config_reader
 import data_repo
 
-from runners import DoFo, GenUnfo, DoUnfo, StealFoers, Fofo, StealSuperBrand, StealSimilarTo, Similar
+from runners import DoFo, GenUnfo2, DoUnfo, StealFoers, Fofo, StealSuperBrand, StealSimilarTo, Similar
 
 
 d = data_repo.d0
@@ -24,7 +24,7 @@ if __name__ == '__main__':
 
     for cmd in cmds:
         if cmd == 'unfo':
-            t = GenUnfo(u)
+            t = GenUnfo2(u) # TODO: deprecate GenUnfo
             t.daemon = True
             t.start()
         elif cmd.startswith('steal('):

@@ -64,6 +64,33 @@ class GenUnfo(Thread):
                     pass
 
 
+""" user the new method for getting follows"""
+class GenUnfo2(Thread):
+    def __init__(self, u):
+        Thread.__init__(self)
+        self.u = u
+        self.user_id = user_utils.get_user_id(u)  # TODO: check null
+        self.bot = d0.bot
+        self.queue_to_unfo = d0.queue_to_unfo
+
+    @retry
+    def run(self):
+        total = 0
+        while True:
+            try:
+                for _id, _u in user_utils.get_follows(self.bot, self.user_id):
+                    logger.info('#%03d gen unfollow: %s', total, _u)
+                    total += 1
+                    self.queue_to_unfo.put(_id)
+                time.sleep(10)
+            except BaseException as e:
+                logger.error('Error in GenUnfo')
+                logger.error(e)
+                try:
+                    traceback.print_tb(e)
+                except BaseException:
+                    pass
+
 class DoUnfo(Thread):
     def __init__(self, u):
         Thread.__init__(self)
