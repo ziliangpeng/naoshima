@@ -54,6 +54,7 @@ QUERY_HASHs = {
 DEFAULT_PAGINATION = 50
 QUERY = '{"id":"%s","first":%d}'
 QUERY_WITH_CURSOR = '{"id":"%s","first":%d,"after":"%s"}'
+PROFILE_QUERY = '{"user_id":"%s","include_chaining":true,"include_reel":true,"include_suggested_users":false,"include_logged_out_extras":false,"include_highlight_reels":false}'
 INSTAGRAM_GRAPPHQL_ID_QUERY = 'https://www.instagram.com/graphql/query/?query_id=%d&variables=%s'
 INSTAGRAM_GRAPPHQL_HASH_QUERY = 'https://www.instagram.com/graphql/query/?query_hash=%s&variables=%s'
 # for URL decode: https://meyerweb.com/eric/tools/dencoder/
@@ -71,6 +72,8 @@ INSTAGRAM_GRAPPHQL_HASH_QUERY = 'https://www.instagram.com/graphql/query/?query_
 def make_query_cursor(uid, paginate=DEFAULT_PAGINATION, cursor=""):
     return QUERY_WITH_CURSOR % (str(uid), int(paginate), str(cursor))
 
+def make_profile_query(uid):
+    return PROFILE_QUERY % (uid)
 
 def get_saved_medias(bot, uid):
     class Media:
@@ -194,14 +197,32 @@ def get_all_follows_gen(bot, uid, max=0):
                 count += 1
 
 
+def get_related_users_gen(bot, uid):
+    # example url:
+    # https://www.instagram.com/graphql/query/?query_id=17845312237175864&variables=%7B%22id%22%3A%225261744%22%7D
+    url = INSTAGRAM_GRAPPHQL_HASH_QUERY % \
+          (query_hash.profile_hash(bot.s),
+           urllib.parse.quote_plus(make_profile_query(uid)))
+    r = bot.s.get(url)
+    if r.status_code == 200:
+        j = r.json()
+        # [n["node"]["username"] for n in j["data"]["user"]["edge_chaining"]["edges"]]
+        for n in j["data"]["user"]["edge_chaining"]["edges"]:
+            yield n['node']['id'], n["node"]["username"]
+    else:
+        return
+
 def related_users(bot, u):
     # example url:
     # https://www.instagram.com/graphql/query/?query_id=17845312237175864&variables=%7B%22id%22%3A%225261744%22%7D
     uid = get_user_id(u)
     variables = make_query_cursor(uid)
-    url = INSTAGRAM_GRAPPHQL_ID_QUERY % \
-        (QUERY_IDs['related_user'],
-         urllib.parse.quote_plus(make_query_cursor(uid)))
+    # url = INSTAGRAM_GRAPPHQL_ID_QUERY % \
+    #     (QUERY_IDs['related_user'],
+    #      urllib.parse.quote_plus(make_query_cursor(uid)))
+    url = INSTAGRAM_GRAPPHQL_HASH_QUERY % \
+          (query_hash.profile_hash(bot.s),
+           urllib.parse.quote_plus(make_profile_query(uid)))
     r = bot.s.get(url)
     if r.status_code == 200:
         j = r.json()
@@ -259,13 +280,24 @@ if __name__ == '__main__':
     # tests
     import auth
     b = auth.auth()
-    uid = get_user_id('bokehcume')
+    print('user id')
+    u = 'bokehcume'
+    uid = get_user_id(u)
+    print(uid)
+    print('followers')
     for id, u in get_all_followers_gen(b, uid):
         print(id, u)
         break
 
+    print('follows')
     for id, u in get_all_follows_gen(b, uid):
         print(id, u)
+        break
+
+    print('related')
+    for _id, _u in get_related_users_gen(b, uid):
+        print(_id, _u)
+        break
     # u = 'instagram'
     # print(u)
     # while True:
