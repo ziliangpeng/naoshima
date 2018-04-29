@@ -90,6 +90,8 @@ class GenUnfo2(Thread):
                     traceback.print_tb(e)
                 except BaseException:
                     pass
+                logger.info('sleeping for 60')
+                time.sleep(60)
 
 class DoUnfo(Thread):
     def __init__(self, u):
