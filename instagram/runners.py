@@ -78,7 +78,7 @@ class GenUnfo2(Thread):
         total = 0
         while True:
             try:
-                for _id, _u in user_utils.get_follows(self.bot, self.user_id):
+                for _id, _u in user_utils.get_all_follows_gen(self.bot, self.user_id):
                     logger.info('#%03d gen unfollow: %s', total, _u)
                     total += 1
                     self.queue_to_unfo.put(_id)
