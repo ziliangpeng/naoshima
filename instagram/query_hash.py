@@ -1,4 +1,5 @@
 import data
+from logs import logger
 
 def profile_hash(s):
     # tbh not too sure what this gives me
@@ -11,7 +12,7 @@ def profile_hash(s):
     index2 = text.find('m="', index1 + 1) + 3
     index2_end = text.find('"', index2 + 1)
     hash = text[index2:index2_end]
-    print("profile hash is " + hash)
+    logger.info("profile hash is " + hash)
     return hash
 
 def following_hash(s):
@@ -25,7 +26,7 @@ def following_hash(s):
     index3 = text.find('l="', index2 + 1) + 3
     index3_end = text.find('"', index3 + 1)
     hash = text[index3:index3_end]
-    print("following hash is " + hash)
+    logger.info("following hash is " + hash)
     return hash
 
 def follower_hash(s):
@@ -37,7 +38,7 @@ def follower_hash(s):
     index1 = text.find('),s="') + 5
     index1_end = text.find('"', index1 + 1)
     hash = text[index1:index1_end]
-    print("follower hash is " + hash)
+    logger.info("follower hash is " + hash)
     return hash
 
 
