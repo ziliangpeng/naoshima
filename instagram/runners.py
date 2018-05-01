@@ -36,6 +36,7 @@ class GenUnfo(Thread):
 
     @retry
     def run(self):
+        r = random.Random()
         while True:
             try:
                 follows = user_utils.get_follows(self.bot, self.user_id)
@@ -53,7 +54,8 @@ class GenUnfo(Thread):
                 random.shuffle(to_unfo)
                 for i, f in enumerate(to_unfo):
                     logger.info('#%03d gen unfollow: %s', i, data.get_id_to_name(f))
-                    self.queue_to_unfo.put(f)
+                    if r.random() < 0.5:
+                        self.queue_to_unfo.put(f)
                 time.sleep(10)
             except BaseException as e:
                 logger.error('Error in GenUnfo')
