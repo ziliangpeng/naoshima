@@ -5,6 +5,7 @@ import json
 
 import fetcher
 import requests
+from retrying import retry
 
 
 class UserInfo:
@@ -39,6 +40,7 @@ class UserInfo:
             return True
         return False
 
+    @retry
     def get_user_id_by_login(self, user_name):
         # url_info = self.url_user_info % (user_name)
         # info = self.s.get(url_info)
