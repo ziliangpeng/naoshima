@@ -1,5 +1,7 @@
 import data
-from logs import logger
+import logs
+
+logger = logs.logger
 
 def profile_hash(s):
     # tbh not too sure what this gives me
