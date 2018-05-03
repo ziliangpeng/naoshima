@@ -1,8 +1,8 @@
 import logging
 
-import data_repo
+from data_repo import d0
 
-d = data_repo.d0
+d = d0
 u = d.u
 
 u_format = '(%s): ' % (u)
