@@ -82,6 +82,13 @@ class GenUnfo2(Thread):
     def run(self):
         total = 0
         while True:
+            MIN_FOLLOW_THRESHOLD = 999
+            follows = user_utils.get_follows_count(self.u)
+            if MIN_FOLLOW_THRESHOLD > follows:
+                logger.info("Only %d follows. Pause.", len(follows))
+                time.sleep(60 * 30)
+                continue
+
             try:
                 for _id, _u in user_utils.get_all_follows_gen(self.bot, self.user_id):
                     logger.info('#%03d gen unfollow: %s', total, _u)
