@@ -68,6 +68,8 @@ class GenUnfo(Thread):
 
 
 """ user the new method for getting follows"""
+
+
 class GenUnfo2(Thread):
     def __init__(self, u):
         Thread.__init__(self)
@@ -95,6 +97,7 @@ class GenUnfo2(Thread):
                     pass
                 logger.info('sleeping for 60')
                 time.sleep(60)
+
 
 class DoUnfo(Thread):
     def __init__(self, u):

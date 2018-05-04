@@ -3,6 +3,7 @@ import data
 
 # logger = logs.logger
 
+
 def profile_hash(s):
     return '9ca88e465c3f866a76f7adee3871bdd8'
 
@@ -19,6 +20,7 @@ def profile_hash(s):
     # logger.info("profile hash is " + hash)
     return hash
 
+
 def following_hash(s):
     return '58712303d941c6855d4e888c5f0cd22f'
 
@@ -34,6 +36,7 @@ def following_hash(s):
     hash = text[index3:index3_end]
     # logger.info("following hash is " + hash)
     return hash
+
 
 def follower_hash(s):
     return '37479f2b8209594dde7facb0d904896a'

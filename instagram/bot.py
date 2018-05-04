@@ -24,7 +24,7 @@ if __name__ == '__main__':
 
     for cmd in cmds:
         if cmd == 'unfo':
-            t = GenUnfo2(u) # TODO: deprecate GenUnfo
+            t = GenUnfo2(u)  # TODO: deprecate GenUnfo
             t.daemon = True
             t.start()
         elif cmd.startswith('steal('):

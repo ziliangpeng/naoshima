@@ -15,4 +15,3 @@ def _json_path(j: str, paths: List[str]):
         else:
             return None
     return j
-

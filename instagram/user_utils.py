@@ -72,8 +72,10 @@ INSTAGRAM_GRAPPHQL_HASH_QUERY = 'https://www.instagram.com/graphql/query/?query_
 def make_query_cursor(uid, paginate=DEFAULT_PAGINATION, cursor=""):
     return QUERY_WITH_CURSOR % (str(uid), int(paginate), str(cursor))
 
+
 def make_profile_query(uid):
     return PROFILE_QUERY % (uid)
+
 
 def get_saved_medias(bot, uid):
     class Media:
@@ -177,8 +179,8 @@ def get_all_follows_gen(bot, uid, max=0):
             #     (QUERY_HASHs['followers'],
             #      urllib.parse.quote_plus(make_query_cursor(uid, 500, cursor)))
             url = INSTAGRAM_GRAPPHQL_HASH_QUERY % \
-                  (query_hash.following_hash(bot.s),
-                   urllib.parse.quote_plus(make_query_cursor(uid, 50, cursor)))
+                (query_hash.following_hash(bot.s),
+                 urllib.parse.quote_plus(make_query_cursor(uid, 50, cursor)))
             print('following url ', url)
             r = bot.s.get(url)
             if r.status_code != 200:
@@ -201,8 +203,8 @@ def get_related_users_gen(bot, uid):
     # example url:
     # https://www.instagram.com/graphql/query/?query_id=17845312237175864&variables=%7B%22id%22%3A%225261744%22%7D
     url = INSTAGRAM_GRAPPHQL_HASH_QUERY % \
-          (query_hash.profile_hash(bot.s),
-           urllib.parse.quote_plus(make_profile_query(uid)))
+        (query_hash.profile_hash(bot.s),
+         urllib.parse.quote_plus(make_profile_query(uid)))
     r = bot.s.get(url)
     if r.status_code == 200:
         j = r.json()
@@ -211,6 +213,7 @@ def get_related_users_gen(bot, uid):
             yield n['node']['id'], n["node"]["username"]
     else:
         return
+
 
 def related_users(bot, u):
     # example url:
@@ -221,8 +224,8 @@ def related_users(bot, u):
     #     (QUERY_IDs['related_user'],
     #      urllib.parse.quote_plus(make_query_cursor(uid)))
     url = INSTAGRAM_GRAPPHQL_HASH_QUERY % \
-          (query_hash.profile_hash(bot.s),
-           urllib.parse.quote_plus(make_profile_query(uid)))
+        (query_hash.profile_hash(bot.s),
+         urllib.parse.quote_plus(make_profile_query(uid)))
     r = bot.s.get(url)
     if r.status_code == 200:
         j = r.json()
@@ -251,6 +254,7 @@ def get_recent_posts(u):
     j = get_user_json(u)
     posts = _json_path(j, ['graphql', "user", "edge_owner_to_timeline_media", "edges"])
     return posts
+
 
 def get_biography(u):
     j = get_user_json(u)

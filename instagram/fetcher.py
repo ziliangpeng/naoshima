@@ -1,7 +1,8 @@
 import json
 
+
 def get_user_json(u, s=None):
-    if s == None:
+    if s is None:
         import requests
         s = requests
     url = 'https://www.instagram.com/%s' % u
@@ -18,7 +19,7 @@ def get_user_json(u, s=None):
 
         start = data.index('{')
         end = data.rindex('}')
-        json_text = data[start:end+1]
+        json_text = data[start:end + 1]
         j = json.loads(json_text)
         j = j['entry_data']['ProfilePage'][0]
         return 200, j
@@ -26,5 +27,3 @@ def get_user_json(u, s=None):
 
 if __name__ == '__main__':
     get_user_json('instagram')
-
-

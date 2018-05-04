@@ -46,6 +46,7 @@ if redis_cache_host is not None and redis_cache_port is not None:
 else:
     raise Exception("redis-cache config must present!")
 
+
 def get_latest_config(u: str) -> dict:
     key = NAMESPACE_CONFIG + u
     j = _redis.lindex(key, -1)
@@ -137,6 +138,8 @@ def set_followed_back(u, i):
     _redis.sadd(NAMESPACE_FOLLOWED_BACK + str(u), str(i))
 
 # return a iterator of integers
+
+
 def get_followed_back(u):
     return map(int, _redis.smembers(NAMESPACE_FOLLOWED_BACK + str(u)))
 
