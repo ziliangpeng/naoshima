@@ -317,6 +317,10 @@ class DoFo(Thread):
             except BaseException as e:
                 logger.error('Error in DoFo')
                 logger.error(e)
+                try:
+                    traceback.print_tb(e)
+                except BaseException:
+                    pass
             finally:
                 # slow down
                 time.sleep(24 * 3600 / daily_rate)
