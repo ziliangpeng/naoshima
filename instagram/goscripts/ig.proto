@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+message Media {
+  string id = 1;
+  string code = 2;
+  int64 timestamp = 3;
+  string owner_id = 4;
+  int32 height = 5;
+  int32 width = 6;
+  int32 liked_by = 7;
+}
+
+message User {
+  string id = 1;
+  string username = 2;
+  string full_name = 3;
+  int32 followed_by = 4;
+  int32 follows = 5;
+  string biography = 6;
+}
