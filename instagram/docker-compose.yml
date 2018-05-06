@@ -12,6 +12,15 @@ services:
       - "6379:16379"
     volumes:
       - /data/ig-ardb:/var/lib/ardb
+  ardb-2:
+    build:
+      context: ../docker
+      dockerfile: ardb.Dockerfile
+    container_name: ardb-server-2
+    ports:
+      - "6380:16379"
+    volumes:
+      - /data/ig-ardb-2:/var/lib/ardb
   ardb-cache:
     image: lupino/ardb-server
     container_name: ardb-server-cache
