@@ -28,7 +28,7 @@ logger = logs.logger
 # 3. keep following hashtag's most recent users
 
 
-class InifityTask(Thread):
+class InfinityTask(Thread):
     def __init__(self):
         Thread.__init__(self)
         self.delay = 0.1 # seconds
@@ -41,9 +41,9 @@ class InifityTask(Thread):
             time.sleep(self.delay)
 
 
-class GenUnfo2(InifityTask):
+class GenUnfo2(InfinityTask):
     def __init__(self, u):
-        InifityTask.__init__(self)
+        InfinityTask.__init__(self)
         self.u = u
         self.user_id = user_utils.get_user_id(u)  # TODO: check null
         self.bot = d0.bot
