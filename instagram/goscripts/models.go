@@ -10,6 +10,9 @@ type Media struct {
   ID string `json:"id"`
   Code string `json:"shortcode"`
   Type string `json:"__typename"`
+  Owner struct {
+    ID string `json:"id"`
+  } `json:"owner"`
   Dimentions struct {
     Height int `json:"height"`
     Width int `json:"width"`
