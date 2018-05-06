@@ -8,6 +8,7 @@ import time
 from threading import Thread
 from retrying import retry
 import traceback
+import sys
 
 import data
 import user_config_reader
@@ -318,7 +319,7 @@ class DoFo(Thread):
                 logger.error('Error in DoFo')
                 logger.error(e)
                 try:
-                    traceback.print_tb(e)
+                    traceback.print_tb(e, file=sys.stdout)
                 except BaseException:
                     pass
             finally:
