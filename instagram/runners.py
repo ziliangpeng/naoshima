@@ -49,6 +49,7 @@ class GenUnfo2(InifityTask):
         self.bot = d0.bot
         self.queue_to_unfo = d0.queue_to_unfo
 
+        self.delay = 10
         self.total = 0
 
     def task(self):
@@ -59,13 +60,12 @@ class GenUnfo2(InifityTask):
             time.sleep(60 * 30)
             return
 
-            for _id, _u in user_utils.get_all_follows_gen(self.bot, self.user_id):
-                # if _u in WHITELIST_USER:
-                #     continue
-                logger.info('#%03d gen unfollow: %s', self.total, _u)
-                self.total += 1
-                self.queue_to_unfo.put(_id)
-            time.sleep(10)
+        for _id, _u in user_utils.get_all_follows_gen(self.bot, self.user_id):
+            if _u in WHITELIST_USER:
+                continue
+            logger.info('#%03d gen unfollow: %s', self.total, _u)
+            self.total += 1
+            self.queue_to_unfo.put(_id)
 
 
 class DoUnfo(Thread):
