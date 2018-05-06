@@ -29,16 +29,21 @@ logger = logs.logger
 
 
 class InifityTask(Thread):
+    def __inti__(self):
+        Thread.__init__(self)
+        self.delay = 0.1 # seconds
+
     @retry
     @logs.log_exception
     def run(self):
         while True:
             self.task()
+            time.sleep(self.delay)
 
 
-class GenUnfo2(Thread):
+class GenUnfo2(InifityTask):
     def __init__(self, u):
-        Thread.__init__(self)
+        InifityTask.__init__(self)
         self.u = u
         self.user_id = user_utils.get_user_id(u)  # TODO: check null
         self.bot = d0.bot
@@ -46,24 +51,21 @@ class GenUnfo2(Thread):
 
         self.total = 0
 
-    @retry(wait_fixed=1000 * 60)
-    @logs.log_exception
-    def run(self):
-        while True:
-            MIN_FOLLOW_THRESHOLD = 999
-            follows = user_utils.get_follows_count(self.u)
-            if MIN_FOLLOW_THRESHOLD > follows:
-                logger.info("Only %d follows. Pause.", follows)
-                time.sleep(60 * 30)
-                continue
+    def task(self):
+        MIN_FOLLOW_THRESHOLD = 999
+        follows = user_utils.get_follows_count(self.u)
+        if MIN_FOLLOW_THRESHOLD > follows:
+            logger.info("Only %d follows. Pause.", follows)
+            time.sleep(60 * 30)
+            return
 
-                for _id, _u in user_utils.get_all_follows_gen(self.bot, self.user_id):
-                    # if _u in WHITELIST_USER:
-                    #     continue
-                    logger.info('#%03d gen unfollow: %s', self.total, _u)
-                    self.total += 1
-                    self.queue_to_unfo.put(_id)
-                time.sleep(10)
+            for _id, _u in user_utils.get_all_follows_gen(self.bot, self.user_id):
+                # if _u in WHITELIST_USER:
+                #     continue
+                logger.info('#%03d gen unfollow: %s', self.total, _u)
+                self.total += 1
+                self.queue_to_unfo.put(_id)
+            time.sleep(10)
 
 
 class DoUnfo(Thread):
