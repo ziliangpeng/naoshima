@@ -291,7 +291,7 @@ class DoFo(Thread):
                     post_ids = random.sample(post_ids, self.like_per_fo)
                 if like_cooldown_remain <= 0:
                     for post_id in post_ids:
-                        logger.info('like user(%s) post %d', username, int(post_id))
+                        logger.info('like user(%s) post %s', username, str(post_id))
                         r = self.bot.like(post_id)
                         if r.status_code == 200:
                             like_cooldown = DEFAULT_LIKE_COOLDOWN
