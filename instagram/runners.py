@@ -82,32 +82,27 @@ class DoUnfo(InfinityTask):
         self.bot.unfollow(f)
 
 
-class StealBase(Thread):
+class StealBase(InfinityTask):
     def __init__(self, u):
-        Thread.__init__(self)
+        InfinityTask.__init__(self)
         self.u = u
         self.uid = user_utils.get_user_id(u)
         self.bot = d0.bot
         self.queue_to_fo = d0.queue_to_fo
         self.conditions = user_config_reader.load_conditions()
 
-    @retry
-    def run(self):
-        try:
-            for id, name, msg in self.generate():
-                logger.info("Candidate %s: %s", name.ljust(16), msg)
-                if data.is_followed(self.u, id):
-                    logger.debug("Already followed.")
+    def task(self):
+        for id, name, msg in self.generate():
+            logger.info("Candidate %s: %s", name.ljust(16), msg)
+            if data.is_followed(self.u, id):
+                logger.debug("Already followed.")
+            else:
+                if not Filter(name, self.conditions).apply():
+                    logger.debug("Has not passed filter")
                 else:
-                    if not Filter(name, self.conditions).apply():
-                        logger.debug("Has not passed filter")
-                    else:
-                        logger.info("Good to steal! %s" % (name))
-                        data.set_id_to_name(id, name)
-                        self.queue_to_fo.put(id)
-        except Exception as e:
-            logger.error(repr(e))
-            raise e
+                    logger.info("Good to steal! %s" % (name))
+                    data.set_id_to_name(id, name)
+                    self.queue_to_fo.put(id)
 
 
 class Fofo(StealBase):
