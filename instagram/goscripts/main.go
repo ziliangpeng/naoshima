@@ -104,6 +104,8 @@ func main() {
     readFollowStats(username)
   } else if task == "model" {
     test()
+  } else if task == "proxy" {
+    startServer()
   } else {
     panic("wrong task type " + task)
   }
