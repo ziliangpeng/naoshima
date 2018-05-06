@@ -80,33 +80,25 @@ class GenUnfo2(Thread):
         self.bot = d0.bot
         self.queue_to_unfo = d0.queue_to_unfo
 
-    @retry
+        self.total = 0
+
+    @retry(wait_fixed=1000 * 60)
+    @logs.log_exception
     def run(self):
-        total = 0
+        # total = 0
         while True:
             MIN_FOLLOW_THRESHOLD = 999
             follows = user_utils.get_follows_count(self.u)
             if MIN_FOLLOW_THRESHOLD > follows:
-                logger.info("Only %d follows. Pause.", len(follows))
+                logger.info("Only %d follows. Pause.", follows)
                 time.sleep(60 * 30)
                 continue
 
-            try:
                 for _id, _u in user_utils.get_all_follows_gen(self.bot, self.user_id):
-                    logger.info('#%03d gen unfollow: %s', total, _u)
-                    total += 1
+                    logger.info('#%03d gen unfollow: %s', self.total, _u)
+                    self.total += 1
                     self.queue_to_unfo.put(_id)
                 time.sleep(10)
-            except BaseException as e:
-                logger.error('Error in GenUnfo')
-                logger.error(e)
-                try:
-                    # traceback.print_tb(e, file=sys.stdout)
-                    logger.error(traceback.format_exc())
-                except BaseException:
-                    pass
-                logger.info('sleeping for 60')
-                time.sleep(60)
 
 
 class DoUnfo(Thread):
