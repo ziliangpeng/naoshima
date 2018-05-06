@@ -68,24 +68,18 @@ class GenUnfo2(InfinityTask):
             self.queue_to_unfo.put(_id)
 
 
-class DoUnfo(Thread):
+class DoUnfo(InfinityTask):
     def __init__(self, u):
-        Thread.__init__(self)
+        InfinityTask.__init__(self)
         self.u = u
         self.bot = d0.bot
         self.queue_to_unfo = d0.queue_to_unfo
+        self.daily_rate = 1000
+        self.delay = 24 * 3600 / self.daily_rate
 
-    @retry
-    def run(self):
-        daily_rate = 1000
-        while True:
-            try:
-                f = self.queue_to_unfo.get()
-                self.bot.unfollow(f)
-                time.sleep(24 * 3600 / daily_rate)
-            except BaseException as e:
-                logger.error('Error in DoUnfo')
-                logger.error(e)
+    def task(self):
+        f = self.queue_to_unfo.get()
+        self.bot.unfollow(f)
 
 
 class StealBase(Thread):
