@@ -196,19 +196,20 @@ class StealFoers(StealBase):
         logger.info("Enumerated all followers of %s. My task is done!" % (self.steal_name))
 
 
-class DoFo(Thread):
+class DoFo(InfinityTask):
     def __init__(self, u):
-        Thread.__init__(self)
+        InfinityTask.__init__(self)
         self.u = u
         self.bot = d0.bot
         self.queue_to_fo = d0.queue_to_fo
         self.like_per_fo = d0.like_per_fo
         self.comment_pool = d0.comment_pool
 
-    @retry
-    def run(self):
-        daily_rate = user_config_reader.load_follow_per_day()
-        logger.info("Daily rate is %d", daily_rate)
+        self.daily_rate = user_config_reader.load_follow_per_day()
+        logger.info("Daily rate is %d", self.daily_rate)
+        self.delay = 24 * 3600 / self.daily_rate
+
+    def task(self):
         # TODO: extract all cooldown logic into separate module
         DEFAULT_LIKE_COOLDOWN = 100
         DEFAULT_COMMENT_COOLDOWN = 100
@@ -216,63 +217,50 @@ class DoFo(Thread):
         like_cooldown_remain = 0
         comment_cooldown = DEFAULT_COMMENT_COOLDOWN
         comment_cooldown_remain = 0
-        while True:
-            try:
-                if user_config_reader.load_incremental_daily_rate():
-                    daily_rate += 0.01
-                    logger.info("Daily rate increased to %f", daily_rate)
+        if user_config_reader.load_incremental_daily_rate():
+            self.daily_rate += 0.01
+            logger.info("Daily rate increased to %f", self.daily_rate)
 
-                # TODO: this is not UniqueQueue any more so possibly there's double-following, not a big deal
-                # but can use a fix
-                f = self.queue_to_fo.get()
-                r = self.bot.follow(f)
-                statsd.increment('naoshima.ig.follow', 1, tags=["user:" + self.u])
+        # TODO: this is not UniqueQueue any more so possibly there's double-following, not a big deal
+        # but can use a fix
+        f = self.queue_to_fo.get()
+        logger.info("Follow " + f)
+        r = self.bot.follow(f)
+        statsd.increment('naoshima.ig.follow', 1, tags=["user:" + self.u])
+        if r.status_code == 200:
+            data.set_followed(self.u, f)
+        else:
+            logger.error('Fail to follow, stats code: %d', r.status_code)
+            # TODO: cool down?
+            return
+
+        username = data.get_id_to_name(f)
+        post_ids = user_utils.get_post_ids(username)
+
+        # to like
+        if len(post_ids) > self.like_per_fo:
+            post_ids = random.sample(post_ids, self.like_per_fo)
+        if like_cooldown_remain <= 0:
+            for post_id in post_ids:
+                logger.info('like user(%s) post %s', username, str(post_id))
+                r = self.bot.like(post_id)
                 if r.status_code == 200:
-                    data.set_followed(self.u, f)
+                    like_cooldown = DEFAULT_LIKE_COOLDOWN
+                    like_cooldown_remain = 0
                 else:
-                    logger.error('Fail to follow, stats code: %d', r.status_code)
-                    # TODO: cool down?
-                    continue
+                    logger.info('fail to like. status code %d', r.status_code)
+                    like_cooldown *= 1.2
+                    logger.info('like cool down gap increased to %d', like_cooldown)
+                    like_cooldown_remain = like_cooldown
+                    logger.info('start like cool down for %d', like_cooldown)
+                    break
+        else:
+            logger.info('remain like cooldown %d', like_cooldown_remain)
+            like_cooldown_remain -= 1
 
-                username = data.get_id_to_name(f)
-                post_ids = user_utils.get_post_ids(username)
-
-                # to like
-                if len(post_ids) > self.like_per_fo:
-                    post_ids = random.sample(post_ids, self.like_per_fo)
-                if like_cooldown_remain <= 0:
-                    for post_id in post_ids:
-                        logger.info('like user(%s) post %s', username, str(post_id))
-                        r = self.bot.like(post_id)
-                        if r.status_code == 200:
-                            like_cooldown = DEFAULT_LIKE_COOLDOWN
-                            like_cooldown_remain = 0
-                        else:
-                            logger.info('fail to like. status code %d', r.status_code)
-                            like_cooldown *= 1.2
-                            logger.info('like cool down gap increased to %d', like_cooldown)
-                            like_cooldown_remain = like_cooldown
-                            logger.info('start like cool down for %d', like_cooldown)
-                            break
-                else:
-                    logger.info('remain like cooldown %d', like_cooldown_remain)
-                    like_cooldown_remain -= 1
-
-                # to comment
-                if post_ids and self.comment_pool:
-                    post_id = random.choice(post_ids)
-                    comment = random.choice(self.comment_pool)
-                    logger.info('comment %s on %s', comment, str(post_id))
-                    self.bot.comment(post_id, comment)
-
-            except BaseException as e:
-                logger.error('Error in DoFo')
-                logger.error(e)
-                try:
-                    # traceback.print_tb(e, file=sys.stdout)
-                    logger.error(traceback.format_exc())
-                except BaseException:
-                    pass
-            finally:
-                # slow down
-                time.sleep(24 * 3600 / daily_rate)
+        # to comment
+        if post_ids and self.comment_pool:
+            post_id = random.choice(post_ids)
+            comment = random.choice(self.comment_pool)
+            logger.info('comment %s on %s', comment, str(post_id))
+            self.bot.comment(post_id, comment)
