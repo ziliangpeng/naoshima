@@ -32,6 +32,14 @@ logger.addHandler(fh)
 logger.addHandler(fh2)
 
 
+def log_method_name(f, level=logging.INFO):
+    def df(*args, **kwargs):
+        msg = "Calling method %s" % (f.__name__)
+        logger.log(level, msg)
+        return f(*args, **kwargs)
+    return df
+
+
 def main():
     logger.info('Test: This is an INFO')
     logger.error("Test: This is ERROR")
