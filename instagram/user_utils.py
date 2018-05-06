@@ -9,34 +9,31 @@ import urllib.request
 import urllib.parse
 import urllib.error
 from utils import _json_path
+from logs import logger
 
 
 def get_user_json(u):
     cached_json = data.get_json_by_username(u)
     if cached_json is not None:
-        # print('user %s json cached' % (u))
         return cached_json
     else:
         # TODO: find proper way to do rate limit
         time.sleep(1)  # initial delay
-        # url = 'https://www.instagram.com/%s/?__a=1' % u
         retry_delay = 5
         while True:
             status_code, j = fetcher.get_user_json(u)
-            # r = requests.get(url)
             if status_code == 200:
                 data.set_json_by_username(u, j)
                 return j
             elif status_code == 429:
-                print('status code', status_code)
-                print('get json failed. sleeping for %d s' % (retry_delay))
+                logger.info("status code %d", status_code)
+                logger.info("get json failed. sleeping for %d s", retry_delay)
                 time.sleep(retry_delay)
                 retry_delay = int(retry_delay * 1.2)  # exponentially increase delay
             else:
-                print('status code', status_code)
+                logger.info("status code %d", status_code)
                 break
-    # raise BaseException("Fail to get user json")
-    print("Unable to get user json. Returning {}")
+    logger.warn("Unable to get user json. Returning {}")
     return {}
 
 
@@ -120,7 +117,7 @@ def get_follows(bot, uid):
             (QUERY_HASHs['follows'], urllib.parse.quote_plus(make_query_cursor(uid)))
         r = bot.s.get(url)
         if r.status_code != 200:
-            print('error in get follows, error code', r.status_code)
+            logger.warn("error in get follows, error code %d", r.status_code)
             time.sleep(2)
             continue
         all_data = json.loads(r.text)
@@ -145,16 +142,13 @@ def get_all_followers_gen(bot, uid, max=0):
     while True:
         while True:
             time.sleep(3)  # initial delay
-            # url = INSTAGRAM_GRAPPHQL_HASH_QUERY % \
-            #     (QUERY_HASHs['followers'],
-            #      urllib.parse.quote_plus(make_query_cursor(uid, 500, cursor)))
             url = INSTAGRAM_GRAPPHQL_HASH_QUERY % \
                 (query_hash.follower_hash(bot.s),
                  urllib.parse.quote_plus(make_query_cursor(uid, 50, cursor)))
-            print('followers url ', url)
+            logger.info("followers url %s", url)
             r = bot.s.get(url)
             if r.status_code != 200:
-                print('error in get followers, error code', r.status_code)
+                logger.warn("error in get followers, error code %d", r.status_code)
                 time.sleep(10)  # retry delay
                 continue
             all_data = json.loads(r.text)
@@ -176,16 +170,13 @@ def get_all_follows_gen(bot, uid, max=0):
     while True:
         while True:
             time.sleep(3)  # initial delay
-            # url = INSTAGRAM_GRAPPHQL_HASH_QUERY % \
-            #     (QUERY_HASHs['followers'],
-            #      urllib.parse.quote_plus(make_query_cursor(uid, 500, cursor)))
             url = INSTAGRAM_GRAPPHQL_HASH_QUERY % \
                 (query_hash.following_hash(bot.s),
                  urllib.parse.quote_plus(make_query_cursor(uid, 50, cursor)))
-            print('following url ', url)
+            logger.info("following url %s", url)
             r = bot.s.get(url)
             if r.status_code != 200:
-                print('error in get following, error code', r.status_code)
+                logger.warn("error in get following, error code %d", r.status_code)
                 time.sleep(10)  # retry delay
                 continue
             all_data = json.loads(r.text)
@@ -209,7 +200,6 @@ def get_related_users_gen(bot, uid):
     r = bot.s.get(url)
     if r.status_code == 200:
         j = r.json()
-        # [n["node"]["username"] for n in j["data"]["user"]["edge_chaining"]["edges"]]
         for n in j["data"]["user"]["edge_chaining"]["edges"]:
             yield n['node']['id'], n["node"]["username"]
     else:
@@ -221,9 +211,6 @@ def related_users(bot, u):
     # https://www.instagram.com/graphql/query/?query_id=17845312237175864&variables=%7B%22id%22%3A%225261744%22%7D
     uid = get_user_id(u)
     variables = make_query_cursor(uid)
-    # url = INSTAGRAM_GRAPPHQL_ID_QUERY % \
-    #     (QUERY_IDs['related_user'],
-    #      urllib.parse.quote_plus(make_query_cursor(uid)))
     url = INSTAGRAM_GRAPPHQL_HASH_QUERY % \
         (query_hash.profile_hash(bot.s),
          urllib.parse.quote_plus(make_profile_query(uid)))
