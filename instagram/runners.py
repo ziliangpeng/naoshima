@@ -29,7 +29,7 @@ logger = logs.logger
 
 
 class InifityTask(Thread):
-    def __inti__(self):
+    def __init__(self):
         Thread.__init__(self)
         self.delay = 0.1 # seconds
 
