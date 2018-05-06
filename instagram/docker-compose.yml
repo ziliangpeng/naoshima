@@ -35,6 +35,8 @@ services:
     build:
       context: ../docker
       dockerfile: ardb.Dockerfile
+      args:
+        engine: leveldb
     container_name: ardb-server-cache-2
     ports:
       - "26379:16379"
