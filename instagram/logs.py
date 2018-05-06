@@ -1,4 +1,5 @@
 import logging
+import traceback
 
 # from data_repo import d0
 from user_config_reader import load_secrets
@@ -37,6 +38,16 @@ def log_method_name(f, level=logging.INFO):
         msg = "Calling method %s" % (f.__name__)
         logger.log(level, msg)
         return f(*args, **kwargs)
+    return df
+
+
+def log_exception(f):
+    def df(*args, **kwargs):
+        try:
+            return f(*args, **kwargs)
+        except BaseException as e:
+            logger.error(traceback.format_exc())
+            raise e
     return df
 
 
