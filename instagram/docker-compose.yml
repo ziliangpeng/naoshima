@@ -13,6 +13,7 @@ services:
     volumes:
       - /data/ig-ardb:/var/lib/ardb
   ardb-2:
+  # user https://github.com/yaauie/redis-copy/ to dump redis from old redis to here
     build:
       context: ../docker
       dockerfile: ardb.Dockerfile
@@ -43,7 +44,7 @@ services:
     image: redis:2.8
     container_name: redis-fun
     links:
-      - ardb:redis
+      - ardb-2:redis
       - ardb-cache:redis-cache
       - ardb-cache-2:redis-cache-2
   bot:
@@ -53,7 +54,7 @@ services:
     # links is deprecated. we want to migrate to docker's user defined network.
     # we may also provision ardb inside here (bot own its data storage)
     links:
-     - ardb:redis
+     - ardb-2:redis
      - ardb-cache:redis-cache
   z-bot:
     build: .
@@ -65,7 +66,7 @@ services:
       - "-u"
       - "z"
     links:
-     - ardb:redis
+     - ardb-2:redis
      - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
   airbnb-bot:
@@ -78,7 +79,7 @@ services:
       - "-u"
       - "airbnb"
     links:
-     - ardb:redis
+     - ardb-2:redis
      - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
   v-bot:
@@ -91,7 +92,7 @@ services:
       - "-u"
       - "v"
     links:
-     - ardb:redis
+     - ardb-2:redis
      - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
   mc-bot:
@@ -104,7 +105,7 @@ services:
       - "-u"
       - "mc"
     links:
-     - ardb:redis
+     - ardb-2:redis
      - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
   hix-bot:
@@ -117,7 +118,7 @@ services:
       - "-u"
       - "hix"
     links:
-     - ardb:redis
+     - ardb-2:redis
      - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
   newdone-bot:
@@ -130,7 +131,7 @@ services:
       - "-u"
       - "newdone"
     links:
-     - ardb:redis
+     - ardb-2:redis
      - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
   let-bot:
@@ -143,7 +144,7 @@ services:
       - "-u"
       - "let"
     links:
-     - ardb:redis
+     - ardb-2:redis
      - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
   eva-bot:
@@ -156,7 +157,7 @@ services:
       - "-u"
       - "eva"
     links:
-     - ardb:redis
+     - ardb-2:redis
      - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
   eaxy-bot:
@@ -169,7 +170,7 @@ services:
       - "-u"
       - "eaxy"
     links:
-     - ardb:redis
+     - ardb-2:redis
      - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
   likes:
