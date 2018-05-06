@@ -18,3 +18,11 @@ message User {
   int32 follows = 5;
   string biography = 6;
 }
+
+message GetUserRequest {
+  string username = 1;
+}
+
+service Instagram {
+  rpc GetUser (GetUserRequest) returns (User);
+}
