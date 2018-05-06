@@ -19,7 +19,9 @@ RUN cd ardb && \
     yes | rm -r ardb
 
 RUN sed -e 's@home.*@home /var/lib/ardb@' \
-        -e 's/loglevel.*/loglevel info/' -i /etc/ardb.conf
+        -e 's/loglevel.*/loglevel info/' \
+        -e 's/redis-compatible-mode.*no/redis-compatible-mode     yes/' \
+        -i /etc/ardb.conf
 
 RUN echo 'trusted-ip *.*.*.*' >> /etc/ardb.conf
 
