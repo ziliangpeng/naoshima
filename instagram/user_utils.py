@@ -3,6 +3,7 @@ import time
 import requests
 import fetcher
 import data
+# import data_repo
 import query_hash
 import urllib.request
 import urllib.parse
@@ -279,6 +280,9 @@ def get_followed_by_count(u):
 def get_follow_counts(u):
     return get_followed_by_count(u), get_follows_count(u)
 
+
+# d0 = data_repo.d0
+# d0.user_id = get_user_id(d0.u)  # TODO: check null
 
 if __name__ == '__main__':
     # tests

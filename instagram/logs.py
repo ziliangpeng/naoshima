@@ -1,9 +1,11 @@
 import logging
 
-from data_repo import d0
+# from data_repo import d0
+from user_config_reader import load_secrets
 
-d = d0
-u = d.u
+# d = d0
+# u = d.u
+u = load_secrets()[0]
 
 u_format = '(%s): ' % (u)
 formatter = logging.Formatter(
