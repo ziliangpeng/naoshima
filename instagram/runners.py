@@ -28,48 +28,12 @@ logger = logs.logger
 # 3. keep following hashtag's most recent users
 
 
-class GenUnfo(Thread):
-    def __init__(self, u):
-        Thread.__init__(self)
-        self.u = u
-        self.user_id = user_utils.get_user_id(u)  # TODO: check null
-        self.bot = d0.bot
-        self.queue_to_unfo = d0.queue_to_unfo
-
+class InifityTask(Thread):
     @retry
+    @logs.log_exception
     def run(self):
-        r = random.Random()
         while True:
-            try:
-                follows = user_utils.get_follows(self.bot, self.user_id)
-                # followers = utils.get_followers(self.bot, self.user_id)
-                # self.id_name_dict.update(follows)
-                # self.id_name_dict.update(followers)
-                if len(follows) < user_config_reader.load_min_follow():
-                    logger.info("Only %d follows. Pause.", len(follows))
-                    time.sleep(60 * 30)
-                    continue
-
-                n = 100
-                filtered_user_ids = [x for x in follows if data.get_id_to_name(x) not in WHITELIST_USER]
-                to_unfo = random.sample(filtered_user_ids, n)
-                random.shuffle(to_unfo)
-                for i, f in enumerate(to_unfo):
-                    logger.info('#%03d gen unfollow: %s', i, data.get_id_to_name(f))
-                    if r.random() < 0.5:
-                        self.queue_to_unfo.put(f)
-                time.sleep(10)
-            except BaseException as e:
-                logger.error('Error in GenUnfo')
-                logger.error(e)
-                try:
-                    # traceback.print_tb(e, file=sys.stdout)
-                    logger.error(traceback.format_exc())
-                except BaseException:
-                    pass
-
-
-""" user the new method for getting follows"""
+            self.task()
 
 
 class GenUnfo2(Thread):
@@ -85,7 +49,6 @@ class GenUnfo2(Thread):
     @retry(wait_fixed=1000 * 60)
     @logs.log_exception
     def run(self):
-        # total = 0
         while True:
             MIN_FOLLOW_THRESHOLD = 999
             follows = user_utils.get_follows_count(self.u)
@@ -95,6 +58,8 @@ class GenUnfo2(Thread):
                 continue
 
                 for _id, _u in user_utils.get_all_follows_gen(self.bot, self.user_id):
+                    # if _u in WHITELIST_USER:
+                    #     continue
                     logger.info('#%03d gen unfollow: %s', self.total, _u)
                     self.total += 1
                     self.queue_to_unfo.put(_id)
