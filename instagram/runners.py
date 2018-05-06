@@ -31,7 +31,7 @@ logger = logs.logger
 class InfinityTask(Thread):
     def __init__(self):
         Thread.__init__(self)
-        self.delay = 0.1 # seconds
+        self.delay = 0.1  # seconds
 
     @retry
     @logs.log_exception
