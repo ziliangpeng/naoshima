@@ -63,7 +63,8 @@ class GenUnfo(Thread):
                 logger.error('Error in GenUnfo')
                 logger.error(e)
                 try:
-                    traceback.print_tb(e)
+                    # traceback.print_tb(e, file=sys.stdout)
+                    logger.error(traceback.format_exc())
                 except BaseException:
                     pass
 
@@ -100,7 +101,8 @@ class GenUnfo2(Thread):
                 logger.error('Error in GenUnfo')
                 logger.error(e)
                 try:
-                    traceback.print_tb(e)
+                    # traceback.print_tb(e, file=sys.stdout)
+                    logger.error(traceback.format_exc())
                 except BaseException:
                     pass
                 logger.info('sleeping for 60')
@@ -319,7 +321,8 @@ class DoFo(Thread):
                 logger.error('Error in DoFo')
                 logger.error(e)
                 try:
-                    traceback.print_tb(e, file=sys.stdout)
+                    # traceback.print_tb(e, file=sys.stdout)
+                    logger.error(traceback.format_exc())
                 except BaseException:
                     pass
             finally:
