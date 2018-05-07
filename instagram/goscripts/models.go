@@ -6,7 +6,7 @@ import (
   "io/ioutil"
 )
 
-type Media struct {
+type IGMedia struct {
   ID string `json:"id"`
   Code string `json:"shortcode"`
   Type string `json:"__typename"`
@@ -23,7 +23,7 @@ type Media struct {
   } `json:"edge_liked_by"`
 }
 
-type User struct {
+type IGUser struct {
   ID string `json:"id"`
   Name string `json:"full_name"`
   Username string `json:"username"`
@@ -42,24 +42,31 @@ type User struct {
   Medias struct {
     Count int `json:"count"`
     MediaEdges []struct {
-      Media Media `json:"node"`
+      Media IGMedia `json:"node"`
     } `json:"edges"`
   } `json:"edge_owner_to_timeline_media"`
 }
 
+type IGProfile struct {
+  EntryData struct {
+    ProfilePage []struct {
+      GraphQL struct {
+        User IGUser `json:"user"`
+      } `json:"graphql"`
+    } `json:"ProfilePage"`
+  } `json:"entry_data"`
+}
+
+
 func test() {
-  filename := "ig_user_data.json"
+  filename := "ig_user_profile.json"
   bytes, _ := ioutil.ReadFile(filename)
 
-  var data struct {
-    GraphQL struct {
-      User User `json:"user"`
-    } `json:"graphql"`
-  }
+  var igProfile IGProfile
 
-  json.Unmarshal([]byte(bytes), &data)
+  json.Unmarshal([]byte(bytes), &igProfile)
 
-  user := data.GraphQL.User
+  user := igProfile.EntryData.ProfilePage[0].GraphQL.User
   fmt.Printf("%+v\n\n", user)
   j, _ := json.Marshal(user)
   fmt.Println(string(j))
