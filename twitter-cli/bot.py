@@ -32,6 +32,8 @@ class ForeverThread(Thread):
                 self.act()
             except BaseException as e:
                 logger.error(e)
+                logger.info("sleeping...")
+                time.sleep(60 * 5)
 
 class Unfo(ForeverThread):
     def act(self):
@@ -39,7 +41,7 @@ class Unfo(ForeverThread):
             u = api.get_user(friend_id)
             logger.info("Unfollow: %s(%s)(%d)" % (u.screen_name, u.name, u.id))
             api.destroy_friendship(u.id)
-            two_minutes = 60 * 2
+            two_minutes = 60 * 3
             logger.info("Sleep for %d" % two_minutes)
             time.sleep(two_minutes)
 
@@ -80,7 +82,7 @@ class Fo(ForeverThread):
                     api.create_friendship(user.id)
                     followed.follow(user.id)
                     remain_to_fo_from_list -= 1
-                    two_minutes = 60 * 3
+                    two_minutes = 60 * 4
                     logger.info("Sleep for %d" % two_minutes)
                     time.sleep(two_minutes)
 
