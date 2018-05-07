@@ -2,6 +2,7 @@ package main
 
 import (
   "context"
+  "encoding/json"
   "fmt"
   "log"
   "net"
@@ -14,12 +15,19 @@ type InstagramServer struct {
 }
 
 func (s *InstagramServer) GetUser(ctx context.Context, getUserRequest *ig.GetUserRequest) (*ig.User, error) {
-  u := ig.User{
-    Id: "1",
-    Username: "tokyo",
-  }
+  fmt.Println("Request " + getUserRequest.Username)
+  dat := readIgHTMLJSONDataBytes(getUserRequest.Username)
+  var igProfil IGProfile
+  json.Unmarshal([]byte(dat), &igProfil)
 
-  return &u, nil
+  igUser := igProfil.EntryData.ProfilePage[0].GraphQL.User
+  var user ig.User
+  user.Id = igUser.ID
+  user.Username = igUser.Username
+  user.FullName = igUser.Name
+  fmt.Println(igUser)
+  fmt.Println(user)
+  return &user, nil
 }
 
 func startServer() {
