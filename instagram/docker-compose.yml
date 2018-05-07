@@ -49,6 +49,15 @@ services:
       - ardb-2:redis
       - ardb-cache:redis-cache
       - ardb-cache-2:redis-cache-2
+  goproxy:
+    build:
+      context: .
+      dockerfile: go.Dockerfile
+    container_name: goproxy
+    entrypoint:
+      - "./main"
+      - "-t"
+      - "proxy"
   bot:
     build: .
     volumes:
@@ -71,6 +80,7 @@ services:
      - ardb-2:redis
      - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
+     - goproxy:goproxy
   airbnb-bot:
     build: .
     volumes:
