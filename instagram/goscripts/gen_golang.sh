@@ -1,3 +1,3 @@
 #!/bin/bash
 
-protoc --go_out=plugins=grpc:ig ig.proto
+protoc -I../proto --go_out=plugins=grpc:ig ig.proto
