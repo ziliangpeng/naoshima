@@ -3,4 +3,4 @@
 # need to `pip install grpcio-tools`
 
 
-python -m grpc_tools.protoc -I. --python_out=ig --grpc_python_out=ig ig.proto
+python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. ig.proto
