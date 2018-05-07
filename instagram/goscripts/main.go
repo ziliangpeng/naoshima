@@ -30,8 +30,7 @@ func getMapListKeyGeneral(m interface{}, keys ...interface{}) interface{} {
   return m
 }
 
-// IG changed protocol. read from HTML
-func readJsonFromIgHTML(username string) map[string]interface{} {
+func readIgHTMLJSONDataBytes(username string) string {
   resp, err := http.Get(fmt.Sprintf("https://www.instagram.com/%s/", username))
   defer resp.Body.Close()
   if err != nil {
@@ -47,7 +46,12 @@ func readJsonFromIgHTML(username string) map[string]interface{} {
   // fmt.Println(line)
   startIndex := strings.Index(line, "{")
   endIndex := strings.LastIndex(line, "}") + 1
-  j := line[startIndex:endIndex]
+  return line[startIndex:endIndex]
+}
+
+// IG changed protocol. read from HTML
+func readJsonFromIgHTML(username string) map[string]interface{} {
+  j:= readIgHTMLJSONDataBytes(username)
 
   var dat map[string]interface{}
   json.Unmarshal([]byte(j), &dat)
