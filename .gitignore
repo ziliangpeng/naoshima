@@ -6,7 +6,7 @@ bazel-*
 
 # Protobuf generated files
 *.pb.go
-*pb2_py
+*pb2.py
 *pb2_grpc.py
 
 # IntelliJ
