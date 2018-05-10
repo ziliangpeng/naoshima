@@ -1,4 +1,5 @@
 from typing import List
+from retrying import retry
 
 
 def _check_not_null(o):
@@ -15,3 +16,14 @@ def _json_path(j: str, paths: List[str]):
         else:
             return None
     return j
+
+
+@retry(wait_exponential_max=1000*3600*24*1.5)
+def rate_limit_get(s, url):
+    response = s.get(url)
+    if response.status_code == 429:
+        raise RateLimitedException(str(response.status_code))
+    return response
+
+class RateLimitedException(BaseException):
+    pass

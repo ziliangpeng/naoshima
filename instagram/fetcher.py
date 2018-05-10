@@ -1,4 +1,5 @@
 import json
+from utils import rate_limit_get
 
 
 def get_user_json(u, s=None):
@@ -6,7 +7,7 @@ def get_user_json(u, s=None):
         import requests
         s = requests
     url = 'https://www.instagram.com/%s' % u
-    r = s.get(url)
+    r = rate_limit_get(s, url)
     if r.status_code != 200:
         return r.status_code, ''
     else:

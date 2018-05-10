@@ -1,4 +1,5 @@
 import data
+from utils import rate_limit_get
 # import logs
 
 # logger = logs.logger
@@ -9,7 +10,7 @@ def profile_hash(s):
 
     # tbh not too sure what this gives me
     js_url = 'https://www.instagram.com/static/bundles/base/ProfilePageContainer.js/d735e6d96a3e.js'
-    response = s.get(js_url)
+    response = rate_limit_get(s, js_url)
     if response.status_code != 200:
         raise Exception(str(response.status_code))
     text = response.text
@@ -25,7 +26,7 @@ def following_hash(s):
     return '58712303d941c6855d4e888c5f0cd22f'
 
     js_url = 'https://www.instagram.com/static/bundles/base/Consumer.js/ee18369e407b.js'
-    response = s.get(js_url)
+    response = rate_limit_get(s, js_url)
     if response.status_code != 200:
         raise Exception(str(response.status_code))
     text = response.text
@@ -42,7 +43,7 @@ def follower_hash(s):
     return '37479f2b8209594dde7facb0d904896a'
 
     js_url = 'https://www.instagram.com/static/bundles/base/Consumer.js/ee18369e407b.js'
-    response = s.get(js_url)
+    response = rate_limit_get(s, js_url)
     if response.status_code != 200:
         raise Exception(str(response.status_code))
     text = response.text
