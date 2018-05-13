@@ -32,16 +32,17 @@ services:
     volumes:
       - /data/ig-ardb-cache:/var/lib/ardb
   ardb-cache-2:
-    build:
-      context: ../docker
-      dockerfile: ardb.Dockerfile
-      args:
-        engine: leveldb
-    container_name: ardb-server-cache-2
-    ports:
-      - "26379:16379"
-    volumes:
-      - /data/ig-ardb-cache-2:/var/lib/ardb
+    image: redis
+#    build:
+#      context: ../docker
+#      dockerfile: ardb.Dockerfile
+#      args:
+#        engine: leveldb
+#    container_name: ardb-server-cache-2
+#    ports:
+#      - "26379:16379"
+#    volumes:
+#      - /data/ig-ardb-cache-2:/var/lib/ardb
   redis:
     image: redis:2.8
     container_name: redis-fun
