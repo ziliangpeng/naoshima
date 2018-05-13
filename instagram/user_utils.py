@@ -16,25 +16,14 @@ def get_user_json(u):
     cached_json = data.get_json_by_username(u)
     if cached_json is not None:
         return cached_json
+
+    status_code, j = fetcher.get_user_json(u)
+    if status_code == 200:
+        data.set_json_by_username(u, j)
+        return j
     else:
-        # TODO: find proper way to do rate limit
-        time.sleep(1)  # initial delay
-        retry_delay = 5
-        while True:
-            status_code, j = fetcher.get_user_json(u)
-            if status_code == 200:
-                data.set_json_by_username(u, j)
-                return j
-            elif status_code == 429:
-                logger.info("status code %d", status_code)
-                logger.info("get json failed. sleeping for %d s", retry_delay)
-                time.sleep(retry_delay)
-                retry_delay = int(retry_delay * 1.2)  # exponentially increase delay
-            else:
-                logger.info("status code %d", status_code)
-                break
-    logger.warn("Unable to get user json. Returning {}")
-    return {}
+        logger.warn("Unable to get user json. status code %d. Returning {}", status_code)
+        return {}
 
 
 QUERY_IDs = {
