@@ -12,7 +12,8 @@ RUN cd /proto && \
 
 
 
-FROM golang:1.9-alpine AS golang
+
+FROM golang:1.10.2-alpine3.7 AS golang
 
 WORKDIR "/app"
 
@@ -29,12 +30,14 @@ RUN cd /app && \
 
 
 
-FROM golang:1.9-alpine AS prod
 
-WORKDIR "/app"
+FROM alpine:3.7
+
+RUN apk add --no-cache \
+		ca-certificates
 
 COPY --from=golang /app/main /app/main
 
-#RUN ./main
+WORKDIR "/app"
 
 ENTRYPOINT ["./main"]
