@@ -186,18 +186,20 @@ services:
      - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
   likes:
-    build: ./goscripts
+    build:
+      context: .
+      dockerfile: go.Dockerfile
     entrypoint:
-      - "go"
-      - "run"
-      - "main.go"
+      - "/app/main"
       - "-t"
       - "likes"
       - "-u"
   follow:
-    build: ./goscripts
+    build:
+      context: .
+      dockerfile: go.Dockerfile
     entrypoint:
-      - "./main"
+      - "/app/main"
       - "-t"
       - "follow"
       - "-u"
