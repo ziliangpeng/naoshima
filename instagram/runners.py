@@ -164,7 +164,7 @@ class StealSimilarTo(StealBase):
             yield star
 
     def generate(self):
-        BATCH_SIZE = 500
+        BATCH_SIZE = 200
         for star in self.generate_star():
             star_id = user_utils.get_user_id(star)  # TODO: check null
             yield star_id, star, "This is a star!"
