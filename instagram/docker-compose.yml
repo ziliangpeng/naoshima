@@ -43,8 +43,9 @@ services:
       - "26379:16379"
     volumes:
       - /data/ig-ardb-cache-2:/var/lib/ardb
-  ardb-cache-3:
-    image: redis
+  redis-cache:
+    image: redis:2.8
+    container_name: redis-cache
   redis:
     image: redis:2.8
     container_name: redis-fun
@@ -52,7 +53,6 @@ services:
       - ardb-2:redis
       - ardb-cache:redis-cache
       - ardb-cache-2:redis-cache-2
-      - ardb-cache-3:redis-cache-3
   goproxy:
     build:
       context: .
@@ -84,7 +84,7 @@ services:
      - ardb-2:redis
      - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-     - ardb-cache-3:redis-cache-3
+     - redis-cache:redis-cache-3
      - goproxy:goproxy
   airbnb-bot:
     build: .
@@ -99,7 +99,7 @@ services:
      - ardb-2:redis
      - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-     - ardb-cache-3:redis-cache-3
+     - redis-cache:redis-cache-3
   v-bot:
     build: .
     volumes:
@@ -113,7 +113,7 @@ services:
      - ardb-2:redis
      - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-     - ardb-cache-3:redis-cache-3
+     - redis-cache:redis-cache-3
   mc-bot:
     build: .
     volumes:
@@ -127,7 +127,7 @@ services:
      - ardb-2:redis
      - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-     - ardb-cache-3:redis-cache-3
+     - redis-cache:redis-cache-3
   hix-bot:
     build: .
     volumes:
@@ -141,7 +141,7 @@ services:
      - ardb-2:redis
      - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-     - ardb-cache-3:redis-cache-3
+     - redis-cache:redis-cache-3
   newdone-bot:
     build: .
     volumes:
@@ -155,7 +155,7 @@ services:
      - ardb-2:redis
      - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-     - ardb-cache-3:redis-cache-3
+     - redis-cache:redis-cache-3
   let-bot:
     build: .
     volumes:
@@ -169,7 +169,7 @@ services:
      - ardb-2:redis
      - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-     - ardb-cache-3:redis-cache-3
+     - redis-cache:redis-cache-3
   eva-bot:
     build: .
     volumes:
@@ -183,7 +183,7 @@ services:
      - ardb-2:redis
      - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-     - ardb-cache-3:redis-cache-3
+     - redis-cache:redis-cache-3
   eaxy-bot:
     build: .
     volumes:
@@ -197,7 +197,7 @@ services:
      - ardb-2:redis
      - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-     - ardb-cache-3:redis-cache-3
+     - redis-cache:redis-cache-3
   likes:
     build:
       context: .
