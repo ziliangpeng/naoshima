@@ -97,33 +97,6 @@ def get_saved_medias(bot, uid):
 """ special method, not simple reading. """
 
 
-def get_follows(bot, uid):
-    # TODO: this method need refactoring
-    time.sleep(3)  # initial delay
-    for retry in range(5):
-        time.sleep(2)  # retry delay
-        url = INSTAGRAM_GRAPPHQL_HASH_QUERY % \
-            (QUERY_HASHs['follows'], urllib.parse.quote_plus(make_query_cursor(uid)))
-        r = rate_limit_get(bot.s, url)
-        if r.status_code != 200:
-            logger.warn("error in get follows, error code %d", r.status_code)
-            time.sleep(2)
-            continue
-        all_data = json.loads(r.text)
-        follows = all_data["data"]["user"]["edge_follow"]["edges"]
-        ret = {}
-        for f in follows:
-            i = f["node"]["id"]
-            u = f["node"]["username"]
-            data.set_id_to_name(i, u)
-            ret[i] = u
-        return ret
-    raise BaseException("Fail to get follows")
-
-
-""" this is a special method """
-
-
 def get_all_followers_gen(bot, uid, max=0):
     # TODO: require refactoring
     count = 0
