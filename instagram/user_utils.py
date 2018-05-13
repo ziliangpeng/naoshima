@@ -98,59 +98,53 @@ def get_saved_medias(bot, uid):
 
 
 def get_all_followers_gen(bot, uid, max=0):
-    # TODO: require refactoring
     count = 0
     cursor = ""
     while True:
-        while True:
-            time.sleep(3)  # initial delay
-            url = INSTAGRAM_GRAPPHQL_HASH_QUERY % \
-                (query_hash.follower_hash(bot.s),
-                 urllib.parse.quote_plus(make_query_cursor(uid, 50, cursor)))
-            logger.info("followers url %s", url)
-            r = rate_limit_get(bot.s, url)
-            if r.status_code != 200:
-                logger.warn("error in get followers, error code %d", r.status_code)
-                time.sleep(10)  # retry delay
-                continue
-            all_data = json.loads(r.text)
-            followers = all_data["data"]["user"]["edge_followed_by"]["edges"]
-            if len(followers) == 0:
+        url = INSTAGRAM_GRAPPHQL_HASH_QUERY % \
+            (query_hash.follower_hash(bot.s),
+             urllib.parse.quote_plus(make_query_cursor(uid, 50, cursor)))
+        logger.info("followers url %s", url)
+        r = rate_limit_get(bot.s, url)
+        if r.status_code != 200:
+            logger.warn("error in get followers, error code %d", r.status_code)
+            raise BaseException("Error in getting followers")
+
+        all_data = json.loads(r.text)
+        followers = all_data["data"]["user"]["edge_followed_by"]["edges"]
+        if len(followers) == 0:
+            return
+        cursor = all_data["data"]["user"]["edge_followed_by"]["page_info"]["end_cursor"]
+        for f in followers:
+            if max != 0 and count >= max:
                 return
-            cursor = all_data["data"]["user"]["edge_followed_by"]["page_info"]["end_cursor"]
-            for f in followers:
-                if max != 0 and count >= max:
-                    return
-                yield f["node"]["id"], f["node"]["username"]
-                count += 1
+            yield f["node"]["id"], f["node"]["username"]
+            count += 1
 
 
 def get_all_follows_gen(bot, uid, max=0):
-    # TODO: require refactoring
     count = 0
     cursor = ""
     while True:
-        while True:
-            time.sleep(3)  # initial delay
-            url = INSTAGRAM_GRAPPHQL_HASH_QUERY % \
-                (query_hash.following_hash(bot.s),
-                 urllib.parse.quote_plus(make_query_cursor(uid, 50, cursor)))
-            logger.info("following url %s", url)
-            r = rate_limit_get(bot.s, url)
-            if r.status_code != 200:
-                logger.warn("error in get following, error code %d", r.status_code)
-                time.sleep(10)  # retry delay
-                continue
-            all_data = json.loads(r.text)
-            followers = all_data["data"]["user"]["edge_follow"]["edges"]
-            if len(followers) == 0:
+        url = INSTAGRAM_GRAPPHQL_HASH_QUERY % \
+            (query_hash.following_hash(bot.s),
+             urllib.parse.quote_plus(make_query_cursor(uid, 50, cursor)))
+        logger.info("following url %s", url)
+        r = rate_limit_get(bot.s, url)
+        if r.status_code != 200:
+            logger.warn("error in get following, error code %d", r.status_code)
+            continue
+            raise BaseException("Error in getting follows")
+        all_data = json.loads(r.text)
+        followers = all_data["data"]["user"]["edge_follow"]["edges"]
+        if len(followers) == 0:
+            return
+        cursor = all_data["data"]["user"]["edge_follow"]["page_info"]["end_cursor"]
+        for f in followers:
+            if max != 0 and count >= max:
                 return
-            cursor = all_data["data"]["user"]["edge_follow"]["page_info"]["end_cursor"]
-            for f in followers:
-                if max != 0 and count >= max:
-                    return
-                yield f["node"]["id"], f["node"]["username"]
-                count += 1
+            yield f["node"]["id"], f["node"]["username"]
+            count += 1
 
 
 def get_related_users_gen(bot, uid):
