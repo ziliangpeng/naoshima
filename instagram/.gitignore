@@ -18,3 +18,5 @@ science_followers.html
 # 2to3 bak
 *.py.bak
 
+# docker-compose .env
+.env
