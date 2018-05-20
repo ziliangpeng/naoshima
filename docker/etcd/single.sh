@@ -8,6 +8,12 @@ export HostIP=$1
 echo "Host IP is $HostIP"
 
 
+# kill existing container
+echo 'Killing container'
+docker rm -f etcd-naoshima
+
+
+# run new container
 docker run -d -v /usr/share/ca-certificates/:/etc/ssl/certs -p 4001:4001 -p 2380:2380 -p 2379:2379 \
  --name etcd-naoshima quay.io/coreos/etcd:v2.3.8 \
  -name etcd0 \
@@ -30,6 +36,3 @@ echo 'Getting key x'
 etcdctl --debug get x
 
 
-echo 'Killing container'
-docker kill etcd-naoshima
-docker rm etcd-naoshima
