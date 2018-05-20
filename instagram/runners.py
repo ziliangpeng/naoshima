@@ -16,7 +16,7 @@ import user_utils
 from filter import Filter
 from queue import Queue
 from data_repo import d0
-from dd import statsd
+from dd import m
 
 WHITELIST_USER = user_config_reader.load_whitelist()
 
@@ -225,7 +225,7 @@ class DoFo(InfinityTask):
         f = self.queue_to_fo.get()
         logger.info("Follow " + f)
         r = self.bot.follow(f)
-        statsd.increment('naoshima.ig.follow', 1, tags=["user:" + self.u])
+        m.followed(self.u)
         if r.status_code == 200:
             data.set_followed(self.u, f)
         else:
