@@ -16,7 +16,7 @@ import user_utils
 from filter import Filter
 from queue import Queue
 from data_repo import d0
-from datadog import statsd
+from dd import statsd
 
 WHITELIST_USER = user_config_reader.load_whitelist()
 
@@ -26,7 +26,6 @@ logger = logs.logger
 # 1. follow followers' followers
 # 2. keep following top brand's latest followers
 # 3. keep following hashtag's most recent users
-
 
 class InfinityTask(Thread):
     def __init__(self):
