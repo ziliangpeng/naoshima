@@ -75,6 +75,8 @@ services:
     build: .
     volumes:
       - /data/ig:/data/ig
+    environment:
+      - DD_HOST
     entrypoint:
       - "python"
       - "bot.py"
@@ -90,6 +92,8 @@ services:
     build: .
     volumes:
       - /data/ig:/data/ig
+    environment:
+      - DD_HOST
     entrypoint:
       - "python"
       - "bot.py"
@@ -104,6 +108,8 @@ services:
     build: .
     volumes:
       - /data/ig:/data/ig
+    environment:
+      - DD_HOST
     entrypoint:
       - "python"
       - "bot.py"
@@ -118,6 +124,8 @@ services:
     build: .
     volumes:
       - /data/ig:/data/ig
+    environment:
+      - DD_HOST
     entrypoint:
       - "python"
       - "bot.py"
@@ -132,6 +140,8 @@ services:
     build: .
     volumes:
       - /data/ig:/data/ig
+    environment:
+      - DD_HOST
     entrypoint:
       - "python"
       - "bot.py"
@@ -146,6 +156,8 @@ services:
     build: .
     volumes:
       - /data/ig:/data/ig
+    environment:
+      - DD_HOST
     entrypoint:
       - "python"
       - "bot.py"
@@ -174,6 +186,8 @@ services:
     build: .
     volumes:
       - /data/ig:/data/ig
+    environment:
+      - DD_HOST
     entrypoint:
       - "python"
       - "bot.py"
@@ -188,6 +202,8 @@ services:
     build: .
     volumes:
       - /data/ig:/data/ig
+    environment:
+      - DD_HOST
     entrypoint:
       - "python"
       - "bot.py"
