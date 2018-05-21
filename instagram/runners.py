@@ -223,7 +223,7 @@ class DoFo(InfinityTask):
         # TODO: this is not UniqueQueue any more so possibly there's double-following, not a big deal
         # but can use a fix
         f = self.queue_to_fo.get()
-        logger.info("Follow " + f)
+        logger.info("Follow " + str(f))
         r = self.bot.follow(f)
         m.followed()
         if r.status_code == 200:
