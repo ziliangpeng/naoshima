@@ -26,7 +26,7 @@ class IGStatd:
         self.sd.increment('naoshima.ig.follow', 1, tags=["user:" + self.u])
 
     def get_profile(self, success):
-        self.sd.increment('naoshima.ig.get_profile', 1, tags=['user:' + self.u, 'success' + str(success)])
+        self.sd.increment('naoshima.ig.get_profile', 1, tags=['user:' + self.u, 'success:' + str(success)])
 
     def ratelimit_exceeded(self):
         self.sd.increment('naoshima.ig.ratelimite_exceeded', 1, tags=['user:' + self.u])
