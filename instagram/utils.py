@@ -25,6 +25,8 @@ def _json_path(j: str, paths: List[str]):
 def rate_limit_get(s, url):
     response = s.get(url)
     if response.status_code == 429:
+        from dd import m
+        m.ratelimit_exceeded()
         raise RateLimitedException(str(response.status_code))
     return response
 

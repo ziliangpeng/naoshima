@@ -225,7 +225,7 @@ class DoFo(InfinityTask):
         f = self.queue_to_fo.get()
         logger.info("Follow " + f)
         r = self.bot.follow(f)
-        m.followed(self.u)
+        m.followed()
         if r.status_code == 200:
             data.set_followed(self.u, f)
         else:
