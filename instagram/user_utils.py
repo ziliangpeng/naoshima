@@ -153,6 +153,7 @@ def get_related_users_gen(bot, uid):
     url = INSTAGRAM_GRAPPHQL_HASH_QUERY % \
         (query_hash.profile_hash(bot.s),
          urllib.parse.quote_plus(make_profile_query(uid)))
+    logger.info("related users gen url %s", url)
     r = rate_limit_get(bot.s, url)
     if r.status_code == 200:
         j = r.json()
@@ -170,6 +171,7 @@ def related_users(bot, u):
     url = INSTAGRAM_GRAPPHQL_HASH_QUERY % \
         (query_hash.profile_hash(bot.s),
          urllib.parse.quote_plus(make_profile_query(uid)))
+    logger.info("related users url %s", url)
     r = rate_limit_get(bot.s, url)
     if r.status_code == 200:
         j = r.json()
