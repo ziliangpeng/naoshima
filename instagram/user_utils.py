@@ -207,7 +207,11 @@ def get_biography(u):
 
 def get_user_id(u):
     j = get_user_json(u)
-    return int(_json_path(j, ['graphql', "user", "id"]))
+    user_id = _json_path(j, ['graphql', "user", "id"])
+    if user_id is None:
+        logger.error("Error getting id for user %s", u)
+        return None
+    return int(user_id)
 
 
 def get_follows_count(u):

@@ -179,6 +179,8 @@ class Similar(StealSimilarTo):
     def generate(self):
         for star in self.generate_star():
             star_id = user_utils.get_user_id(star)  # TODO: check null
+            if star_id is None:
+                continue
             yield star_id, star, "This is a star!"
 
 
