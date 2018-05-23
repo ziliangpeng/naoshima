@@ -145,21 +145,28 @@ class StealSimilarTo(StealBase):
         star_queue = Queue()
         star = self.seed_name
         star_queue.put(star)
-        next_stars = user_utils.related_users(self.bot, star)[:10]
+        next_stars = user_utils.related_users(self.bot, star) #[:10]
         random.shuffle(next_stars)
         visited = set()
         logger.info('next stars %s', next_stars)
         for ns in next_stars:
             star_queue.put(ns)
             visited.add(ns)
+        hungry = True
         while True:
             star = star_queue.get()
-            next_stars = user_utils.related_users(self.bot, star)[:50]
-            random.shuffle(next_stars)
-            for ns in next_stars:
-                if ns not in visited and star_queue.qsize() < MAX_QUEUE_SIZE:
-                    star_queue.put(ns)
-                    visited.add(ns)
+            if star_queue.qsize() < MAX_QUEUE_SIZE / 2:
+                hungry = True
+
+            if hungry:
+                next_stars = user_utils.related_users(self.bot, star) #[:50]
+                random.shuffle(next_stars)
+                for ns in next_stars:
+                    if ns not in visited: # and star_queue.qsize() < MAX_QUEUE_SIZE:
+                        star_queue.put(ns)
+                        visited.add(ns)
+                if star_queue.qsize() > MAX_QUEUE_SIZE:
+                    hungry = False
             yield star
 
     def generate(self):
