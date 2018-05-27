@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 
 # TODO: compose supports 'extends', so we can abstract common bot logic into gneral-bot service
 # TODO: compose supports `-f` to load different config files. Can implement some one-off jobs in another file
