@@ -29,6 +29,7 @@ else:
     logger.info("No prometheus host is given")
 
 class PromPush(Thread):
+    @retry
     def run(self):
         while (not sleep(5)):
             logger.info("Sending metrics to prometheus")
