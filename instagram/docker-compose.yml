@@ -99,6 +99,7 @@ services:
       - /data/ig:/data/ig
     environment:
       - DD_HOST
+      - PROM_HOST
     entrypoint:
       - "python"
       - "bot.py"
@@ -133,6 +134,7 @@ services:
       - /data/ig:/data/ig
     environment:
       - DD_HOST
+      - PROM_HOST
     entrypoint:
       - "python"
       - "bot.py"
@@ -149,6 +151,7 @@ services:
       - /data/ig:/data/ig
     environment:
       - DD_HOST
+      - PROM_HOST
     entrypoint:
       - "python"
       - "bot.py"
@@ -165,6 +168,7 @@ services:
       - /data/ig:/data/ig
     environment:
       - DD_HOST
+      - PROM_HOST
     entrypoint:
       - "python"
       - "bot.py"
@@ -181,6 +185,7 @@ services:
       - /data/ig:/data/ig
     environment:
       - DD_HOST
+      - PROM_HOST
     entrypoint:
       - "python"
       - "bot.py"
@@ -211,6 +216,7 @@ services:
       - /data/ig:/data/ig
     environment:
       - DD_HOST
+      - PROM_HOST
     entrypoint:
       - "python"
       - "bot.py"
@@ -227,6 +233,7 @@ services:
       - /data/ig:/data/ig
     environment:
       - DD_HOST
+      - PROM_HOST
     entrypoint:
       - "python"
       - "bot.py"
