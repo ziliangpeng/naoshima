@@ -21,6 +21,7 @@ else:
 
 
 PROM_HOST_KEY = 'PROM_HOST'
+prom_registry = pc.CollectorRegistry()  # need a new registry to that won't send system metrics to it
 if PROM_HOST_KEY in os.environ:
     prom_host = "%s:9091" % (os.getenv(PROM_HOST_KEY))
     logger.info("Prometheus host is %s", prom_host)
@@ -33,7 +34,7 @@ class PromPush(Thread):
     def run(self):
         while (not sleep(5)):
             logger.info("Sending metrics to prometheus")
-            pc.push_to_gateway(prom_host, job='ig-bot', registry=pc.REGISTRY)
+            pc.push_to_gateway(prom_host, job='ig-bot', registry=prom_registry)
 
 if prom_host:
     PromPush().start()
@@ -62,7 +63,7 @@ class IGStatd:
             return self.prom_counters[name]
         else:
             try:
-                c = pc.Counter(name, description, labelnames=labelnames)
+                c = pc.Counter(name, description, labelnames=labelnames, registry=prom_registry)
                 self.prom_counters[name] = c
                 return c
             except ValueError:
