@@ -48,6 +48,7 @@ jobs:
           name: dir size
           command: |
             du -h -d 0
+            du -d 0
       #      . venv/bin/activate
       #      python manage.py test
 
