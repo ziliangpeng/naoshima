@@ -16,7 +16,7 @@ A_ALIAS_DIR="historical-$1"
 git clone $A_REPO $A_DIR
 cd $A_DIR
 git remote rm origin
-git filter-branch --subdirectory-filter $A_ALIAS_DIR -- --all
+git filter-branch --subdirectory-filter $A_ALIAS_DIR -- --all && true
 mkdir $A_ALIAS_DIR
 mv * $A_ALIAS_DIR
 mv .gitignore $A_ALIAS_DIR
