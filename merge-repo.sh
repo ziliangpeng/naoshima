@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e  # exit on error
+set -x  # print command before execution
 
 
 # Usage:
