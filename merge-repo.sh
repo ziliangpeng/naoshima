@@ -12,13 +12,13 @@ set -x  # print command before execution
 GITHUB_USERNAME="ziliangpeng"
 A_REPO="https://github.com/$GITHUB_USERNAME/$1.git"
 A_DIR="/tmp/a_repo_$1"
-A_ALIAS_DIR="historical-$1"
+A_ALIAS_DIR="historical/historical-$1"
 git clone $A_REPO $A_DIR
 cd $A_DIR
 git remote rm origin
 git filter-branch --subdirectory-filter $A_ALIAS_DIR -- --all && true
-mkdir $A_ALIAS_DIR
-mv * $A_ALIAS_DIR
+mkdir -p $A_ALIAS_DIR
+mv * $A_ALIAS_DIR && true
 mv .gitignore $A_ALIAS_DIR
 git add .
 git commit -m "[git] move historical repo $1 into subdir"
