@@ -45,10 +45,10 @@ jobs:
       # https://pytest.org
       # https://nose.readthedocs.io
       - run:
-          name: run tests
+          name: dir size
           command: |
-            pwd
-            ls -l
+            du -h -d 0
+            du -d 0
       #      . venv/bin/activate
       #      python manage.py test
 
