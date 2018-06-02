@@ -50,6 +50,7 @@ class IGStatd:
 
     def followed(self):
         self.sd.increment('naoshima.ig.follow', 1, tags=["user:" + self.u])
+        self._prom_counter('naoshima:ig:follow', "Number of follow", ['user']).labels(user=self.u).inc()
 
     def get_profile(self, success):
         self.sd.increment('naoshima.ig.get_profile', 1, tags=['user:' + self.u, 'success:' + str(success)])
