@@ -1,9 +1,12 @@
+// mut x: &String  vs   x: &mut String
+// mut x: &String  -  x is mutable, x can be reassigned
+// x: &mut String  -  content of x is mutable, x can be modified
 fn f(mut s1: String, s2: &mut String) -> String {
   s1.push_str("[mut s1]");
   s2.push_str("[mut s2]");
   let mut s3 = String::from(s1.as_str());
   s3.push_str(s2.as_str());
-  s3 // &s3 will fail. s3 will be out of scope befor moving ownership out.
+  s3 // &s3 will fail. s3 will be out of scope before moving ownership out.
 }
 
 fn main() {
