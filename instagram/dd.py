@@ -57,7 +57,21 @@ class IGStatd:
         self._prom_counter('naoshima:ig:get_profile', "Number of profile get", ['user']).labels(user=self.u).inc()
 
     def ratelimit_exceeded(self):
-        self.sd.increment('naoshima.ig.ratelimite_exceeded', 1, tags=['user:' + self.u])
+        # self.sd.increment('naoshima.ig.ratelimit_exceeded', 1, tags=['user:' + self.u])
+        # self._prom_counter('naoshima:ig:ratelimit_exceeded', "", ['user']).labels(user=self.u).inc()
+        self._increase_all('naoshima#ig#ratelimit_exceeded')
+
+    def _increase_all(self, m):
+        self._increase_dd(m)
+        self._increase_prom(m)
+
+    def _increase_prom(self, m):
+        m = m.replace('#', ':')
+        self._prom_counter(m, m, ['user']).labels(user=self.u).inc()
+
+    def _increase_dd(self, m):
+        m = m.replace('#', '.')
+        self.sd.increment(m, 1, tags=['user:' + self.u])
 
     def _prom_counter(self, name, description, labelnames=[]):
         if name in self.prom_counters:
