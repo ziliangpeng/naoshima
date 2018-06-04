@@ -7,7 +7,7 @@ from collections import defaultdict
 import user_config_reader
 from logs import logger
 import prometheus_client as pc
-import influxdb
+# import influxdb
 from threading import Thread
 
 ######################### Datadog Setup #########################
