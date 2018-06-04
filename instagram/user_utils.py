@@ -21,6 +21,7 @@ u = user_config_reader.load_secrets()[0]
 def get_user_json(u):
     cached_json = data.get_json_by_username(u)
     if cached_json is not None:
+        sd.increment('naoshima.ig.get_user.cache.hit', tags=['user:' + u])
         return cached_json
 
     status_code, j = fetcher.get_user_json(u)
