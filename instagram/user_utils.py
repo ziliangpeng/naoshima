@@ -8,10 +8,16 @@ import query_hash
 import urllib.request
 import urllib.parse
 import urllib.error
+
+import user_config_reader
+from dd import sd
 from utils import _json_path, rate_limit_get
 from logs import logger
 
 
+u = user_config_reader.load_secrets()[0]
+
+@sd.timed(metric='naoshima.ig.get_user_json_cached.time', tags=['user:' + u])
 def get_user_json(u):
     cached_json = data.get_json_by_username(u)
     if cached_json is not None:
