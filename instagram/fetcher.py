@@ -1,8 +1,12 @@
 import json
+
+import user_config_reader
 from utils import rate_limit_get
-from dd import m
+from dd import m, sd
 
+u = user_config_reader.load_secrets()[0]
 
+@sd.timed(metric='naoshima.ig.get_user_json.time', tags=['user:' + u])
 def get_user_json(u, s=None):
     if s is None:
         import requests
