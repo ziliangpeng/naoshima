@@ -7,7 +7,10 @@ from collections import defaultdict
 import user_config_reader
 from logs import logger
 import prometheus_client as pc
+import influxdb
 from threading import Thread
+
+######################### Datadog Setup #########################
 
 DD_HOST_KEY = 'DD_HOST'
 
@@ -19,6 +22,8 @@ else:
     logger.info("User default Datadog host")
     sd = datadog.statsd
 
+
+######################### Prometheus Setup #########################
 
 PROM_HOST_KEY = 'PROM_HOST'
 prom_registry = pc.CollectorRegistry()  # need a new registry to that won't send system metrics to it
@@ -39,6 +44,18 @@ class PromPush(Thread):
 if prom_host:
     PromPush().start()
 
+
+######################### Influxdb Setup #########################
+
+# INFLUXDB_HOST_KEY = 'INFLUXDB_HOST'
+# if INFLUXDB_HOST_KEY in os.environ:
+#     influxdb_host = os.getenv(INFLUXDB_HOST_KEY)
+#     influxdb_client = influxdb.InfluxDBClient(influxdb_host, 8086, 'root', 'root', 'example')
+# else:
+
+
+
+######################### Metrics Util #########################
 
 class IGStatd:
 
