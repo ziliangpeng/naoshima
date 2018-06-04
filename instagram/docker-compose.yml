@@ -4,14 +4,14 @@ version: '2'
 # TODO: compose supports `-f` to load different config files. Can implement some one-off jobs in another file
 # TODO: maybe can use environment variable (either Dockerfile level or compose level) to customize one bot service
 services:
-  ardb:
-    # docker-compose up -d ardb
-    image: lupino/ardb-server
-    container_name: ardb-server
-    ports:
-      - "6379:16379"
-    volumes:
-      - /data/ig-ardb:/var/lib/ardb
+#  ardb:
+#    # docker-compose up -d ardb
+#    image: lupino/ardb-server
+#    container_name: ardb-server
+#    ports:
+#      - "6379:16379"
+#    volumes:
+#      - /data/ig-ardb:/var/lib/ardb
   ardb-2:
   # user https://github.com/yaauie/redis-copy/ to dump redis from old redis to here
     build:
@@ -24,13 +24,13 @@ services:
       - "6380:16379"
     volumes:
       - /data/ig-ardb-2:/var/lib/ardb
-  ardb-cache:
-    image: lupino/ardb-server
-    container_name: ardb-server-cache
-    ports:
-      - "16379:16379"
-    volumes:
-      - /data/ig-ardb-cache:/var/lib/ardb
+#  ardb-cache:
+#    image: lupino/ardb-server
+#    container_name: ardb-server-cache
+#    ports:
+#      - "16379:16379"
+#    volumes:
+#      - /data/ig-ardb-cache:/var/lib/ardb
   ardb-cache-2:
     image: redis
     build:
@@ -46,13 +46,13 @@ services:
   redis-cache:
     image: redis:2.8
     container_name: redis-cache
-  redis:
-    image: redis:2.8
-    container_name: redis-fun
-    links:
-      - ardb-2:redis
-      - ardb-cache:redis-cache
-      - ardb-cache-2:redis-cache-2
+#  redis:
+#    image: redis:2.8
+#    container_name: redis-fun
+#    links:
+#      - ardb-2:redis
+#      - ardb-cache:redis-cache
+#      - ardb-cache-2:redis-cache-2
   prometheus-push-gateway:
     image: prom/pushgateway:v0.5.0
     ports:
@@ -92,7 +92,7 @@ services:
     # we may also provision ardb inside here (bot own its data storage)
     links:
      - ardb-2:redis
-     - ardb-cache:redis-cache
+#     - ardb-cache:redis-cache
   z-bot:
     build: .
     volumes:
@@ -107,7 +107,7 @@ services:
       - "z"
     links:
      - ardb-2:redis
-     - ardb-cache:redis-cache
+#     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
      - redis-cache:redis-cache-3
      - goproxy:goproxy
@@ -125,7 +125,7 @@ services:
       - "airbnb"
     links:
      - ardb-2:redis
-     - ardb-cache:redis-cache
+#     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
      - redis-cache:redis-cache-3
   v-bot:
@@ -142,7 +142,7 @@ services:
       - "v"
     links:
      - ardb-2:redis
-     - ardb-cache:redis-cache
+#     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
      - redis-cache:redis-cache-3
   mc-bot:
@@ -159,7 +159,7 @@ services:
       - "mc"
     links:
      - ardb-2:redis
-     - ardb-cache:redis-cache
+#     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
      - redis-cache:redis-cache-3
   hix-bot:
@@ -176,7 +176,7 @@ services:
       - "hix"
     links:
      - ardb-2:redis
-     - ardb-cache:redis-cache
+#     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
      - redis-cache:redis-cache-3
   newdone-bot:
@@ -193,7 +193,7 @@ services:
       - "newdone"
     links:
      - ardb-2:redis
-     - ardb-cache:redis-cache
+#     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
      - redis-cache:redis-cache-3
   let-bot:
@@ -207,7 +207,7 @@ services:
       - "let"
     links:
      - ardb-2:redis
-     - ardb-cache:redis-cache
+#     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
      - redis-cache:redis-cache-3
   eva-bot:
@@ -224,7 +224,7 @@ services:
       - "eva"
     links:
      - ardb-2:redis
-     - ardb-cache:redis-cache
+#     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
      - redis-cache:redis-cache-3
   eaxy-bot:
@@ -241,7 +241,7 @@ services:
       - "eaxy"
     links:
      - ardb-2:redis
-     - ardb-cache:redis-cache
+#     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
      - redis-cache:redis-cache-3
   likes:
