@@ -4,7 +4,7 @@
     "port": 16379,
   },
   "redis-cache": {
-    "host": "redis-cache-3",
+    "host": "redis-cache-2",
     "port": 6379,
   },
   "mysql": {
