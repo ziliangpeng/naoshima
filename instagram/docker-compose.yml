@@ -116,7 +116,7 @@ services:
      - ardb-2:redis
 #     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-     - redis-cache:redis-cache-3
+#     - redis-cache:redis-cache-3
      - goproxy:goproxy
   airbnb-bot:
     build: .
@@ -134,7 +134,7 @@ services:
      - ardb-2:redis
 #     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-     - redis-cache:redis-cache-3
+#     - redis-cache:redis-cache-3
   v-bot:
     build: .
     volumes:
@@ -151,7 +151,7 @@ services:
      - ardb-2:redis
 #     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-     - redis-cache:redis-cache-3
+#     - redis-cache:redis-cache-3
   mc-bot:
     build: .
     volumes:
@@ -168,7 +168,7 @@ services:
      - ardb-2:redis
 #     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-     - redis-cache:redis-cache-3
+#     - redis-cache:redis-cache-3
   hix-bot:
     build: .
     volumes:
@@ -185,7 +185,7 @@ services:
      - ardb-2:redis
 #     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-     - redis-cache:redis-cache-3
+#     - redis-cache:redis-cache-3
   newdone-bot:
     build: .
     volumes:
@@ -202,7 +202,7 @@ services:
      - ardb-2:redis
 #     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-     - redis-cache:redis-cache-3
+#     - redis-cache:redis-cache-3
   let-bot:
     build: .
     volumes:
@@ -233,7 +233,7 @@ services:
      - ardb-2:redis
 #     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-     - redis-cache:redis-cache-3
+#     - redis-cache:redis-cache-3
   eaxy-bot:
     build: .
     volumes:
@@ -250,7 +250,7 @@ services:
      - ardb-2:redis
 #     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-     - redis-cache:redis-cache-3
+#     - redis-cache:redis-cache-3
   likes:
     build:
       context: .
