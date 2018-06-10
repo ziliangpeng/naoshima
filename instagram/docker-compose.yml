@@ -21,7 +21,7 @@ services:
         engine: leveldb
     container_name: ardb-server-2
     ports:
-      - "6380:16379"
+      - "6379:16379"
     volumes:
       - /data/ig-ardb-2:/var/lib/ardb
 #  ardb-cache:
