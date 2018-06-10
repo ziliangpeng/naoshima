@@ -41,8 +41,8 @@ services:
     container_name: ardb-server-cache-2
     ports:
       - "26379:16379"
-    volumes:
-      - /data/ig-ardb-cache-2:/var/lib/ardb
+#    volumes:
+#      - /data/ig-ardb-cache-2:/var/lib/ardb
   redis-cache:
     image: redis:2.8
     container_name: redis-cache
