@@ -2,9 +2,11 @@ FROM python:2.7
 
 MAINTAINER Victor Peng version: 0.1
 
-ADD . /reckless/
+ADD requirements.txt /reckless/
 
 RUN pip install -r /reckless/requirements.txt
+
+ADD . /reckless/
 
 WORKDIR "/reckless"
 
