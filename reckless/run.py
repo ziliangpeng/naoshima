@@ -12,7 +12,7 @@ urls = (
 
 class index:
     def GET(self):
-        datadog.DogStatsd.increment('naoshima.reckless.index.count')
+        datadog.statsd.increment('naoshima.reckless.index.count')
         raise web.seeother('/static/main.html')
 
 
