@@ -5,8 +5,8 @@ import datadog
 urls = (
     '/', 'index',
     '/hyperclips', 'hyperclips',
-    '/sex', 'sex',
-    '/baby', 'baby'
+    # '/sex', 'sex',
+    # '/baby', 'baby'
 )
 
 
