@@ -8,3 +8,5 @@ services:
       - "80:80"
     volumes:
       - /data/reckless:/reckless/static/data
+    environment:
+      - DD_HOST

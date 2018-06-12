@@ -1,4 +1,5 @@
 import web
+import os
 import datadog
 
 
@@ -9,10 +10,18 @@ urls = (
     # '/baby', 'baby'
 )
 
+DD_HOST_KEY = 'DD_HOST'
+
+if DD_HOST_KEY in os.environ:
+    dd_host = os.getenv(DD_HOST_KEY)
+    sd = datadog.DogStatsd(host=dd_host)
+else:
+    sd = datadog.statsd
+
 
 class index:
     def GET(self):
-        datadog.statsd.increment('naoshima.reckless.index.count')
+        sd.increment('naoshima.reckless.index.count')
         raise web.seeother('/static/main.html')
 
 
