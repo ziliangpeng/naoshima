@@ -32,7 +32,6 @@ services:
 #    volumes:
 #      - /data/ig-ardb-cache:/var/lib/ardb
   ardb-cache-2:
-    image: redis
     build:
       context: ../docker
       dockerfile: ardb.Dockerfile
