@@ -2,9 +2,10 @@ FROM python:2.7
 
 MAINTAINER Victor Peng version: 0.1
 
-RUN pip install web.py
+ADD . /reckless/
 
-ADD . reckless/
+RUN pip install -r /reckless/requirements.txt
+
 WORKDIR "/reckless"
 
 EXPOSE 80
