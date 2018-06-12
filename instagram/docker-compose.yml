@@ -255,6 +255,7 @@ services:
     build:
       context: .
       dockerfile: go.Dockerfile
+    container_name: ig-likes
     entrypoint:
       - "/app/main"
       - "-t"
@@ -264,6 +265,7 @@ services:
     build:
       context: .
       dockerfile: go.Dockerfile
+    container_name: ig-follow
     entrypoint:
       - "/app/main"
       - "-t"
