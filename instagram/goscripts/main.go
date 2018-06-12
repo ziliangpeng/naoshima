@@ -42,7 +42,7 @@ func readIgHTMLJSONDataBytes(username string) string {
   bodyString := string(bodyBytes)
   // fmt.Println(bodyString)
   lines := strings.Split(bodyString, "\n")
-  line := lines[208]
+  line := lines[236]
   // fmt.Println(line)
   startIndex := strings.Index(line, "{")
   endIndex := strings.LastIndex(line, "}") + 1
