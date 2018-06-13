@@ -250,6 +250,21 @@ services:
 #     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
 #     - redis-cache:redis-cache-3
+  b1-bot:
+    build: .
+    volumes:
+      - /data/ig:/data/ig
+    environment:
+      - DD_HOST
+      - PROM_HOST
+    entrypoint:
+      - "python"
+      - "bot.py"
+      - "-u"
+      - "b1"
+    links:
+     - ardb-2:redis
+     - ardb-cache-2:redis-cache-2
   likes:
     build:
       context: .
