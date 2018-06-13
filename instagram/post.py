@@ -20,12 +20,14 @@ ACCEPT_TYPES = ["GraphImage", "GraphSidecar"]
 
 
 def by_url(bot, u):
-    my_url = 'https://www.instagram.com/%s/?__a=1' % u
+    # my_url = 'https://www.instagram.com/%s/?__a=1' % u
+    #
+    # # get my saved
+    # time.sleep(30)
+    # r = bot.s.get(my_url)
+    # j = r.json()
 
-    # get my saved
-    time.sleep(30)
-    r = bot.s.get(my_url)
-    j = r.json()
+    j = user_utils.get_user_json(u)
     saved = j["user"]["saved_media"]["nodes"]
     # random.shuffle(saved)
     print(len(saved), 'saved')
@@ -43,10 +45,11 @@ def by_url(bot, u):
     photo_code = chosen["code"]
     photo_id = chosen["id"]
     print('photo code', photo_code)
-    photo_url = 'https://www.instagram.com/p/%s/?__a=1' % photo_code
-    r = bot.s.get(photo_url)
-    j = r.json()
-    owner = j["graphql"]["shortcode_media"]["owner"]["username"]
+    # photo_url = 'https://www.instagram.com/p/%s/?__a=1' % photo_code
+    # r = bot.s.get(photo_url)
+    # j = r.json()
+    # owner = j["graphql"]["shortcode_media"]["owner"]["username"]
+    owner = 'unknown'
     print('owner', owner)
     caption = chosen["caption"] or ""
     caption = 'by %s \n' % owner + \
@@ -73,10 +76,11 @@ def by_graphql(bot, u):
     photo_code = chosen.code
     photo_id = chosen.photo_id
     print('photo code', photo_code)
-    photo_url = 'https://www.instagram.com/p/%s/?__a=1' % photo_code
-    r = bot.s.get(photo_url)
-    j = r.json()
-    owner = j["graphql"]["shortcode_media"]["owner"]["username"]
+    # photo_url = 'https://www.instagram.com/p/%s/?__a=1' % photo_code
+    # r = bot.s.get(photo_url)
+    # j = r.json()
+    # owner = j["graphql"]["shortcode_media"]["owner"]["username"]
+    owner = 'unknown'
     print('owner', owner)
     caption = chosen.caption
     caption = 'by @%s \n' % owner + \
@@ -140,29 +144,29 @@ if __name__ == '__main__':
     else:
         print('error posting...')
 
-    # comment
-    time.sleep(5)
-    print('commenting...')
-    my_url = 'https://www.instagram.com/%s/?__a=1' % u
-    logger.info("my url is %s", my_url)
-    r = bot.s.get(my_url)
-    j = r.json()
-    latest_media = j['user']['media']['nodes'][0]
-    image_id = latest_media['id']
-    logger.info("New image id is %s", image_id)
-    tags = tag.tags_from_caption(original_caption)
-    if len(tags) == 0:
-        tags = tag.tags_from_caption(caption)
-    related_tags = tag.top_related(tags, 27, max_count=2000000)
-    logger.info("related tags are %s", str(related_tags))
-    while related_tags:
-        logger.info("Attempting to comment with %d tags", len(related_tags))
-        power_comment = ' '.join(related_tags)
-        logger.info("power comment is %s", power_comment)
-        comment_response = bot.comment(image_id, power_comment)
-        if comment_response.status_code == 200:
-            logger.info("comment success")
-            break
-        else:
-            logger.info("comment fail with status code %d", comment_response.status_code)
-        related_tags.pop(-1)
+    # # comment
+    # time.sleep(5)
+    # print('commenting...')
+    # my_url = 'https://www.instagram.com/%s/?__a=1' % u
+    # logger.info("my url is %s", my_url)
+    # r = bot.s.get(my_url)
+    # j = r.json()
+    # latest_media = j['user']['media']['nodes'][0]
+    # image_id = latest_media['id']
+    # logger.info("New image id is %s", image_id)
+    # tags = tag.tags_from_caption(original_caption)
+    # if len(tags) == 0:
+    #     tags = tag.tags_from_caption(caption)
+    # related_tags = tag.top_related(tags, 27, max_count=2000000)
+    # logger.info("related tags are %s", str(related_tags))
+    # while related_tags:
+    #     logger.info("Attempting to comment with %d tags", len(related_tags))
+    #     power_comment = ' '.join(related_tags)
+    #     logger.info("power comment is %s", power_comment)
+    #     comment_response = bot.comment(image_id, power_comment)
+    #     if comment_response.status_code == 200:
+    #         logger.info("comment success")
+    #         break
+    #     else:
+    #         logger.info("comment fail with status code %d", comment_response.status_code)
+    #     related_tags.pop(-1)
