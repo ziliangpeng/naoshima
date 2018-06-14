@@ -8,6 +8,7 @@ python plot-likes.py \
     /data/ig/hixchan_likes.txt \
     /data/ig/mc_likes.txt \
     /data/ig/let_likes.txt \
+    /data/ig/b1_likes.txt \
     /data/ig/eaxy_likes.txt
 
 python plot-all.py \
@@ -18,4 +19,5 @@ python plot-all.py \
     /data/ig/hixchan_count.txt \
     /data/ig/mc_count.txt \
     /data/ig/let_count.txt \
+    /data/ig/b1_count.txt \
     /data/ig/eaxy_count.txt
