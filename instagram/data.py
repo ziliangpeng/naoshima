@@ -2,6 +2,7 @@ import redis
 import json
 import time
 import pickle
+from utils import _json_path
 
 import storage_config_reader
 
@@ -95,7 +96,20 @@ def get_json_by_username(u):
 
 
 def set_json_by_username(u, j):
+    j = _simplify_json(j)
     _redis_cache.set(NAMESPACE_JSON + str(u), json.dumps(j), DEFAULT_TTL)
+
+
+def _simplify_json(j):
+    posts = _json_path(j, ['graphql', "user", "edge_owner_to_timeline_media", "edges"])
+    for i, post in enumerate(posts):
+        node = post["node"]
+        posts[i]["node"] = {
+            "taken_at_timestamp": node["taken_at_timestamp"],
+            "id": node["id"],
+        }
+
+    return j
 
 
 def save_session(name, s):
