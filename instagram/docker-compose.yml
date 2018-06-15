@@ -45,6 +45,8 @@ services:
   mongo-cache:
     image: mongo:rc-xenial
     container_name: mongo-cache
+    ports:
+      - "27017:27017"
   redis-cache:
     image: redis:2.8
     container_name: redis-cache
