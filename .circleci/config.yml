@@ -18,6 +18,8 @@ jobs:
     working_directory: ~/repo
 
     steps:
+      - setup_remote_docker
+
       - checkout
 
       # Download and cache dependencies
@@ -44,14 +46,31 @@ jobs:
       # other common Python testing frameworks include pytest and nose
       # https://pytest.org
       # https://nose.readthedocs.io
+      # - run:
+      #   name: dir size
+      #   command: |
+      #     du -h -d 0
+      #     du -d 0
+
       - run:
-          name: dir size
+          name: build reckless container
           command: |
-            du -h -d 0
-            du -d 0
+            cd reckless
+            docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
+            docker build -t reckless .
+            docker tag reckless ziliang/reckless
+            docker images
+            docker push ziliang/reckless
+
       #      . venv/bin/activate
       #      python manage.py test
 
       # - store_artifacts:
       #     path: test-reports
       #     destination: test-reports
+workflows:
+  version: 2
+  insert_workflow_name:
+    jobs:
+      - build:
+          context: default
