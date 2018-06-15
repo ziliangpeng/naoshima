@@ -1,3 +1,8 @@
 #!/bin/bash
 
+
+# hack to reuse docker-compose's .env file for environment variables
+export $(cat .env)
+
+
 docker service update $(bin/service-id)
