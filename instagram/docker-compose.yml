@@ -206,6 +206,7 @@ services:
 #     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
 #     - redis-cache:redis-cache-3
+     - mongo-cache:mongo-cache
   let-bot:
     build: .
     volumes:
