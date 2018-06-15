@@ -42,6 +42,9 @@ services:
       - "26379:16379"
 #    volumes:
 #      - /data/ig-ardb-cache-2:/var/lib/ardb
+  mongo-cache:
+    image: mongo:rc-xenial
+    container_name: mongo-cache
   redis-cache:
     image: redis:2.8
     container_name: redis-cache
@@ -168,6 +171,7 @@ services:
 #     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
 #     - redis-cache:redis-cache-3
+     - mongo-cache:mongo-cache
   hix-bot:
     build: .
     volumes:
@@ -265,6 +269,7 @@ services:
     links:
      - ardb-2:redis
      - ardb-cache-2:redis-cache-2
+     - mongo-cache:mongo-cache
   likes:
     build:
       context: .

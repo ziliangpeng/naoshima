@@ -7,6 +7,8 @@ METHODS = {
     'redis_port': (["redis", "port"], None),
     'redis_cache_host': (["redis-cache", "host"], None),
     'redis_cache_port': (["redis-cache", "port"], None),
+    'mongo_cache_host': (["mongo-cache", "host"], None),
+    'mongo_cache_port': (["mongo-cache", "port"], None),
     'mysql_host': (["mysql", "host"], None),
     'mysql_port': (["mysql", "port"], None),
 }

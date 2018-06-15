@@ -3,6 +3,7 @@ import json
 import time
 import pickle
 from utils import _json_path
+from pymongo import MongoClient
 
 import storage_config_reader
 
@@ -46,6 +47,25 @@ if redis_cache_host is not None and redis_cache_port is not None:
     _redis_cache = redis.Redis(redis_cache_host, redis_cache_port, REDIS_CACHE_DB)
 else:
     raise Exception("redis-cache config must present!")
+
+
+mongo_cache_host = storage_config_reader.load_mongo_cache_host()
+mongo_cache_port = storage_config_reader.load_mongo_cache_port()
+from logs import logger
+logger.info('starting mongo provision')
+if mongo_cache_host is not None and mongo_cache_port is not None:
+    logger.info('starting mongo provision 1')
+    _mongo_cache = MongoClient(mongo_cache_host, mongo_cache_port)
+    logger.info('starting mongo provision 2')
+    _mongo_db = _mongo_cache.ig
+    logger.info('starting mongo provision 3')
+    _mongo_collections = _mongo_db.user_json
+    logger.info('starting mongo provision 4')
+    # _mongo_collections.createIndex("createdAt", expireAfterSeconds = DEFAULT_TTL)
+    logger.info('starting mongo provision 5')
+else:
+    raise Exception("mongo-cache config must present!")
+logger.info('mongo done')
 
 
 def get_latest_config(u: str) -> dict:
@@ -97,7 +117,9 @@ def get_json_by_username(u):
 
 def set_json_by_username(u, j):
     j = _simplify_json(j)
+    j["createdAt"] = time.time()
     _redis_cache.set(NAMESPACE_JSON + str(u), json.dumps(j), DEFAULT_TTL)
+    _mongo_collections.insert_one(j)
 
 
 def _simplify_json(j):

@@ -5,7 +5,6 @@
 # sum_of_like.py: 5
 datadog == 0.18.0
 
-# goscripts/ig_pb2_grpc.py: 2
 # goscripts/python_client.py: 3
 grpcio == 1.11.0
 
@@ -24,18 +23,17 @@ moviepy == 0.2.2.11
 # science.py: 3,4
 plotly == 2.2.1
 
-# dd.py: 8
-# fake-prom-metrics.py: 1
+# dd.py: 9
 prometheus_client == 0.2.0
 
-# goscripts/ig_pb2.py: 6,7,8,9,10
-protobuf == 3.5.2.post1
+# data.py: 6
+pymongo == 3.6.1
 
 # data.py: 1
 redis == 2.10.6
 
 # auth.py: 2,4
-# fetcher.py: 8
+# fetcher.py: 12
 # lang_utils.py: 1
 # lib/instabot.py: 13
 # lib/postbot.py: 4

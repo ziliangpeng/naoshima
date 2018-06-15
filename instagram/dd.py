@@ -38,7 +38,7 @@ class PromPush(Thread):
     @retry
     def run(self):
         while (not sleep(5)):
-            logger.info("Sending metrics to prometheus")
+            logger.debug("Sending metrics to prometheus")
             pc.push_to_gateway(prom_host, job='ig-bot', registry=prom_registry)
 
 if prom_host:
