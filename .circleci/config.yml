@@ -44,11 +44,11 @@ jobs:
       # other common Python testing frameworks include pytest and nose
       # https://pytest.org
       # https://nose.readthedocs.io
-      - run:
-        name: dir size
-        command: |
-          du -h -d 0
-          du -d 0
+      # - run:
+      #   name: dir size
+      #   command: |
+      #     du -h -d 0
+      #     du -d 0
 
       - run:
         name: build reckless container
