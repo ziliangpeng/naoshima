@@ -2,8 +2,8 @@ version: '3'
 services:
   reckless:
     # docker-compose up -d reckless
-#    build: .
     image: ziliang/reckless
+    build: .
     container_name: reckless
     ports:
       - "80:80"
