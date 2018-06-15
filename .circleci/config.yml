@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - setup_remote_docker
-      
+
       - checkout
 
       # Download and cache dependencies
@@ -57,7 +57,7 @@ jobs:
           command: |
             cd reckless
             docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
-            docekr-compose build
+            docker-compose build
             docker tag reckless_reckless ziliang/reckless
             docker push ziliang/reckless
 
