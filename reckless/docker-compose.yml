@@ -17,6 +17,6 @@ services:
         constraints:
           - node.role == manager
     networks:
-      - default
+      - d
 networks:
-  default:
+  d:
