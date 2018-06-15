@@ -62,6 +62,13 @@ jobs:
             docker images
             docker push ziliang/reckless
 
+      - run:
+          name: build instagram container
+          command: |
+            cd instagram
+            docker-compose build
+            docker images
+
       #      . venv/bin/activate
       #      python manage.py test
 
