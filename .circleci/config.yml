@@ -59,6 +59,7 @@ jobs:
             docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
             docker-compose build
             docker tag reckless_reckless ziliang/reckless
+            docker images
             docker push ziliang/reckless
 
       #      . venv/bin/activate
