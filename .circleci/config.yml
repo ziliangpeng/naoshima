@@ -65,3 +65,9 @@ jobs:
       # - store_artifacts:
       #     path: test-reports
       #     destination: test-reports
+workflows:
+  version: 2
+  insert_workflow_name:
+    jobs:
+      - build:
+          context: default
