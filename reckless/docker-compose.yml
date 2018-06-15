@@ -2,7 +2,8 @@ version: '3'
 services:
   reckless:
     # docker-compose up -d reckless
-    build: .
+#    build: .
+    image: ziliang/reckless
     container_name: reckless
     ports:
       - "80:80"
@@ -10,3 +11,7 @@ services:
       - /data/reckless:/reckless/static/data
     environment:
       - DD_HOST
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
