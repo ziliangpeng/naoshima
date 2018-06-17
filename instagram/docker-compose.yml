@@ -121,6 +121,7 @@ services:
     build: .
     volumes:
       - /data/ig:/data/ig
+      - ./user_config.local:/instagram/user_config.local
     environment:
       - DD_HOST
       - PROM_HOST
