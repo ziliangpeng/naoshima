@@ -4,3 +4,12 @@ version: '3'
 services:
   prometheus-push-gateway:
     image: prom/pushgateway:v0.5.0
+  prometheus:
+    image: ziliang/prometheus
+    volumes:
+      - /data/ig-prometheus:/prometheus
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
