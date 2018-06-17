@@ -1,6 +1,6 @@
 #!/bin/bash
 
 docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
-docker build -f -t prometheus .
+docker build -t prometheus .
 docker tag prometheus ziliang/prometheus
 docker push ziliang/prometheus
