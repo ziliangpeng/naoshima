@@ -118,7 +118,7 @@ services:
 #     - redis-cache:redis-cache-3
      - goproxy:goproxy
   basebot:
-    build: .
+    build: .  # TODO: if we publish this image in CI, we can pull from registry
     volumes:
       - /data/ig:/data/ig
       - ./user_config.local:/instagram/user_config.local
