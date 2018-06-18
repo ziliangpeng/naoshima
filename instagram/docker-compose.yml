@@ -188,13 +188,8 @@ services:
      - ardb-cache-2:redis-cache-2
 #     - redis-cache:redis-cache-3
   newdone-bot:
-    build: .
-    volumes:
-      - /data/ig:/data/ig
-      - ./user_config.local:/instagram/user_config.local
-    environment:
-      - DD_HOST
-      - PROM_HOST
+    extends:
+      service: basebot
     entrypoint:
       - "python"
       - "bot.py"
@@ -202,9 +197,7 @@ services:
       - "newdone"
     links:
      - ardb-2:redis
-#     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-#     - redis-cache:redis-cache-3
   let-bot:
     build: .
     volumes:
