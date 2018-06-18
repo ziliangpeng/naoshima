@@ -117,7 +117,7 @@ services:
      - ardb-cache-2:redis-cache-2
 #     - redis-cache:redis-cache-3
      - goproxy:goproxy
-  airbnb-bot:
+  basebot:
     build: .
     volumes:
       - /data/ig:/data/ig
@@ -125,6 +125,9 @@ services:
     environment:
       - DD_HOST
       - PROM_HOST
+  airbnb-bot:
+    extends:
+      service: basebot
     entrypoint:
       - "python"
       - "bot.py"
@@ -132,9 +135,7 @@ services:
       - "airbnb"
     links:
      - ardb-2:redis
-#     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-#     - redis-cache:redis-cache-3
   v-bot:
     build: .
     volumes:
