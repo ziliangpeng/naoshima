@@ -4,14 +4,6 @@ version: '2'
 # TODO: compose supports `-f` to load different config files. Can implement some one-off jobs in another file
 # TODO: maybe can use environment variable (either Dockerfile level or compose level) to customize one bot service
 services:
-#  ardb:
-#    # docker-compose up -d ardb
-#    image: lupino/ardb-server
-#    container_name: ardb-server
-#    ports:
-#      - "6379:16379"
-#    volumes:
-#      - /data/ig-ardb:/var/lib/ardb
   ardb-2:
   # user https://github.com/yaauie/redis-copy/ to dump redis from old redis to here
     build:
@@ -24,13 +16,6 @@ services:
       - "6379:16379"
     volumes:
       - /data/ig-ardb-2:/var/lib/ardb
-#  ardb-cache:
-#    image: lupino/ardb-server
-#    container_name: ardb-server-cache
-#    ports:
-#      - "16379:16379"
-#    volumes:
-#      - /data/ig-ardb-cache:/var/lib/ardb
   ardb-cache-2:
     build:
       context: ../docker
@@ -40,18 +25,9 @@ services:
     container_name: ardb-server-cache-2
     ports:
       - "26379:16379"
-#    volumes:
-#      - /data/ig-ardb-cache-2:/var/lib/ardb
   redis-cache:
     image: redis:2.8
     container_name: redis-cache
-#  redis:
-#    image: redis:2.8
-#    container_name: redis-fun
-#    links:
-#      - ardb-2:redis
-#      - ardb-cache:redis-cache
-#      - ardb-cache-2:redis-cache-2
   prometheus-push-gateway:
     image: prom/pushgateway:v0.5.0
     ports:
@@ -90,33 +66,6 @@ services:
       - "./main"
       - "-t"
       - "proxy"
-  bot:
-    build: .
-    volumes:
-      - /data/ig:/data/ig
-    # links is deprecated. we want to migrate to docker's user defined network.
-    # we may also provision ardb inside here (bot own its data storage)
-    links:
-     - ardb-2:redis
-#     - ardb-cache:redis-cache
-  z-bot:
-    build: .
-    volumes:
-      - /data/ig:/data/ig
-    environment:
-      - DD_HOST
-      - PROM_HOST
-    entrypoint:
-      - "python"
-      - "bot.py"
-      - "-u"
-      - "z"
-    links:
-     - ardb-2:redis
-#     - ardb-cache:redis-cache
-     - ardb-cache-2:redis-cache-2
-#     - redis-cache:redis-cache-3
-     - goproxy:goproxy
   basebot:
     build: .  # TODO: if we publish this image in CI, we can pull from registry
     volumes:
@@ -125,6 +74,18 @@ services:
     environment:
       - DD_HOST
       - PROM_HOST
+  z-bot:
+    extends:
+      service: basebot
+    entrypoint:
+      - "python"
+      - "bot.py"
+      - "-u"
+      - "z"
+    links:
+     - ardb-2:redis
+     - ardb-cache-2:redis-cache-2
+     - goproxy:goproxy
   airbnb-bot:
     extends:
       service: basebot
@@ -137,12 +98,8 @@ services:
      - ardb-2:redis
      - ardb-cache-2:redis-cache-2
   v-bot:
-    build: .
-    volumes:
-      - /data/ig:/data/ig
-    environment:
-      - DD_HOST
-      - PROM_HOST
+    extends:
+      service: basebot
     entrypoint:
       - "python"
       - "bot.py"
@@ -150,16 +107,10 @@ services:
       - "v"
     links:
      - ardb-2:redis
-#     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-#     - redis-cache:redis-cache-3
   mc-bot:
-    build: .
-    volumes:
-      - /data/ig:/data/ig
-    environment:
-      - DD_HOST
-      - PROM_HOST
+    extends:
+      service: basebot
     entrypoint:
       - "python"
       - "bot.py"
@@ -167,16 +118,10 @@ services:
       - "mc"
     links:
      - ardb-2:redis
-#     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-#     - redis-cache:redis-cache-3
   hix-bot:
-    build: .
-    volumes:
-      - /data/ig:/data/ig
-    environment:
-      - DD_HOST
-      - PROM_HOST
+    extends:
+      service: basebot
     entrypoint:
       - "python"
       - "bot.py"
@@ -184,9 +129,7 @@ services:
       - "hix"
     links:
      - ardb-2:redis
-#     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-#     - redis-cache:redis-cache-3
   newdone-bot:
     extends:
       service: basebot
@@ -199,9 +142,8 @@ services:
      - ardb-2:redis
      - ardb-cache-2:redis-cache-2
   let-bot:
-    build: .
-    volumes:
-      - /data/ig:/data/ig
+    extends:
+      service: basebot
     entrypoint:
       - "python"
       - "bot.py"
@@ -209,16 +151,10 @@ services:
       - "let"
     links:
      - ardb-2:redis
-#     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-     - redis-cache:redis-cache-3
   eva-bot:
-    build: .
-    volumes:
-      - /data/ig:/data/ig
-    environment:
-      - DD_HOST
-      - PROM_HOST
+    extends:
+      service: basebot
     entrypoint:
       - "python"
       - "bot.py"
@@ -226,16 +162,10 @@ services:
       - "eva"
     links:
      - ardb-2:redis
-#     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-#     - redis-cache:redis-cache-3
   eaxy-bot:
-    build: .
-    volumes:
-      - /data/ig:/data/ig
-    environment:
-      - DD_HOST
-      - PROM_HOST
+    extends:
+      service: basebot
     entrypoint:
       - "python"
       - "bot.py"
@@ -243,16 +173,10 @@ services:
       - "eaxy"
     links:
      - ardb-2:redis
-#     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-#     - redis-cache:redis-cache-3
   b1-bot:
-    build: .
-    volumes:
-      - /data/ig:/data/ig
-    environment:
-      - DD_HOST
-      - PROM_HOST
+    extends:
+      service: basebot
     entrypoint:
       - "python"
       - "bot.py"
