@@ -69,6 +69,15 @@ jobs:
             cd prometheus &&
               ./build
 
+      - run:
+          name: build ig bot image
+          command: |
+            cd instagram
+            docker build -t igbot .
+            docker tag igbot ziliang/igbot
+            docker images
+            docker push ziliang/igbot
+
       #      . venv/bin/activate
       #      python manage.py test
 
