@@ -70,6 +70,7 @@ jobs:
               ./build
 
       - run:
+          # TODO:  only publish if master branch
           name: build ig bot image
           command: |
             cd instagram
