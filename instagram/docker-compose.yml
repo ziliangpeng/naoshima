@@ -117,13 +117,17 @@ services:
      - ardb-cache-2:redis-cache-2
 #     - redis-cache:redis-cache-3
      - goproxy:goproxy
-  airbnb-bot:
-    build: .
+  basebot:
+    build: .  # TODO: if we publish this image in CI, we can pull from registry
     volumes:
       - /data/ig:/data/ig
+      - ./user_config.local:/instagram/user_config.local
     environment:
       - DD_HOST
       - PROM_HOST
+  airbnb-bot:
+    extends:
+      service: basebot
     entrypoint:
       - "python"
       - "bot.py"
@@ -131,9 +135,7 @@ services:
       - "airbnb"
     links:
      - ardb-2:redis
-#     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-#     - redis-cache:redis-cache-3
   v-bot:
     build: .
     volumes:
@@ -186,12 +188,8 @@ services:
      - ardb-cache-2:redis-cache-2
 #     - redis-cache:redis-cache-3
   newdone-bot:
-    build: .
-    volumes:
-      - /data/ig:/data/ig
-    environment:
-      - DD_HOST
-      - PROM_HOST
+    extends:
+      service: basebot
     entrypoint:
       - "python"
       - "bot.py"
@@ -199,9 +197,7 @@ services:
       - "newdone"
     links:
      - ardb-2:redis
-#     - ardb-cache:redis-cache
      - ardb-cache-2:redis-cache-2
-#     - redis-cache:redis-cache-3
   let-bot:
     build: .
     volumes:
