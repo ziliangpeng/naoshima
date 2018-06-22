@@ -77,6 +77,9 @@ class DoUnfo(InfinityTask):
         self.delay = 24 * 3600 / self.daily_rate
 
     def task(self):
+        qsize = self.queue_to_unfo.qsize()
+        logger.info('unfo Queue size: %d', qsize)
+        sd.gauge('naoshima.ig.queue.unfo', qsize, tags=['user:' + self.u])
         f = self.queue_to_unfo.get()
         self.bot.unfollow(f)
 
