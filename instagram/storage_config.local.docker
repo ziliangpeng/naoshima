@@ -1,10 +1,10 @@
 {
   "redis": {
-    "host": "redis",
+    "host": "ardb-2",
     "port": 16379,
   },
   "redis-cache": {
-    "host": "redis-cache-2",
+    "host": "ardb-cache-2",
     "port": 16379,
   },
   "mysql": {

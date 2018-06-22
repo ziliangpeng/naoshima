@@ -82,10 +82,6 @@ services:
       - "bot.py"
       - "-u"
       - "z"
-    links:
-     - ardb-2:redis
-     - ardb-cache-2:redis-cache-2
-     - goproxy:goproxy
   airbnb-bot:
     extends:
       service: basebot
@@ -94,9 +90,6 @@ services:
       - "bot.py"
       - "-u"
       - "airbnb"
-    links:
-     - ardb-2:redis
-     - ardb-cache-2:redis-cache-2
   v-bot:
     extends:
       service: basebot
@@ -105,9 +98,6 @@ services:
       - "bot.py"
       - "-u"
       - "v"
-    links:
-     - ardb-2:redis
-     - ardb-cache-2:redis-cache-2
   mc-bot:
     extends:
       service: basebot
@@ -116,9 +106,6 @@ services:
       - "bot.py"
       - "-u"
       - "mc"
-    links:
-     - ardb-2:redis
-     - ardb-cache-2:redis-cache-2
   hix-bot:
     extends:
       service: basebot
@@ -127,9 +114,6 @@ services:
       - "bot.py"
       - "-u"
       - "hix"
-    links:
-     - ardb-2:redis
-     - ardb-cache-2:redis-cache-2
   newdone-bot:
     extends:
       service: basebot
@@ -138,9 +122,6 @@ services:
       - "bot.py"
       - "-u"
       - "newdone"
-    links:
-     - ardb-2:redis
-     - ardb-cache-2:redis-cache-2
   let-bot:
     extends:
       service: basebot
@@ -149,9 +130,6 @@ services:
       - "bot.py"
       - "-u"
       - "let"
-    links:
-     - ardb-2:redis
-     - ardb-cache-2:redis-cache-2
   eva-bot:
     extends:
       service: basebot
@@ -160,9 +138,6 @@ services:
       - "bot.py"
       - "-u"
       - "eva"
-    links:
-     - ardb-2:redis
-     - ardb-cache-2:redis-cache-2
   eaxy-bot:
     extends:
       service: basebot
@@ -171,9 +146,6 @@ services:
       - "bot.py"
       - "-u"
       - "eaxy"
-    links:
-     - ardb-2:redis
-     - ardb-cache-2:redis-cache-2
   b1-bot:
     extends:
       service: basebot
@@ -182,9 +154,6 @@ services:
       - "bot.py"
       - "-u"
       - "b1"
-    links:
-     - ardb-2:redis
-     - ardb-cache-2:redis-cache-2
   likes:
     build:
       context: .
