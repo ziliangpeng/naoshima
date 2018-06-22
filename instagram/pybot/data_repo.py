@@ -8,8 +8,8 @@ class Data:
     pass
 
 
-FO_QUEUE_SIZE = 50
-UNFO_QUEUE_SIZE = 50
+FO_QUEUE_SIZE = 8
+UNFO_QUEUE_SIZE = 8
 
 
 d0 = Data()
