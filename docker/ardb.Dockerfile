@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:18.04 AS builder
 
 MAINTAINER Victor Peng version: 0.1
 
@@ -27,7 +27,12 @@ RUN echo 'trusted-ip *.*.*.*' >> /etc/ardb.conf
 
 RUN mv /etc/ardb.conf /etc/reckless-ardb.conf
 
-WORKDIR /var/lib/ardb
+
+FROM ubuntu:18.04 as prod
+
+COPY --from=builder /etc/reckless-ardb.conf /etc/reckless-ardb.conf
+
+COPY --from=builder /usr/bin/ardb-server /usr/bin/ardb-server
 
 EXPOSE 16379
 ENTRYPOINT /usr/bin/ardb-server /etc/reckless-ardb.conf
