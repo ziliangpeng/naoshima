@@ -16,7 +16,7 @@ import user_utils
 from filter import Filter
 from queue import Queue
 from data_repo import d0
-from dd import m
+from dd import m, sd
 
 WHITELIST_USER = user_config_reader.load_whitelist()
 
@@ -231,6 +231,9 @@ class DoFo(InfinityTask):
 
         # TODO: this is not UniqueQueue any more so possibly there's double-following, not a big deal
         # but can use a fix
+        qsize = self.queue_to_fo.qsize()
+        logger.info('fo Queue size: %d', qsize)
+        sd.gauge('naoshima.ig.queue.fo', qsize, tags=['user:' + self.u])
         f = self.queue_to_fo.get()
         logger.info("Follow " + str(f))
         r = self.bot.follow(f)
