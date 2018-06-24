@@ -70,7 +70,7 @@ services:
       - "-u"
       - "z"
     configs:
-      - source: user_config
+      - source: IG_CONFIG
         target: /instagram/user_config.local
   v-bot:
     image: ziliang/igbot
@@ -85,7 +85,7 @@ services:
       - "-u"
       - "v"
     configs:
-      - source: user_config
+      - source: IG_CONFIG
         target: /instagram/user_config.local
   hix-bot:
     image: ziliang/igbot
@@ -100,7 +100,7 @@ services:
       - "-u"
       - "hix"
     configs:
-      - source: user_config
+      - source: IG_CONFIG
         target: /instagram/user_config.local
   newdone-bot:
     image: ziliang/igbot
