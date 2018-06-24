@@ -84,7 +84,7 @@ jobs:
           name: build ardb image
           command: |
             cd docker
-            docker build -f ardb.Dockerfile -t ardb .
+            docker build -f ardb.Dockerfile --build-arg engine=leveldb -t ardb .
             docker tag ardb ziliang/ardb
             docker images
             docker push ziliang/ardb
