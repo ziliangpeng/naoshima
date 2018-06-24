@@ -115,7 +115,7 @@ services:
       - "-u"
       - "newdone"
     configs:
-      - source: user_config
+      - source: IG_CONFIG
         target: /instagram/user_config.local
   mc-bot:
     image: ziliang/igbot
@@ -130,7 +130,7 @@ services:
       - "-u"
       - "mc"
     configs:
-      - source: user_config
+      - source: IG_CONFIG
         target: /instagram/user_config.local
   eaxy-bot:
     image: ziliang/igbot
@@ -145,7 +145,7 @@ services:
       - "-u"
       - "eaxy"
     configs:
-      - source: user_config
+      - source: IG_CONFIG
         target: /instagram/user_config.local
   eva-bot:
     image: ziliang/igbot
@@ -160,7 +160,7 @@ services:
       - "-u"
       - "eva"
     configs:
-      - source: user_config
+      - source: IG_CONFIG
         target: /instagram/user_config.local
 #  airbnb-bot:
 #    image: ziliang/igbot
@@ -279,8 +279,8 @@ services:
 #     - ardb-cache-2:redis-cache-2
 
 configs:
-  user_config:
-    file: ./user_config.local
+#  user_config:
+#    file: ./user_config.local
   IG_CONFIG:
     external: true
 
