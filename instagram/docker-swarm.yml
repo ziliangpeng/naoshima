@@ -281,6 +281,8 @@ services:
 configs:
   user_config:
     file: ./user_config.local
+  IG_CONFIG:
+    external: true
 
 #We need a way to achieve the following:
 #- one click to bring up all of the several accounts on prod
