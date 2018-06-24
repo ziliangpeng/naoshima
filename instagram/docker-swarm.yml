@@ -102,6 +102,66 @@ services:
     configs:
       - source: user_config
         target: /instagram/user_config.local
+  newdone-bot:
+    image: ziliang/igbot
+    volumes:
+      - /data/ig:/data/ig
+    environment:
+      - DD_HOST
+      - PROM_HOST
+    entrypoint:
+      - "python"
+      - "bot.py"
+      - "-u"
+      - "newdone"
+    configs:
+      - source: user_config
+        target: /instagram/user_config.local
+  mc-bot:
+    image: ziliang/igbot
+    volumes:
+      - /data/ig:/data/ig
+    environment:
+      - DD_HOST
+      - PROM_HOST
+    entrypoint:
+      - "python"
+      - "bot.py"
+      - "-u"
+      - "mc"
+    configs:
+      - source: user_config
+        target: /instagram/user_config.local
+  eaxy-bot:
+    image: ziliang/igbot
+    volumes:
+      - /data/ig:/data/ig
+    environment:
+      - DD_HOST
+      - PROM_HOST
+    entrypoint:
+      - "python"
+      - "bot.py"
+      - "-u"
+      - "eaxy"
+    configs:
+      - source: user_config
+        target: /instagram/user_config.local
+  eva-bot:
+    image: ziliang/igbot
+    volumes:
+      - /data/ig:/data/ig
+    environment:
+      - DD_HOST
+      - PROM_HOST
+    entrypoint:
+      - "python"
+      - "bot.py"
+      - "-u"
+      - "eva"
+    configs:
+      - source: user_config
+        target: /instagram/user_config.local
 #  airbnb-bot:
 #    image: ziliang/igbot
 #    volumes:
