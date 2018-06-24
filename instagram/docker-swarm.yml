@@ -8,8 +8,15 @@ services:
 #      - "6379:16379"
     volumes:
       - /data/ig-ardb-2:/var/lib/ardb
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+
   ardb-cache-2:
     image: ziliang/ardb
+    deploy:
+      mode: global
 #    ports:
 #      - "16379:16379"
 #  prometheus-push-gateway:
@@ -62,6 +69,36 @@ services:
       - "bot.py"
       - "-u"
       - "z"
+    configs:
+      - source: user_config
+        target: /instagram/user_config.local
+  v-bot:
+    image: ziliang/igbot
+    volumes:
+      - /data/ig:/data/ig
+    environment:
+      - DD_HOST
+      - PROM_HOST
+    entrypoint:
+      - "python"
+      - "bot.py"
+      - "-u"
+      - "v"
+    configs:
+      - source: user_config
+        target: /instagram/user_config.local
+  hix-bot:
+    image: ziliang/igbot
+    volumes:
+      - /data/ig:/data/ig
+    environment:
+      - DD_HOST
+      - PROM_HOST
+    entrypoint:
+      - "python"
+      - "bot.py"
+      - "-u"
+      - "hix"
     configs:
       - source: user_config
         target: /instagram/user_config.local
