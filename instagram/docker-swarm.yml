@@ -70,7 +70,7 @@ services:
       - "-u"
       - "z"
     configs:
-      - source: IG_CONFIG
+      - source: user_config
         target: /instagram/user_config.local
   v-bot:
     image: ziliang/igbot
@@ -85,7 +85,7 @@ services:
       - "-u"
       - "v"
     configs:
-      - source: IG_CONFIG
+      - source: user_config
         target: /instagram/user_config.local
   hix-bot:
     image: ziliang/igbot
@@ -100,7 +100,7 @@ services:
       - "-u"
       - "hix"
     configs:
-      - source: IG_CONFIG
+      - source: user_config
         target: /instagram/user_config.local
   newdone-bot:
     image: ziliang/igbot
@@ -115,7 +115,7 @@ services:
       - "-u"
       - "newdone"
     configs:
-      - source: IG_CONFIG
+      - source: user_config
         target: /instagram/user_config.local
   mc-bot:
     image: ziliang/igbot
@@ -130,7 +130,7 @@ services:
       - "-u"
       - "mc"
     configs:
-      - source: IG_CONFIG
+      - source: user_config
         target: /instagram/user_config.local
   eaxy-bot:
     image: ziliang/igbot
@@ -145,7 +145,7 @@ services:
       - "-u"
       - "eaxy"
     configs:
-      - source: IG_CONFIG
+      - source: user_config
         target: /instagram/user_config.local
   eva-bot:
     image: ziliang/igbot
@@ -160,7 +160,7 @@ services:
       - "-u"
       - "eva"
     configs:
-      - source: IG_CONFIG
+      - source: user_config
         target: /instagram/user_config.local
 #  airbnb-bot:
 #    image: ziliang/igbot
@@ -279,10 +279,9 @@ services:
 #     - ardb-cache-2:redis-cache-2
 
 configs:
-#  user_config:
-#    file: ./user_config.local
-  IG_CONFIG:
-    external: true
+  user_config:
+    external:
+      name: IG_CONFIG
 
 #We need a way to achieve the following:
 #- one click to bring up all of the several accounts on prod
