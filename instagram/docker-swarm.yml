@@ -8,12 +8,16 @@ services:
 #      - "6379:16379"
     volumes:
       - /data/ig-ardb-2:/var/lib/ardb
+    networks:
+      - gnet
     deploy:
       placement:
         constraints:
           - node.role == manager
   ardb-cache-2:
     image: ziliang/ardb
+    networks:
+      - gnet
     deploy:
       mode: global
 #    ports:
