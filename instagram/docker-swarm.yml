@@ -24,8 +24,6 @@ services:
 #      - "16379:16379"
   z-bot:
     image: ziliang/igbot
-    volumes:
-      - /data/ig:/data/ig
     environment:
       - DD_HOST
       - PROM_HOST
@@ -41,8 +39,6 @@ services:
         target: /instagram/user_config.local
   v-bot:
     image: ziliang/igbot
-    volumes:
-      - /data/ig:/data/ig
     environment:
       - DD_HOST
       - PROM_HOST
@@ -58,8 +54,6 @@ services:
         target: /instagram/user_config.local
   hix-bot:
     image: ziliang/igbot
-    volumes:
-      - /data/ig:/data/ig
     environment:
       - DD_HOST
       - PROM_HOST
@@ -75,8 +69,6 @@ services:
         target: /instagram/user_config.local
   newdone-bot:
     image: ziliang/igbot
-    volumes:
-      - /data/ig:/data/ig
     environment:
       - DD_HOST
       - PROM_HOST
@@ -92,8 +84,6 @@ services:
         target: /instagram/user_config.local
   mc-bot:
     image: ziliang/igbot
-    volumes:
-      - /data/ig:/data/ig
     environment:
       - DD_HOST
       - PROM_HOST
@@ -109,8 +99,6 @@ services:
         target: /instagram/user_config.local
   eaxy-bot:
     image: ziliang/igbot
-    volumes:
-      - /data/ig:/data/ig
     environment:
       - DD_HOST
       - PROM_HOST
@@ -126,8 +114,6 @@ services:
         target: /instagram/user_config.local
   eva-bot:
     image: ziliang/igbot
-    volumes:
-      - /data/ig:/data/ig
     environment:
       - DD_HOST
       - PROM_HOST
