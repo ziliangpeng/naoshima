@@ -25,13 +25,15 @@ services:
     environment:
       - DD_HOST
       - PROM_HOST
+    network:
+      - gnet
     entrypoint:
       - "python"
       - "bot.py"
       - "-u"
       - "z"
     configs:
-      - source: user_config
+      - source: config
         target: /instagram/user_config.local
   v-bot:
     image: ziliang/igbot
@@ -40,13 +42,15 @@ services:
     environment:
       - DD_HOST
       - PROM_HOST
+    network:
+      - gnet
     entrypoint:
       - "python"
       - "bot.py"
       - "-u"
       - "v"
     configs:
-      - source: user_config
+      - source: config
         target: /instagram/user_config.local
   hix-bot:
     image: ziliang/igbot
@@ -55,13 +59,15 @@ services:
     environment:
       - DD_HOST
       - PROM_HOST
+    network:
+      - gnet
     entrypoint:
       - "python"
       - "bot.py"
       - "-u"
       - "hix"
     configs:
-      - source: user_config
+      - source: config
         target: /instagram/user_config.local
   newdone-bot:
     image: ziliang/igbot
@@ -70,13 +76,15 @@ services:
     environment:
       - DD_HOST
       - PROM_HOST
+    network:
+      - gnet
     entrypoint:
       - "python"
       - "bot.py"
       - "-u"
       - "newdone"
     configs:
-      - source: user_config
+      - source: config
         target: /instagram/user_config.local
   mc-bot:
     image: ziliang/igbot
@@ -85,13 +93,15 @@ services:
     environment:
       - DD_HOST
       - PROM_HOST
+    network:
+      - gnet
     entrypoint:
       - "python"
       - "bot.py"
       - "-u"
       - "mc"
     configs:
-      - source: user_config
+      - source: config
         target: /instagram/user_config.local
   eaxy-bot:
     image: ziliang/igbot
@@ -100,13 +110,15 @@ services:
     environment:
       - DD_HOST
       - PROM_HOST
+    network:
+      - gnet
     entrypoint:
       - "python"
       - "bot.py"
       - "-u"
       - "eaxy"
     configs:
-      - source: user_config
+      - source: config
         target: /instagram/user_config.local
   eva-bot:
     image: ziliang/igbot
@@ -115,15 +127,20 @@ services:
     environment:
       - DD_HOST
       - PROM_HOST
+    network:
+      - gnet
     entrypoint:
       - "python"
       - "bot.py"
       - "-u"
       - "eva"
     configs:
-      - source: user_config
+      - source: config
         target: /instagram/user_config.local
 configs:
-  user_config:
+  config:
     external:
       name: IG_CONFIG
+networks:
+  gnet:
+    driver: overlay
