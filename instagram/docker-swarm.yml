@@ -18,8 +18,8 @@ services:
     image: ziliang/ardb
     networks:
       - gnet
-    deploy:
-      mode: global
+#    deploy:
+#      mode: global
 #    ports:
 #      - "16379:16379"
   z-bot:
