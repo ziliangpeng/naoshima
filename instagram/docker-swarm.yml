@@ -25,7 +25,7 @@ services:
     environment:
       - DD_HOST
       - PROM_HOST
-    network:
+    networks:
       - gnet
     entrypoint:
       - "python"
@@ -42,7 +42,7 @@ services:
     environment:
       - DD_HOST
       - PROM_HOST
-    network:
+    networks:
       - gnet
     entrypoint:
       - "python"
@@ -59,7 +59,7 @@ services:
     environment:
       - DD_HOST
       - PROM_HOST
-    network:
+    networks:
       - gnet
     entrypoint:
       - "python"
@@ -76,7 +76,7 @@ services:
     environment:
       - DD_HOST
       - PROM_HOST
-    network:
+    networks:
       - gnet
     entrypoint:
       - "python"
@@ -93,7 +93,7 @@ services:
     environment:
       - DD_HOST
       - PROM_HOST
-    network:
+    networks:
       - gnet
     entrypoint:
       - "python"
@@ -110,7 +110,7 @@ services:
     environment:
       - DD_HOST
       - PROM_HOST
-    network:
+    networks:
       - gnet
     entrypoint:
       - "python"
@@ -127,7 +127,7 @@ services:
     environment:
       - DD_HOST
       - PROM_HOST
-    network:
+    networks:
       - gnet
     entrypoint:
       - "python"
