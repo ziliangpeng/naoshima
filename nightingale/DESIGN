@@ -1,0 +1,21 @@
+# Nightingale
+
+
+## services
+
+- read from file
+- custom implementation retrieving instance info e.g. host from optica, pod from ?
+
+
+## healthchecks
+
+- read healthcheck text from services
+
+
+## endpoint metrics
+
+- read hosts from optica
+- read each endpoint metrics from each host
+- make into a 2-d table
+- highlight abnormal latency
+- make time-series graph
