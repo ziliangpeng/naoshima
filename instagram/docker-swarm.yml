@@ -1,0 +1,136 @@
+version: '3.3'
+
+services:
+  ardb-2:
+  # user https://github.com/yaauie/redis-copy/ to dump redis from old redis to here
+    image: ziliang/ardb
+#    ports:
+#      - "6379:16379"
+    volumes:
+      - /data/ig-ardb-2:/var/lib/ardb
+    networks:
+      - gnet
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+  ardb-cache-2:
+    image: ziliang/ardb
+    networks:
+      - gnet
+    deploy:
+      mode: global
+#    ports:
+#      - "16379:16379"
+  z-bot:
+    image: ziliang/igbot
+    environment:
+      - DD_HOST
+      - PROM_HOST
+    networks:
+      - gnet
+    entrypoint:
+      - "python"
+      - "bot.py"
+      - "-u"
+      - "z"
+    configs:
+      - source: config
+        target: /instagram/user_config.local
+  v-bot:
+    image: ziliang/igbot
+    environment:
+      - DD_HOST
+      - PROM_HOST
+    networks:
+      - gnet
+    entrypoint:
+      - "python"
+      - "bot.py"
+      - "-u"
+      - "v"
+    configs:
+      - source: config
+        target: /instagram/user_config.local
+  hix-bot:
+    image: ziliang/igbot
+    environment:
+      - DD_HOST
+      - PROM_HOST
+    networks:
+      - gnet
+    entrypoint:
+      - "python"
+      - "bot.py"
+      - "-u"
+      - "hix"
+    configs:
+      - source: config
+        target: /instagram/user_config.local
+  newdone-bot:
+    image: ziliang/igbot
+    environment:
+      - DD_HOST
+      - PROM_HOST
+    networks:
+      - gnet
+    entrypoint:
+      - "python"
+      - "bot.py"
+      - "-u"
+      - "newdone"
+    configs:
+      - source: config
+        target: /instagram/user_config.local
+  mc-bot:
+    image: ziliang/igbot
+    environment:
+      - DD_HOST
+      - PROM_HOST
+    networks:
+      - gnet
+    entrypoint:
+      - "python"
+      - "bot.py"
+      - "-u"
+      - "mc"
+    configs:
+      - source: config
+        target: /instagram/user_config.local
+  eaxy-bot:
+    image: ziliang/igbot
+    environment:
+      - DD_HOST
+      - PROM_HOST
+    networks:
+      - gnet
+    entrypoint:
+      - "python"
+      - "bot.py"
+      - "-u"
+      - "eaxy"
+    configs:
+      - source: config
+        target: /instagram/user_config.local
+  eva-bot:
+    image: ziliang/igbot
+    environment:
+      - DD_HOST
+      - PROM_HOST
+    networks:
+      - gnet
+    entrypoint:
+      - "python"
+      - "bot.py"
+      - "-u"
+      - "eva"
+    configs:
+      - source: config
+        target: /instagram/user_config.local
+configs:
+  config:
+    external:
+      name: IG_CONFIG
+networks:
+  gnet:
+    driver: overlay
