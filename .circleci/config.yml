@@ -79,6 +79,16 @@ jobs:
             docker images
             docker push ziliang/igbot
 
+      - run:
+          # TODO:  only publish if master branch
+          name: build ardb image
+          command: |
+            cd docker
+            docker build -f ardb.Dockerfile --build-arg engine=leveldb -t ardb .
+            docker tag ardb ziliang/ardb
+            docker images
+            docker push ziliang/ardb
+
       #      . venv/bin/activate
       #      python manage.py test
 
