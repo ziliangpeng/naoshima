@@ -1,23 +1,23 @@
 import sys
 import rsa
 import aes
-from timeit import default_timer as timer
+from time import time
 
 if len(sys.argv) > 1:
     repeat = int(sys.argv[1])
 else:
     repeat = 1
 
-start_1 = timer()
+start_1 = time()
 for i in range(repeat):
     rsa.run()
-end_1 = timer()
+end_1 = time()
 elapsed_1 = end_1 - start_1
 
-start_2 = timer()
+start_2 = time()
 for i in range(repeat):
     aes.run()
-end_2 = timer()
+end_2 = time()
 elapsed_2 = end_2 - start_2
 
 print("Repeat:", repeat)
