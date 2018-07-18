@@ -1,1 +1,19 @@
 crypt, not crypto.
+
+The first step mainly test the python's pycrypto library (https://github.com/dlitz/pycrypto)
+
+In it there are several components
+
+- Crypto.Cipher (symetric encryption)
+- Crypto.PublicKey (Asymmetric)
+- Crypto.Hash (Hashing libs)
+
+Notes:
+- core lib written in c
+- Asymmetric crypto seems much slower than symetric
+
+
+Links:
+
+- TODO: symetric vs asymmetric
+- TODO: Hash algorithm comparison
