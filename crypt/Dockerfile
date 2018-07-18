@@ -6,4 +6,4 @@ ADD . /app
 
 WORKDIR /app
 
-ENTRYPOINT ["python", "rsa.py"]
+ENTRYPOINT ["python", "main.py"]

@@ -24,13 +24,14 @@ def decrypt_message(encoded_encrypted_msg, privatekey):
 
 ########## BEGIN ##########
 
-a_message = "The quick brown fox jumped over the lazy dog"
-privatekey , publickey = generate_keys()
-encrypted_msg = encrypt_message(a_message , publickey)
-decrypted_msg = decrypt_message(encrypted_msg, privatekey)
+def run():
+    a_message = "The quick brown fox jumped over the lazy dog"
+    privatekey , publickey = generate_keys()
+    encrypted_msg = encrypt_message(a_message , publickey)
+    decrypted_msg = decrypt_message(encrypted_msg, privatekey)
 
-print "%s - (%d)" % (privatekey.exportKey() , len(privatekey.exportKey()))
-print "%s - (%d)" % (publickey.exportKey() , len(publickey.exportKey()))
-print " Original content: %s - (%d)" % (a_message, len(a_message))
-print "Encrypted message: %s - (%d)" % (encrypted_msg, len(encrypted_msg))
-print "Decrypted message: %s - (%d)" % (decrypted_msg, len(decrypted_msg))
+    print "%s - (%d)" % (privatekey.exportKey() , len(privatekey.exportKey()))
+    print "%s - (%d)" % (publickey.exportKey() , len(publickey.exportKey()))
+    print " Original content: %s - (%d)" % (a_message, len(a_message))
+    print "Encrypted message: %s - (%d)" % (encrypted_msg, len(encrypted_msg))
+    print "Decrypted message: %s - (%d)" % (decrypted_msg, len(decrypted_msg))
