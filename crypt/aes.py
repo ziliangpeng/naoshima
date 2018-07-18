@@ -3,6 +3,7 @@
 
 from Crypto.Cipher import AES
 import base64, os
+import msg
 
 def generate_secret_key_for_AES_cipher():
     # AES key length must be either 16, 24, or 32 bytes long
@@ -47,9 +48,7 @@ def decrypt_message(encoded_encrypted_msg, encoded_secret_key, padding_character
 
 
 def run(silence=True):
-    private_msg = """
-     Lorem ipsum dolor sit amet, malis recteque posidonium ea sit, te vis meliore verterem. Duis movet comprehensam eam ex, te mea possim luptatum gloriatur. Modus summo epicuri eu nec. Ex placerat complectitur eos.
-    """
+    private_msg = msg.MESSAGE
     padding_character = "{"
 
     secret_key = generate_secret_key_for_AES_cipher()

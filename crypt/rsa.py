@@ -4,6 +4,7 @@
 from Crypto import Random
 from Crypto.PublicKey import RSA
 import base64
+import msg
 
 def generate_keys():
     # RSA modulus length must be a multiple of 256 and >= 1024
@@ -25,7 +26,7 @@ def decrypt_message(encoded_encrypted_msg, privatekey):
 ########## BEGIN ##########
 
 def run(silence=True):
-    a_message = "The quick brown fox jumped over the lazy dog"
+    a_message = msg.MESSAGE
     privatekey , publickey = generate_keys()
     encrypted_msg = encrypt_message(a_message , publickey)
     decrypted_msg = decrypt_message(encrypted_msg, privatekey)
