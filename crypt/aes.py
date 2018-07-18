@@ -46,7 +46,7 @@ def decrypt_message(encoded_encrypted_msg, encoded_secret_key, padding_character
 ####### BEGIN HERE #######
 
 
-def run():
+def run(silence=True):
     private_msg = """
      Lorem ipsum dolor sit amet, malis recteque posidonium ea sit, te vis meliore verterem. Duis movet comprehensam eam ex, te mea possim luptatum gloriatur. Modus summo epicuri eu nec. Ex placerat complectitur eos.
     """
@@ -56,6 +56,7 @@ def run():
     encrypted_msg = encrypt_message(private_msg, secret_key, padding_character)
     decrypted_msg = decrypt_message(encrypted_msg, secret_key, padding_character)
 
-    print "   Secret Key: %s - (%d)" % (secret_key, len(secret_key))
-    print "Encrypted Msg: %s - (%d)" % (encrypted_msg, len(encrypted_msg))
-    print "Decrypted Msg: %s - (%d)" % (decrypted_msg, len(decrypted_msg))
+    if not silence:
+        print "   Secret Key: %s - (%d)" % (secret_key, len(secret_key))
+        print "Encrypted Msg: %s - (%d)" % (encrypted_msg, len(encrypted_msg))
+        print "Decrypted Msg: %s - (%d)" % (decrypted_msg, len(decrypted_msg))
