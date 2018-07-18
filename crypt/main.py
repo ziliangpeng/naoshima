@@ -24,3 +24,4 @@ for r in repeat:
     print("Repeat:", r)
     print('RSA', elapsed_1)
     print('AES', elapsed_2)
+    sys.stdout.flush()
