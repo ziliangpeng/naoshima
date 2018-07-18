@@ -6,4 +6,4 @@ ADD . /app
 
 WORKDIR /app
 
-ENTRYPOINT ["python", "main.py"]
+ENTRYPOINT ["python", "benchmark.py"]
