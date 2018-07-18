@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-docker build -t crypt .
+docker build -q -t crypt .
 
-docker run crypt
+docker run crypt $@
