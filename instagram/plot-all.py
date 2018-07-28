@@ -29,7 +29,8 @@ for fo_data_file in sys.argv[1:]:
     with open(fo_data_file, 'r') as f:
         for line in f.readlines():
             try:
-                date = ' '.join(line.split(' ')[1:6]).split(':')[0] + ':00' + ' ' + line.split(' ')[5]
+                date = ' '.join(line.split(' ')[1:6]).split(
+                    ':')[0] + ':00' + ' ' + line.split(' ')[5]
                 if len(date_list) > 0 and date not in date_list[0]:
                     continue
                 data_block = line.split('\"')[3]
