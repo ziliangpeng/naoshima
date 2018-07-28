@@ -59,4 +59,4 @@ for i in range(len(data_list)):
 
 py.plot({
     "data": graphs,
-}, filename='/data/reckless/stats-gen.html', , auto_open=False)
+}, filename='/data/reckless/stats-gen.html', auto_open=False)
