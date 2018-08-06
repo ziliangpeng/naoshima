@@ -74,6 +74,11 @@ services:
     environment:
       - DD_HOST
       - PROM_HOST
+  auth:
+    extends:
+      service: basebot
+    entrypoint:
+      - "bash"
   z-bot:
     extends:
       service: basebot
