@@ -77,6 +77,8 @@ services:
   auth:
     extends:
       service: basebot
+    volumes:
+      - ./cookies.txt:/instagram/cookies.txt
     entrypoint:
       - "bash"
   z-bot:
