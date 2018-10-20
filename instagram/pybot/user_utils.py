@@ -1,5 +1,7 @@
 import json
 import time
+from functools import lru_cache
+
 import requests
 import fetcher
 import data
@@ -18,6 +20,7 @@ from logs import logger
 from_user = user_config_reader.load_secrets()[0]
 
 @sd.timed(metric='naoshima.ig.get_user_json_cached.time', tags=['user:' + from_user])
+@lru_cache(maxsize=32)
 def get_user_json(u):
     cached_json = data.get_json_by_username(u)
     if cached_json is not None:
