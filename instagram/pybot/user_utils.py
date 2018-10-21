@@ -125,6 +125,7 @@ def get_all_followers_gen(bot, uid, max=0):
         if len(followers) == 0:
             return
         cursor = all_data["data"]["user"]["edge_followed_by"]["page_info"]["end_cursor"]
+        logger.info("next cursor is %s" % (str(cursor)))
         for f in followers:
             if max != 0 and count >= max:
                 return
