@@ -116,7 +116,10 @@ def get_all_followers_gen(bot, uid, max=0):
              urllib.parse.quote_plus(make_query_cursor(uid, 50, cursor)))
         logger.info("followers url %s", url)
         r = rate_limit_get(bot.s, url)
-        if r.status_code != 200:
+        if r.status_code == 400:
+            # TODO: temporary hack, work around end of cursor
+            return
+        elif r.status_code != 200:
             logger.warn("error in get followers, error code %d", r.status_code)
             raise BaseException("Error in getting followers")
 
