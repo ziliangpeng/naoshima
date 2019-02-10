@@ -7,17 +7,21 @@ plt.rcParams['image.cmap'] = 'gray'
 plt.rcParams['image.interpolation'] = 'none'
 
 
+###
 
-from skimage import data, filters
+from skimage import data, filters, io
 
 image = data.camera()
+fname = 'chelmico.jpg'
+image = io.imread(fname)
 # Ignore the Gaussian filter, for now.
 # (This is explained at the end of the article.)
 smooth_image = filters.gaussian(image, 5)
-plt.imshow(smooth_image)
-plt.show()
+# plt.imshow(smooth_image)
+# plt.show()
 
 
+###
 
 import numpy as np
 
