@@ -1,6 +1,9 @@
 # local files
 *.local
 
+# Macos
+.DS_Store
+
 # Bazel
 bazel-*
 
