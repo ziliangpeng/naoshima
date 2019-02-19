@@ -69,15 +69,18 @@ jobs:
             cd prometheus &&
               ./build
 
-      - run:
-          # TODO:  only publish if master branch
-          name: build ig bot image
-          command: |
-            cd instagram
-            docker build -t igbot .
-            docker tag igbot ziliang/igbot
-            docker images
-            docker push ziliang/igbot
+      # Disable for now. problem downloading ffmpeg
+      # Error in "RUN imageio_download_bin ffmpeg"
+      # Exception: Plugin ffmpeg not registered for binary download!
+      # - run:
+      #     # TODO:  only publish if master branch
+      #     name: build ig bot image
+      #     command: |
+      #       cd instagram
+      #       docker build -t igbot .
+      #       docker tag igbot ziliang/igbot
+      #       docker images
+      #       docker push ziliang/igbot
 
       - run:
           # TODO:  only publish if master branch
