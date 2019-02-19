@@ -1,0 +1,6 @@
+# Datadog + Redis
+
+It seems datadog cannot read from redis.
+
+1. ardb probably give a different format of info than redis, the different in format will crash dd agent.
+2. redis in docker seems to have some security setting that prevents read from host.
