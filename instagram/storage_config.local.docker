@@ -4,8 +4,8 @@
     "port": 16379,
   },
   "redis-cache": {
-    "host": "ardb-cache-2",
-    "port": 16379,
+    "host": "redis-cache",
+    "port": 6379,
   },
   "mysql": {
     "host": "xxx",
