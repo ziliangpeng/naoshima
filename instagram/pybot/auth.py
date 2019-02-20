@@ -43,7 +43,16 @@ def auth_from_cookies_file(filename, log_mod=0):
     return auth(log_mod=log_mod, session=session)
 
 
+"""
+  python auth.py -u eva -f eva-cookies.txt
+"""
 if __name__ == '__main__':
     # upload cookies from file to redis
-    filename = sys.argv[1]
+    # filename = sys.argv[1]
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-f', type=str)
+    args, unknown = parser.parse_known_args()
+
+    filename = args.f
     auth_from_cookies_file(filename)
