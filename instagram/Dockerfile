@@ -8,7 +8,8 @@ ADD pybot/requirements.txt instagram/requirements.txt
 RUN pip install -r instagram/requirements.txt
 
 # required for processing image to post
-RUN imageio_download_bin ffmpeg
+# This line has problem. ignore it for now.
+# RUN imageio_download_bin ffmpeg
 
 ADD pybot instagram/
 
