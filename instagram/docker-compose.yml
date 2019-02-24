@@ -33,6 +33,14 @@ services:
     volumes:
       - ./non-existent.conf:/usr/local/etc/redis/redis.conf
     command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+  redis-slave:
+    image: redis:2.8
+    container_name: redis-slave
+    ports:
+      - "16380:6379"
+    volumes:
+      - ./non-existent.conf:/usr/local/etc/redis/redis.conf
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
   prometheus-push-gateway:
     image: prom/pushgateway:v0.5.0
     ports:
