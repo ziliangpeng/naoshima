@@ -30,6 +30,7 @@ class hyperclips:
         raise web.seeother('/static/hyperclips/hyper.html')
 
 
+# web.py only support concurrent connections of 10. It is not production ready.
 if __name__ == "__main__":
     print('Starting server...')
     app = web.application(urls, globals())
