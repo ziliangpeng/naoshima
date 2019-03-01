@@ -24,7 +24,7 @@ services:
     environment:
       - DD_HOST
     deploy:
-      replicas: 1
+      replicas: 3
       placement:
         constraints:
           - node.role == manager
