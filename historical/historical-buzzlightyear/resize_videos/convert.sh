@@ -21,6 +21,8 @@ function convert_to {
     echo `date` >>"$stdout_file"
     echo `date` >>"$stderr_file"
 
+    # following can preserve modified time, but seems only work at linux
+    # -metadata date="$(stat --printf='%y' inputfile.mp4 | cut -d ' ' -f1)"
     ffmpeg -i "$filename" -preset $SPEED -crf $QUALITY "$tmp_file" 1>>"$stdout_file" 2>>"$stderr_file"
     if [ $? -ne 0 ]; then
       echo "is interrupted."
