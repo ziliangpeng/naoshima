@@ -54,7 +54,6 @@ class RGB():
             return self.b < o.b
         return False
 
-
     def distance(self, other_pixel):
         return math.sqrt((self.r - other_pixel.r) ** 2 + (self.g - other_pixel.g) ** 2 + (self.b - other_pixel.b) ** 2)
 
@@ -76,8 +75,9 @@ def kmeans(pixels, k):
 
         new_means = [RGB.avg(belonging[i]) for i in range(k)]
         glog.debug("New mean colors are " + str(new_means))
-        if new_means == means:
-            glog.debug("New mean has not changed. End iteration.")
+        diff = sum([means[i].distance(new_means[i]) for i in range(k)])
+        if diff < k * 5:
+            glog.debug("New mean (almost) has not changed. End iteration.")
             break
         else:
             means = new_means
