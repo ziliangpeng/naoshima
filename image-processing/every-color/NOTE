@@ -6,4 +6,16 @@ Find formular of arrangement.
 ### tone and brightness circle
 - distane to center is brightness. center white. edge black.
 - 3 triangelar points of R, G, and B respectively.
+- arrange colors from white (left) to black (right)
+  - this should become a diamond shape, expand the left/right edge from a point to an edge.
+
+Diamond shape:
+
+        red
+              - yellow 
+      / green          \
+white         - cyan     black
+      \ blue           /
+              - purple
+        red
 
