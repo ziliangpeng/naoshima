@@ -2,3 +2,8 @@ Find ways of arranging every RGB color onto a circle, or square, or whatever sha
 
 Find formular of arrangement.
 
+
+### tone and brightness circle
+- distane to center is brightness. center white. edge black.
+- 3 triangelar points of R, G, and B respectively.
+
