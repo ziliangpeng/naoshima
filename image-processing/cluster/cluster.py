@@ -45,6 +45,16 @@ class RGB():
     def __repr__(self):
         return "RGB(%d, %d, %d)" % (self.r, self.g, self.b)
 
+    def __lt__(self, o):
+        if self.r != o.r:
+            return self.r < o.r
+        if self.g != o.g:
+            return self.g < o.g
+        if self.b != o.b:
+            return self.b < o.b
+        return False
+
+
     def distance(self, other_pixel):
         return math.sqrt((self.r - other_pixel.r) ** 2 + (self.g - other_pixel.g) ** 2 + (self.b - other_pixel.b) ** 2)
 
@@ -107,6 +117,7 @@ if __name__ == '__main__':
 
     img = Image.open(filename)
     colors = cluster(img, K)
+    colors.sort()
 
     # Vertical strip
     strip_multiplier = 10
