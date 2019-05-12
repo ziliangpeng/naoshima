@@ -2,6 +2,13 @@ from PIL import Image, ImageMode
 import glog
 from random import randint
 import math
+import sys
+import math
+import gflags
+
+gflags.DEFINE_integer('k', 3, 'Number of clusters')
+gflags.DEFINE_string('filename', 'test.jpg', 'Filename')
+gflags.DEFINE_string('comment', 'default', 'Comment')
 
 
 class RGB():
@@ -39,7 +46,7 @@ class RGB():
         return "RGB(%d, %d, %d)" % (self.r, self.g, self.b)
 
     def distance(self, other_pixel):
-        return abs(self.r - other_pixel.r) + abs(self.g - other_pixel.g) + abs(self.b - other_pixel.b)
+        return math.sqrt((self.r - other_pixel.r) ** 2 + (self.g - other_pixel.g) ** 2 + (self.b - other_pixel.b) ** 2)
 
 
 def kmeans(pixels, k):
@@ -90,8 +97,15 @@ def cluster(img, k) -> Image:
 
 if __name__ == '__main__':
     glog.setLevel('DEBUG')
-    K = 3
-    img = Image.open("test.jpg")
+
+    FLAGS = gflags.FLAGS
+    FLAGS(sys.argv)
+
+    filename = FLAGS.filename
+    K = FLAGS.k
+    comment = FLAGS.comment
+
+    img = Image.open(filename)
     colors = cluster(img, K)
 
     # Vertical strip
@@ -104,4 +118,4 @@ if __name__ == '__main__':
         for i in range(strip_width * K):
             px[i, j] = colors[i // strip_width].to_tuple()
 
-    new_img.save("test.jps.cluster.jpg")
+    new_img.save("%s.cluster.%d.%s.jpg" % (filename, K, comment))
