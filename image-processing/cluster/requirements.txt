@@ -3,3 +3,9 @@
 
 # cluster.py: 1
 Pillow == 6.0.0
+
+# cluster.py: 2
+glog == 0.3.1
+
+# cluster.py: 7
+python_gflags == 3.1.2
