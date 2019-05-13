@@ -17,6 +17,37 @@ class RGB():
         def r(): return randint(0, 255)
         return RGB(r(), r(), r())
 
+    # TODO: move out of RGB
+    @classmethod
+    def fixed_seeds(cls, k):
+        BLACK = RGB(0, 0, 0)
+
+        RED = RGB(255, 0, 0)
+        GREEN = RGB(0, 255, 0)
+        BLUE = RGB(0, 0, 255)
+
+        YELLOW = RGB(255, 255, 0)
+        CYAN = RGB(0, 255, 255)
+        MAGENTA = RGB(255, 0, 255)
+
+        WHITE = RGB(255, 255, 255)
+
+        if k == 2:
+            return [WHITE, BLACK]
+        if k == 3:
+            return [RED, GREEN, BLUE]
+        if k == 4:
+            return [WHITE, RED, GREEN, BLUE]
+        if k == 5:
+            return [WHITE, RED, GREEN, BLUE, BLACK]
+        if k == 6:
+            return [RED, GREEN, BLUE, YELLOW, CYAN, MAGENTA]
+        if k == 7:
+            return [WHITE, RED, GREEN, BLUE, YELLOW, CYAN, MAGENTA]
+        if k == 8:
+            return [WHITE, RED, GREEN, BLUE, YELLOW, CYAN, MAGENTA, BLACK]
+        return [WHITE, RED, GREEN, BLUE, YELLOW, CYAN, MAGENTA, BLACK] + [cls.random() for i in range(k - 8)]
+
     @classmethod
     def avg(cls, pixels):
         cnt = len(pixels)
@@ -62,7 +93,8 @@ def kmeans(pixels, k):
 
     # def find_closest(pixel, means):
 
-    means = [RGB.random() for i in range(k)]
+    # means = [RGB.random() for i in range(k)]
+    means = RGB.fixed_seeds(k)
     glog.debug("Initial mean colors are " + str(means))
 
     while True:
