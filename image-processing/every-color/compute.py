@@ -7,6 +7,7 @@ def c(m, n):
     return int(ans)
 
 
+# brightness 382 and 383 have most combinations: 49152
 def colors_of_brightness(br):
     if br < 0 or br > 255 * 3:
         return []
