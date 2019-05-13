@@ -108,11 +108,11 @@ def kmeans(pixels, k):
         new_means = [RGB.avg(belonging[i]) for i in range(k)]
         glog.debug("New mean colors are " + str(new_means))
         diff = sum([means[i].distance(new_means[i]) for i in range(k)])
+        means = new_means
+
         if diff < k * 5:
             glog.debug("New mean (almost) has not changed. End iteration.")
             break
-        else:
-            means = new_means
 
     return means
 
