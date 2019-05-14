@@ -9,7 +9,7 @@ import gflags
 gflags.DEFINE_integer('k', 5, 'Number of clusters')
 gflags.DEFINE_string('f', 'test.jpg', 'Filename')
 gflags.DEFINE_string('comment', 'default', 'Comment')
-gflags.DEFINE_bool('inplace', False, 'Attach strip to image')
+gflags.DEFINE_bool('inplace', True, 'Attach strip to image')
 
 
 class RGB():
@@ -154,7 +154,7 @@ if __name__ == '__main__':
 
     strip_multiplier = 10
     if FLAGS.inplace:
-        strip_height = 100 * strip_multiplier
+        strip_height = img.height // 3
         img_width = img.width
         img_height = img.height + strip_height
         new_img = Image.new('RGB', (img_width, img_height))
@@ -182,4 +182,5 @@ if __name__ == '__main__':
             for i in range(strip_width * K):
                 px[i, j] = colors[i // strip_width].to_tuple()
 
-    new_img.save("%s.cluster.%d.%s.jpg" % (filename, K, comment))
+    new_img.save("%s.cluster.%d.%s%s.jpg" % (filename, K, '.' +
+                                             comment if comment else '', '.inplace' if FLAGS.inplace else ''))
