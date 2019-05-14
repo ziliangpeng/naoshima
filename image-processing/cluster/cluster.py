@@ -144,7 +144,7 @@ if __name__ == '__main__':
     FLAGS = gflags.FLAGS
     FLAGS(sys.argv)
 
-    filename = FLAGS.filename
+    filename = FLAGS.f
     K = FLAGS.k
     comment = FLAGS.comment
 
