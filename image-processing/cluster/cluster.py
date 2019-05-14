@@ -7,7 +7,7 @@ import math
 import gflags
 
 gflags.DEFINE_integer('k', 3, 'Number of clusters')
-gflags.DEFINE_string('filename', 'test.jpg', 'Filename')
+gflags.DEFINE_string('f', 'test.jpg', 'Filename')
 gflags.DEFINE_string('comment', 'default', 'Comment')
 gflags.DEFINE_bool('inplace', False, 'Attach strip to image')
 
