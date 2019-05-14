@@ -9,6 +9,7 @@ import gflags
 gflags.DEFINE_integer('k', 3, 'Number of clusters')
 gflags.DEFINE_string('filename', 'test.jpg', 'Filename')
 gflags.DEFINE_string('comment', 'default', 'Comment')
+gflags.DEFINE_bool('inplace', False, 'Attach strip to image')
 
 
 class RGB():
@@ -151,14 +152,34 @@ if __name__ == '__main__':
     colors = cluster(img, K)
     colors.sort()
 
-    # Vertical strip
     strip_multiplier = 10
-    strip_height = 100 * strip_multiplier
-    strip_width = 50 * strip_multiplier
-    new_img = Image.new('RGB', (strip_width * K, strip_height))
-    px = new_img.load()
-    for j in range(strip_height):
-        for i in range(strip_width * K):
-            px[i, j] = colors[i // strip_width].to_tuple()
+    if FLAGS.inplace:
+        strip_height = 100 * strip_multiplier
+        img_width = img.width
+        img_height = img.height + strip_height
+        new_img = Image.new('RGB', (img_width, img_height))
+
+        # Copy original image
+        input_px = img.load()
+        output_px = new_img.load()
+        for j in range(img.height):
+            for i in range(img.width):
+                output_px[i, j] = input_px[i, j]
+
+        # Draw strip
+        strip_start_j = img.height
+        for j in range(strip_height):
+            for i in range(img_width):
+                color_i = min(K - 1, int(i // (img_width / K)))
+                output_px[i, strip_start_j + j] = colors[color_i].to_tuple()
+    else:
+        # Vertical strip
+        strip_height = 100 * strip_multiplier
+        strip_width = 50 * strip_multiplier
+        new_img = Image.new('RGB', (strip_width * K, strip_height))
+        px = new_img.load()
+        for j in range(strip_height):
+            for i in range(strip_width * K):
+                px[i, j] = colors[i // strip_width].to_tuple()
 
     new_img.save("%s.cluster.%d.%s.jpg" % (filename, K, comment))
