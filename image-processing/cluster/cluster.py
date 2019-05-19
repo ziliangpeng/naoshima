@@ -9,7 +9,11 @@ import gflags
 gflags.DEFINE_integer('k', 5, 'Number of clusters')
 gflags.DEFINE_string('f', 'test.jpg', 'Filename')
 gflags.DEFINE_string('comment', 'default', 'Comment')
-gflags.DEFINE_bool('inplace', True, 'Attach strip to image')
+# modes:
+#   - colors
+#   - img_with_colors
+#   - img_with_colors_progress
+gflags.DEFINE_string('mode', 'img_with_colors', 'Attach strip to image')
 
 
 class RGB():
@@ -96,6 +100,7 @@ def kmeans(pixels, k):
 
     # means = [RGB.random() for i in range(k)]
     means = RGB.fixed_seeds(k)
+    all_means = [means]
     glog.debug("Initial mean colors are " + str(means))
 
     while True:
@@ -107,6 +112,7 @@ def kmeans(pixels, k):
             belonging[index].append(pixel)
 
         new_means = [RGB.avg(belonging[i]) for i in range(k)]
+        all_means.append(new_means)
         glog.debug("New mean colors are " + str(new_means))
         diff = sum([means[i].distance(new_means[i]) for i in range(k)])
         means = new_means
@@ -115,7 +121,7 @@ def kmeans(pixels, k):
             glog.debug("New mean (almost) has not changed. End iteration.")
             break
 
-    return means
+    return all_means
 
 
 def cluster(img, k) -> Image:
@@ -132,10 +138,11 @@ def cluster(img, k) -> Image:
             rgb_pixel = RGB(pixel[0], pixel[1], pixel[2])
             pixels.append(rgb_pixel)
 
-    means = kmeans(pixels, k)
+    all_means = kmeans(pixels, k)
+    means = all_means[-1]
     glog.debug("Final mean colors are " + str(means))
 
-    return means
+    return all_means
 
 
 if __name__ == '__main__':
@@ -148,12 +155,15 @@ if __name__ == '__main__':
     K = FLAGS.k
     comment = FLAGS.comment
 
-    img = Image.open(filename)
-    colors = cluster(img, K)
-    colors.sort()
-
     strip_multiplier = 10
-    if FLAGS.inplace:
+    mode = FLAGS.mode
+
+    if mode == 'img_with_colors':
+        img = Image.open(filename)
+        all_means = cluster(img, K)
+        colors = all_means[-1]
+        colors.sort()
+
         strip_height = img.height // 3
         img_width = img.width
         img_height = img.height + strip_height
@@ -172,7 +182,15 @@ if __name__ == '__main__':
             for i in range(img_width):
                 color_i = min(K - 1, int(i // (img_width / K)))
                 output_px[i, strip_start_j + j] = colors[color_i].to_tuple()
-    else:
+
+        new_img.save("%s.cluster.%d%s.inplace.jpg" %
+                     (filename, K, '.' + comment if comment else ''))
+    elif mode == 'colors':
+        img = Image.open(filename)
+        all_means = cluster(img, K)
+        colors = all_means[-1]
+        colors.sort()
+
         # Vertical strip
         strip_height = 100 * strip_multiplier
         strip_width = 50 * strip_multiplier
@@ -181,6 +199,37 @@ if __name__ == '__main__':
         for j in range(strip_height):
             for i in range(strip_width * K):
                 px[i, j] = colors[i // strip_width].to_tuple()
+        new_img.save("%s.cluster.%d.%s.jpg" %
+                     (filename, K, '.' + comment if comment else ''))
 
-    new_img.save("%s.cluster.%d.%s%s.jpg" % (filename, K, '.' +
-                                             comment if comment else '', '.inplace' if FLAGS.inplace else ''))
+    elif mode == 'img_with_colors_progress':
+        img = Image.open(filename)
+        all_means = cluster(img, K)
+
+        strip_height = img.height // 10
+        img_width = img.width
+        img_height = img.height + strip_height * len(all_means)
+        new_img = Image.new('RGB', (img_width, img_height))
+
+        # Copy original image
+        input_px = img.load()
+        output_px = new_img.load()
+        for j in range(img.height):
+            for i in range(img.width):
+                output_px[i, j] = input_px[i, j]
+
+        # Draw strip
+        for i, colors in enumerate(all_means):
+            colors.sort()
+            strip_start_j = img.height + strip_height * i
+            for j in range(strip_height):
+                for i in range(img_width):
+                    color_i = min(K - 1, int(i // (img_width / K)))
+                    output_px[i, strip_start_j +
+                              j] = colors[color_i].to_tuple()
+
+        new_img.save("%s.cluster.%d%s.progress.jpg" %
+                     (filename, K, '.' + comment if comment else ''))
+    else:
+        glog.fatal("mode %s is not supported." % (mode))
+        sys.exit(1)
