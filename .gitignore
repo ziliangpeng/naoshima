@@ -21,3 +21,6 @@ bazel-*
 
 # gen html
 *-gen.html
+
+# vscode
+.vscode/*
