@@ -2,9 +2,9 @@ from PIL import Image, ImageMode
 import gflags
 import sys
 
-gflags.DEFINE_string('f1', '1.jpg', 'file 1')
-gflags.DEFINE_string('f2', '2.jpg', 'file 2')
-gflags.DEFINE_string('out', 'out.jpg', 'out file')
+gflags.DEFINE_string('f1', 'images/blend/1.jpg', 'file 1')
+gflags.DEFINE_string('f2', 'images/blend/2.jpg', 'file 2')
+gflags.DEFINE_string('out', 'images/blend/out.jpg', 'out file')
 
 FLAGS = gflags.FLAGS
 FLAGS(sys.argv)
