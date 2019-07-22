@@ -30,5 +30,23 @@ services:
           - node.role == manager
     networks:
       - d
+  rlink:
+    # docker-compose up -d rlink
+    image: ziliang/rlink
+    build: ../rlink
+    container_name: rlink
+    ports:
+      - "8081:80"
+    volumes:
+      - /data/rlink:/rlink/link
+    environment:
+      - DD_HOST
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+    networks:
+      - d
 networks:
   d:
