@@ -1,4 +1,4 @@
-from flask import Flask, escape, request
+from flask import Flask, escape, request, abort, redirect
 import gflags
 import glog
 import os
@@ -36,14 +36,17 @@ def get(name):
     glog.info('fetching ' + name)
     abs_path = os.path.abspath(FLAGS.dir)
     file_path = os.path.join(abs_path, name)
-    glog.info('abs path is ' + file_path)
 
     try:
         with open(file_path) as f:
-            content = f.read()
-        return f'path: {content}'
-    except:
-        return f'path: not found'
+            content = f.read().strip()
+        glog.info('redirecting to ' + content)
+        return redirect(content)
+    except Exception as e:
+        glog.error(e)
+
+    glog.info('not found')
+    abort(404)
 
 if __name__ == '__main__':
       app.run(host='0.0.0.0', port=80)
