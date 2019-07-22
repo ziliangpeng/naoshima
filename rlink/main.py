@@ -2,6 +2,7 @@ from flask import Flask, escape, request
 import gflags
 import glog
 import os
+import sys
 
 FLAGS = gflags.FLAGS
 
@@ -43,3 +44,6 @@ def get(name):
         return f'path: {content}'
     except:
         return f'path: not found'
+
+if __name__ == '__main__':
+      app.run(host='0.0.0.0', port=80)
