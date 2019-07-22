@@ -30,6 +30,16 @@ def ls():
     return html
 
 
+@app.route('/rlink/', defaults={'name': ''})
+@app.route('/rlink/<path:name>')
+def get_proxy(name):
+    if name == 'list':
+        return ls()
+    else:
+        glog.info('getting proxied request ' + name)
+        return get(name)
+
+
 @app.route('/', defaults={'name': ''})
 @app.route('/<path:name>')
 def get(name):
@@ -48,5 +58,6 @@ def get(name):
     glog.info('not found')
     abort(404)
 
+
 if __name__ == '__main__':
-      app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=80)
