@@ -24,7 +24,9 @@ def convert(path, creation_time):
     #        stderr=subprocess.STDOUT)
     # stdout,_ = out.communicate()
     out_file = '%s.%s.converted.mp4' % (path, creation_time)
-    out_file_tmp = out_file + '.tmp'
+    if os.path.isfile(out_file):
+        return
+    out_file_tmp = out_file + '.tmp.mp4'
     os.system('ffmpeg -i %s -map_metadata g %s' % (path, out_file_tmp))
     shutil.move(out_file_tmp, out_file)
 
