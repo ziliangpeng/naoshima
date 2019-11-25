@@ -31,6 +31,8 @@ def convert(path, creation_time):
     shutil.move(out_file_tmp, out_file)
 
 for path in os.listdir('.'):
+    if not path.lower().endswith('.mp4'):
+        continue
     if 'converted.mp4' not in path.lower():
         creation_time = get_creation_date(path)
         print('creation time of %s is %s' % (path, creation_time))
