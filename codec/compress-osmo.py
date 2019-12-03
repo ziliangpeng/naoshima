@@ -27,7 +27,8 @@ def convert(path, creation_time):
     if os.path.isfile(out_file):
         return
     out_file_tmp = out_file + '.tmp.mp4'
-    os.system('ffmpeg -i %s -map_metadata g %s' % (path, out_file_tmp))
+    if os.system('ffmpeg -i %s -map_metadata g %s' % (path, out_file_tmp)) != 0:
+        return
     shutil.move(out_file_tmp, out_file)
 
 for path in os.listdir('.'):
