@@ -4,9 +4,9 @@ https://github.com/philgyford/python-halftone/blob/189c3fc15a38588ed3846387a9153
 """
 import os
 import sys
+import datetime
 
 from PIL import Image, ImageDraw, ImageStat
-
 """
 Class: Halftone( path )
 Usage:
@@ -51,7 +51,9 @@ class Halftone(object):
         """
         f, e = os.path.splitext(self.path)
 
-        outfile = "%s%s%s" % (f, filename_addition, e)
+        outfile = "%s%s_%d%s" % (f, filename_addition,
+                                 int(datetime.datetime.utcnow().timestamp()),
+                                 e)
 
         try:
             im = Image.open(self.path)
@@ -86,9 +88,8 @@ class Halftone(object):
             cmyk.append(cmyk_im[i].load())
         for x in range(im.size[0]):
             for y in range(im.size[1]):
-                gray = (
-                    min(cmyk[0][x, y], cmyk[1][x, y], cmyk[2][x, y]) * percentage / 100
-                )
+                gray = (min(cmyk[0][x, y], cmyk[1][x, y], cmyk[2][x, y]) *
+                        percentage / 100)
                 for i in range(3):
                     cmyk[i][x, y] = cmyk[i][x, y] - gray
                 cmyk[3][x, y] = gray
@@ -133,7 +134,7 @@ class Halftone(object):
                     mean = ImageStat.Stat(box).mean[0]
 
                     # The diameter of the circle to draw based on the mean (0-1):
-                    diameter = (mean / 255) ** 0.5
+                    diameter = (mean / 255)**0.5
 
                     # Size of the box we'll draw the circle in:
                     box_size = sample * scale
@@ -183,4 +184,3 @@ if __name__ == "__main__":
 
     h = Halftone(path)
     h.make()
-
