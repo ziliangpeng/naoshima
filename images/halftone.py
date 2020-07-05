@@ -24,7 +24,7 @@ class Halftone(object):
         """
         path is the path to the image we want to halftone.
         """
-        self.path = path
+        self.path = os.path.realpath(path)
 
     def make(
         self,
@@ -179,6 +179,8 @@ class Halftone(object):
 
 
 if __name__ == "__main__":
+    print("python version: %s" % (sys.version))
+    print("python version info: %s" % (str(sys.version_info)))
 
     path = sys.argv[1]
 
