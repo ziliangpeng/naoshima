@@ -1,0 +1,7 @@
+
+py_runtime(
+    name = "pyenv",
+    files = [],
+    interpreter_path = "/home/zpeng/.pyenv/shims/python",
+    visibility = ["//visibility:public"],
+)

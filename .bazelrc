@@ -1,0 +1,2 @@
+run --python_top=//:pyenv
+run --incompatible_use_python_toolchains=false # this is needed for python_top
