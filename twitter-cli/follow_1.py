@@ -53,6 +53,6 @@ for l in tweepy.Cursor(api.lists_memberships, screen_name=name).items():  # list
                     break
             except Exception as e:
                 print(e)
-            time.sleep(1)
+            time.sleep(60)
     except Exception as e:
         print(e)
