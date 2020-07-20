@@ -47,12 +47,13 @@ for l in tweepy.Cursor(api.lists_memberships, screen_name=name).items():  # list
                     i += 1
 
                     api.create_friendship(user.id)
+                    time.sleep(240)
 
                 if i >= 989:
                     print("Already used up today's quote. break.")
                     break
             except Exception as e:
                 print(e)
-            time.sleep(60)
+            time.sleep(1)
     except Exception as e:
         print(e)

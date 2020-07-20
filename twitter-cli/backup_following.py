@@ -9,7 +9,7 @@ read_list = []
 for l in api.lists_all():
     print(l.id, l.name)
     n = l.name
-    if 'backup' in n and '2018' in n:
+    if 'backup' in n:
         read_list.append(l.id)
         print('read list id is', read_list)
 
@@ -17,7 +17,7 @@ write_list = None
 for l in api.lists_all():
     print(l.id, l.name)
     n = l.name
-    if 'backup' in n and '2018' in n and '04-14' in n:
+    if 'backup' in n and '2020' in n and '07-19' in n:
         write_list = l.id
         print('write list id is', write_list)
 
@@ -43,10 +43,11 @@ def fo():
             # continue
         #u = api.get_user(i)
         #print(i, u.name)
-        print('adding', id)
+        u = api.get_user(id)
+        print('%d-th: adding %s, %s, %s' % (i, str(id), u.screen_name, u.name))
         # ids.append(i)
         api.add_list_member(user_id=id, list_id=write_list)
-        time.sleep(1)
+        time.sleep(2)
         # if len(ids) > 64:
         #    print('adding ids', ids)
         #    print(api.add_list_members(user_id=ids, list_id=list_id))

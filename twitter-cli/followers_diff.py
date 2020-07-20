@@ -46,10 +46,16 @@ for i in range(len(data) - 1):
     cur_ids = set(current['ids'])
     print('diff between %s and %s' % (prev['time'], current['time']))
     for id in prev_ids - cur_ids:
-        u = api.get_user(id)
-        print('- %d %s %s' % (u.id, u.screen_name, u.name))
+        try:
+            u = api.get_user(id)
+            print('- %d %s %s' % (u.id, u.screen_name, u.name))
+        except:
+            print('- Cannot get user %d' % (id))
     for id in cur_ids - prev_ids:
-        u = api.get_user(id)
-        print('+ %d %s %s' % (u.id, u.screen_name, u.name))
+        try:
+            u = api.get_user(id)
+            print('+ %d %s %s' % (u.id, u.screen_name, u.name))
+        except:
+            print('+ Cannot get user %d' % (id))
 
     print('')
