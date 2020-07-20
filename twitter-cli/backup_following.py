@@ -2,8 +2,9 @@ import tweepy
 import time
 from auth import api
 
-u = api.get_user(screen_name='recklessdesuka')
-my_id = u.id
+MY_NAME = 'recklessdesuka'
+me = api.get_user(screen_name=MY_NAME)
+my_id = me.id
 
 read_list = []
 for l in api.lists_all():
@@ -24,7 +25,7 @@ for l in api.lists_all():
 # list_id = '977990964890411013'
 
 
-def fo():
+def backup():
     in_list_users = []
     for list_id in read_list:
         in_list_users += list(tweepy.Cursor(api.list_members, list_id=list_id, count=5000).items())
@@ -59,7 +60,7 @@ def fo():
 def main():
     while True:
         try:
-            fo()
+            backup()
         except BaseException as e:
             print(e)
             print("sleeping for 1 day")
