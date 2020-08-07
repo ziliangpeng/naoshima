@@ -8,6 +8,7 @@ import followed
 import os
 
 gflags.DEFINE_bool('refresh', False, 'get new data')
+gflags.DEFINE_bool('all', False, 'get new data')
 
 FLAGS = gflags.FLAGS
 FLAGS(sys.argv)
@@ -38,6 +39,9 @@ if FLAGS.refresh:
     data.append({'time': str(datetime.now()), 'ids': followers_ids})
 
     write(data)
+
+if not FLAGS.all:
+    data = data[-2:]
 
 for i in range(len(data) - 1):
     prev = data[i]
