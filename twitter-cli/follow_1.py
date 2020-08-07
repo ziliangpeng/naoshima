@@ -97,6 +97,9 @@ def fofo():
         except:
             glog.error("Cannot visit user %d" % (u_id))
             continue
+        if fo.protected:
+            glog.info("User %s is protected. Skip." % (fo.screen_name))
+            continue
         glog.info("Inspecting foer %d %s" % (fo.id, fo.screen_name))
         # fofo_ids = [1105041123461025793]
         # fofo_ids = list(
@@ -130,7 +133,11 @@ def fofo():
             if len(tweets) == 0:
                 glog.info("    No tweet.")
                 continue
-            last_tweeted = u.status.created_at
+            try:
+                last_tweeted = u.status.created_at
+            except:
+                glog.error("  Cannot get last tweet from fofo user %d %s" % (fofo_id, u.name))
+                continue
             if last_tweeted < datetime.now() - timedelta(days=3):
                 glog.info("    User %s last tweeted at %s, is too old" %
                           (u.name, last_tweeted))
@@ -149,13 +156,19 @@ def fofo():
                 glog.info("    No language detected.")
                 continue
             glog.info('    ' + str(langs))
-            lang = langs[0].lang
-            if lang in ['zh-cn', 'zh-tw']:
-                glog.info("    中国 user. To follow")
-                api.create_friendship(fofo_id)
-                time.sleep(240)
-            else:
-                glog.info("    lang is %s. not follow" % (lang))
+            for lang in langs:
+                lang = lang.lang
+                if lang in ['zh-cn', 'zh-tw']:
+                    glog.info("    中国 user. To follow")
+                    try:
+                        api.create_friendship(fofo_id)
+                    except:
+                        glog.error("Cannot follow.")
+                        continue
+                    time.sleep(240)
+                    break
+            # else:
+            #     glog.info("    lang is %s. not follow" % (lang))
             time.sleep(5)
 
 
