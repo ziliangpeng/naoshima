@@ -324,7 +324,7 @@ early_stopping_callback = tf.keras.callbacks.EarlyStopping(
 training_history = model.fit(
     x=dataset_train_augmented_shuffled.repeat(),
     validation_data=dataset_test_shuffled.repeat(),
-    epochs=15,
+    epochs=8,
     steps_per_epoch=steps_per_epoch,
     validation_steps=validation_steps,
     callbacks=[
@@ -335,5 +335,61 @@ training_history = model.fit(
     verbose=1
 )
 
+def render_training_history(training_history):
+    loss = training_history.history['loss']
+    val_loss = training_history.history['val_loss']
+
+    accuracy = training_history.history['accuracy']
+    val_accuracy = training_history.history['val_accuracy']
+
+    plt.figure(figsize=(14, 4))
+
+    plt.subplot(1, 2, 1)
+    plt.title('Loss')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.plot(loss, label='Training set')
+    plt.plot(val_loss, label='Test set', linestyle='--')
+    plt.legend()
+    plt.grid(linestyle='--', linewidth=1, alpha=0.5)
+
+    plt.subplot(1, 2, 2)
+    plt.title('Accuracy')
+    plt.xlabel('Epoch')
+    plt.ylabel('Accuracy')
+    plt.plot(accuracy, label='Training set')
+    plt.plot(val_accuracy, label='Test set', linestyle='--')
+    plt.legend()
+    plt.grid(linestyle='--', linewidth=1, alpha=0.5)
+
+    plt.show()
+
+render_training_history(training_history)
+
+
+## Debugging model accuracy
+train_loss, train_accuracy = model.evaluate(
+    x=dataset_train.batch(BATCH_SIZE).take(NUM_TRAIN_EXAMPLES)
+)
+
+test_loss, test_accuracy = model.evaluate(
+    x=dataset_test.batch(BATCH_SIZE).take(NUM_TEST_EXAMPLES)
+)
+
+print('Training loss: ', train_loss)
+print('Training accuracy: ', train_accuracy)
+print('\n')
+print('Test loss: ', test_loss)
+print('Test accuracy: ', test_accuracy)
+
+## Saving the model
+model_name = 'rock_paper_scissors_cnn.h5'
+model.save(model_name, save_format='h5')
+
+
+## Converting to web format (understandable by tensorflowjs)
+# tensorflowjs_converter --input_format keras \
+#   ./experiments/rock_paper_scissors_cnn/rock_paper_scissors_cnn.h5 \
+#   ./demos/public/models/rock_paper_scissors_cnn
 
 # plt.show()
