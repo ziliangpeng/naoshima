@@ -4,13 +4,13 @@ import sys
 
 FLAGS = gflags.FLAGS
 gflags.DEFINE_integer('init_age', 36, '')
-gflags.DEFINE_float('init_w', 1.1, 'in million')
+gflags.DEFINE_float('init_w', 1.0, 'in million')
 gflags.DEFINE_float('start_rate', 1.15, '')
 gflags.DEFINE_float('end_rate', 1.05, '')
 gflags.DEFINE_float('init_spend', 0.1, '')
 gflags.DEFINE_float('income', 0.2, '')
 gflags.DEFINE_float('inflate', 1.04, '')
-gflags.DEFINE_integer('retire_age', 55, '')
+gflags.DEFINE_integer('retire_age', 50, '')
 
 arglist = sys.argv
 try:
