@@ -25,15 +25,16 @@ spend = FLAGS.init_spend
 w = FLAGS.init_w
 
 
-print('%8s   %8s   %8s   %8s   %8s' % ('YEAR', 'AGE', 'SPEND', 'WEALTH', 'RATE'))
+print('%8s   %8s   %8s   %8s   %8s   %8s' % ('YEAR', 'AGE', 'SPEND', 'WEALTH', 'RATE', 'DIFF'))
 print('\n')
 for age in range(FLAGS.init_age, 100):
+  prev_w = w
   w *= rate
   w -= spend
   if age <= FLAGS.retire_age:
     w += FLAGS.income 
   rate -= (FLAGS.start_rate - FLAGS.end_rate) / 60
   #print(1985 + age, age, spend, w, rate)
-  print('%8d   %8d   %8f   %8f   %8f' % (1985+age, age, spend, w, rate))
+  print('%8d   %8d   %8f   %8f   %8f   %8f' % (1985+age, age, spend, w, rate, w - prev_w))
   spend *= FLAGS.inflate
 
