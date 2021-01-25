@@ -1,26 +1,39 @@
-init_age = 36 # 40
-init_w = 1.5 # 10 # in million
+import gflags
+import glog
+import sys
 
-start_rate = 1.20 # capital gain
-end_rate = 1.05
-rate = start_rate
-spend = 0.13
-inflate = 1.04
+FLAGS = gflags.FLAGS
+gflags.DEFINE_integer('init_age', 36, '')
+gflags.DEFINE_float('init_w', 1.1, 'in million')
+gflags.DEFINE_float('start_rate', 1.15, '')
+gflags.DEFINE_float('end_rate', 1.05, '')
+gflags.DEFINE_float('init_spend', 0.1, '')
+gflags.DEFINE_float('income', 0.2, '')
+gflags.DEFINE_float('inflate', 1.04, '')
+gflags.DEFINE_integer('retire_age', 55, '')
 
-retire_age = 55
-income = 0.1
+arglist = sys.argv
+try:
+    remaining_args = gflags.FLAGS(argv=arglist)
+except gflags.Error as e:
+    print('%s\nUsage:\n%s' % (e, gflags.FLAGS))
+    sys.exit(1)
+glog.init()
 
-w = init_w
+rate = FLAGS.start_rate
+spend = FLAGS.init_spend
+w = FLAGS.init_w
+
 
 print('%8s   %8s   %8s   %8s   %8s' % ('YEAR', 'AGE', 'SPEND', 'WEALTH', 'RATE'))
 print('\n')
-for age in range(init_age, 100):
+for age in range(FLAGS.init_age, 100):
   w *= rate
   w -= spend
-  if age <= retire_age:
-    w += income 
-  rate -= (start_rate - end_rate) / 60
+  if age <= FLAGS.retire_age:
+    w += FLAGS.income 
+  rate -= (FLAGS.start_rate - FLAGS.end_rate) / 60
   #print(1985 + age, age, spend, w, rate)
   print('%8d   %8d   %8f   %8f   %8f' % (1985+age, age, spend, w, rate))
-  spend *= inflate
+  spend *= FLAGS.inflate
 
