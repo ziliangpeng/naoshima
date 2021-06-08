@@ -2,7 +2,7 @@
 # https://github.com/damnever/pigar
 
 # cluster.py: 1
-Pillow == 7.2.0
+Pillow == 8.2.0
 
 # cluster.py: 2
 glog == 0.3.1
