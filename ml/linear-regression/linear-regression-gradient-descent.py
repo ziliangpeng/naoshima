@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import imageio
+import os
 
 
 def compute_cost(X, y, theta):
@@ -47,18 +48,10 @@ def gradient_descent(X, y, theta, learning_rate, num_iterations):
         # so every act func needs to be derivable/differentiable (可导)
         # Oh.. so derivative means how much y changes over x. so it makes sense to use d for backward calculation.
 
+        # based on the video, intercept is learned very fast, but slop is very slow.
+        # is there a way to use adaptive learning rate?
         theta -= (1 / m) * learning_rate * (X.T.dot(predictions - y))
         theta_history.append(theta.copy())
-        # if i == 1 or i == num_iterations - 1:
-        # print("inspecting theta")
-        # print(X)
-        # print(y)
-        # print(X.T.dot(predictions-y))
-        # print((1/m) * learning_rate * (X.T.dot(predictions-y)))
-        # print(theta)
-        # print("done inspecting theta")
-        if i % 1000 == 0:
-            print(theta)
         cost_history[i] = compute_cost(X, y, theta)
 
     return theta, cost_history, theta_history
@@ -95,6 +88,8 @@ print("Optimized theta:", theta)
 
 
 # print(theta_history)
+if not os.path.exists('lrgs'):
+    os.mkdir('lrgs')
 for i, t in enumerate(theta_history):
     plt.scatter(x, y)
     plt.plot(x, X.dot(t), color="red")
