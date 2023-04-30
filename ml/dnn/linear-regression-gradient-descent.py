@@ -27,7 +27,24 @@ def gradient_descent(X, y, theta, learning_rate, num_iterations):
         # - weighted y diff minimize - find slope
         #
         # in DNN world, the `theta -=` part is the back propagation, basically updating weights.
-        # there is no activation function, since there's no need for non-linearity. (or maybe I can understand it as there's a naive activation function?)
+        # there is no activation function, since there's no need for non-linearity, or an identity function
+        # we can think of the activation function as 
+        # ```
+        #     def identity(x):
+        #         return x
+        #     predictions = identity(X.dot(theta))
+        # ```
+        # in this case, activtion function is used for forward calculation, not backward calculation?
+        # so... if we use ReLU as activation function, the effect is that `y = ReLU(Wx + b)`
+        #
+        # GPT-4 says activation function is used in both forward and back prop, 
+        # in forward pass, act func is used normally.
+        # in the back prop, a derivative(导数) of act func (e.g. dReLU) is used.
+        # ReLU(x) = max(0, x)
+        # dReLU(x)/dx = { 1, if x > 0; 0, if x < 0 }
+        # so every act func needs to be derivable/differentiable (可导)
+        # Oh.. so derivative means how much y changes over x. so it makes sense to use d for backward calculation.
+
         theta -= (1/m) * learning_rate * (X.T.dot(predictions-y))
         theta_history.append(theta.copy())
         # if i == 1 or i == num_iterations - 1:
