@@ -14,24 +14,30 @@ import numpy as np
 x_train, x_test = x_train / 255.0, x_test / 255.0
 
 # Create a simple DNN model
-model = Sequential([
-    Flatten(input_shape=(28, 28)),
-    Dense(128, activation='relu'),
-    Dense(16, activation='relu'),
-    Dense(10, activation='softmax')
-])
+model = Sequential(
+    [
+        Flatten(input_shape=(28, 28)),
+        Dense(128, activation="relu"),
+        Dense(16, activation="relu"),
+        Dense(10, activation="softmax"),
+    ]
+)
 
 # Compile the model
-model.compile(optimizer=Adam(), loss=SparseCategoricalCrossentropy(), metrics=['accuracy'])
+model.compile(
+    optimizer=Adam(), loss=SparseCategoricalCrossentropy(), metrics=["accuracy"]
+)
 
 # Train the model using CPU
-with tf.device('/GPU:0'):
-    history = model.fit(x_train, y_train, epochs=10, batch_size=32, validation_split=0.2)
+with tf.device("/GPU:0"):
+    history = model.fit(
+        x_train, y_train, epochs=10, batch_size=32, validation_split=0.2
+    )
 
 # Evaluate the model on the test set
 loss, accuracy = model.evaluate(x_test, y_test)
-print(f'Test loss: {loss:.4f}')
-print(f'Test accuracy: {accuracy:.4f}')
+print(f"Test loss: {loss:.4f}")
+print(f"Test accuracy: {accuracy:.4f}")
 
 # print weights
 for l in model.layers:

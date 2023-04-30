@@ -7,14 +7,14 @@ X = np.random.rand(1000, 1) * 5
 y = 3 * X + 2 + np.random.normal(0, 0.5, size=(1000, 1))
 
 # Define the neural network model (one-layer DNN)
-model = tf.keras.Sequential([
-    tf.keras.layers.Dense(1, input_shape=(1,))
-])
+model = tf.keras.Sequential([tf.keras.layers.Dense(1, input_shape=(1,))])
 
 # Compile the model
-model.compile(optimizer=tf.keras.optimizers.SGD(learning_rate=0.01),
-              loss=tf.keras.losses.MeanSquaredError(),
-              metrics=['accuracy'])
+model.compile(
+    optimizer=tf.keras.optimizers.SGD(learning_rate=0.01),
+    loss=tf.keras.losses.MeanSquaredError(),
+    metrics=["accuracy"],
+)
 
 # Train the model
 # Is there a way to visualize how the weights changed?
