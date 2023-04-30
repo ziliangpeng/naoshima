@@ -87,20 +87,28 @@ print("slope: %d, intercept %d" % (slope, intercept))
 print("Optimized theta:", theta)
 
 
-# print(theta_history)
-if not os.path.exists('lrgs'):
-    os.mkdir('lrgs')
+# print(cost_history)
+if not os.path.exists("lrgs"):
+    os.mkdir("lrgs")
 for i, t in enumerate(theta_history):
     plt.scatter(x, y)
     plt.plot(x, X.dot(t), color="red")
     plt.xlabel("x")
     plt.ylabel("y")
     plt.title(f"Iteration {i+1}")
+
+    # doesn't work yet. don't know why.
+    # plt.text(10, 10, str(cost_history[i]), color='black', fontsize=14)
+    # plt.axis('off')
+
     plt.savefig(f"lrgs/iteration_{i+1}.png")
     plt.clf()
 with imageio.get_writer(
     "lrgs/gradient_descent_optimization.mp4", mode="I", fps=32
 ) as writer:
     for i in range(num_iterations):
-        image = imageio.imread(f"lrgs/iteration_{i+1}.png")
+        image = imageio.v2.imread(f"lrgs/iteration_{i+1}.png")
         writer.append_data(image)
+
+
+# TODO: show graph of loss (color) from different parameter (intercept, slope) combination, on a 2D image.
