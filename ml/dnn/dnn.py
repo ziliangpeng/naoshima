@@ -33,6 +33,13 @@ loss, accuracy = model.evaluate(x_test, y_test)
 print(f'Test loss: {loss:.4f}')
 print(f'Test accuracy: {accuracy:.4f}')
 
+# print weights
+for l in model.layers:
+    print("layer:", l)
+    weights, bias = l.get_weights()
+    print("Learned weight:", weights[0][0])
+    print("Learned bias:", bias[0])
+
 # # Plot the training loss and accuracy
 # plt.figure(figsize=(12, 4))
 # plt.subplot(1, 2, 1)
