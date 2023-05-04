@@ -62,7 +62,7 @@ biases = [
     np.zeros((1, num_classes))
 ]
 
-learning_rate = 0.1
+learning_rate = 0.01
 
 # Define the forward pass function
 def forward(inputs):
@@ -105,7 +105,7 @@ def backpropagation(inputs, hidden_layer_activations, hidden_layer_activations2,
 
 
 # Train the neural network using backpropagation
-num_epochs = 1000
+num_epochs = 10000
 epsilon = 1e-8
 
 for epoch in range(num_epochs):
