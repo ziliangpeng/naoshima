@@ -75,7 +75,7 @@ theta = np.zeros((X.shape[1], 1))
 # Set the hyperparameters
 # NOTE: yeah, so a learning of 2 messes up the learning lol
 learning_rate = 0.1
-num_iterations = 200
+num_iterations = 1000
 
 # Perform gradient descent
 theta, cost_history, theta_history = gradient_descent(
