@@ -31,7 +31,7 @@ model.compile(
 # Train the model using CPU
 with tf.device("/GPU:0"):
     history = model.fit(
-        x_train, y_train, epochs=10, batch_size=32, validation_split=0.2
+        x_train, y_train, epochs=5, batch_size=32, validation_split=0.2
     )
 
 # Evaluate the model on the test set
@@ -41,7 +41,9 @@ print(f"Test accuracy: {accuracy:.4f}")
 
 # print weights
 for l in model.layers:
-    print("layer:", l)
+    # print("layer:", l)
+    if not l.get_weights():
+        continue
     weights, bias = l.get_weights()
     print("Learned weight:", weights[0][0])
     print("Learned bias:", bias[0])
