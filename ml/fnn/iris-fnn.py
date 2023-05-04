@@ -12,7 +12,8 @@ X, y = data.data, data.target
 # Normalize each feature  to the same range.
 # Strangely, in practice, not normalizing has better result :/
 scaler = StandardScaler()
-X = scaler.fit_transform(X)
+# comment out this and bunch of things to be simple and comparable to the back prop implementation.
+# X = scaler.fit_transform(X)
 
 # Preprocess the output labels
 encoder = OneHotEncoder(sparse=False)
@@ -27,16 +28,17 @@ X_train, X_test, y_train, y_test = train_test_split(
 model = tf.keras.Sequential(
     [
         tf.keras.layers.Dense(10, activation="relu", input_shape=(4,)),
-        tf.keras.layers.Dense(10, activation="relu"),
+        tf.keras.layers.Dense(7, activation="relu"),
         tf.keras.layers.Dense(3, activation="softmax"),
     ]
 )
 
 # Compile the model
-model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+# model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+model.compile(optimizer="sgd", loss="categorical_crossentropy", metrics=["accuracy"])
 
 # Train the model
-model.fit(X_train, y_train, epochs=500, batch_size=32, validation_split=0.1)
+model.fit(X_train, y_train, epochs=500, batch_size=1, validation_split=0.1)
 
 # Evaluate the model on the test set
 test_loss, test_accuracy = model.evaluate(X_test, y_test)
