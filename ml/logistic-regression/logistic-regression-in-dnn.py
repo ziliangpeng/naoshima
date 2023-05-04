@@ -39,7 +39,7 @@ tensorboard_callback = tf.keras.callbacks.TensorBoard(
     log_dir=log_dir, histogram_freq=1, update_freq='epoch')
 
 # Train the model
-history = model.fit(X_train, y_train, epochs=200, validation_split=0.2, callbacks=[tensorboard_callback])
+history = model.fit(X_train, y_train, epochs=1000, validation_split=0.2, callbacks=[tensorboard_callback])
 
 # Evaluate the model on the test set
 test_loss, test_accuracy = model.evaluate(X_test, y_test)

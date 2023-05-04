@@ -14,6 +14,17 @@ def logistic_regression(X, y, num_iterations, learning_rate):
     num_features = X.shape[1]
     weights = np.zeros((num_features, 1))
     bias = 0
+    # NOTES:
+    # weights are a matrix, and bias is a vector. The reason weights are matrix is because there could be multi-output.
+    # bias is vector because it represents the relationship between every input and every output.
+    # weights is like slope and bias is like inercept.
+    # the DNN training process is like human defining the goal to optimize, machine use input to optimize output.
+
+    # When to use Sigmoid and when to use ReLU?
+    # Sigmoid:
+    #   squashes input into range of [0,1] by a smooth S curve. it is used for binary classification.
+    # ReLU:
+    #   avoid vanishing gradient problem (make the derivative of very small gradient be 1)
 
     for _ in range(num_iterations):
         linear_output = np.dot(X, weights) + bias
