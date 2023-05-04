@@ -2,59 +2,79 @@
 Implement back prop for this without using TF.
 This is just simple linear regression.
 
-model.compile(
-    optimizer=tf.keras.optimizers.SGD(learning_rate=0.01),
-    loss=tf.keras.losses.MeanSquaredError(),
-    metrics=["accuracy"],
-)
+model = tf.keras.Sequential([
+    tf.keras.layers.Dense(1, input_shape=(X_train.shape[1],))
+])
 """
+import numpy as np
+from sklearn.datasets import make_regression
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import mean_squared_error
+
+# Generate synthetic regression data
+# X, y = make_regression(n_samples=1000, n_features=1, noise=0.1, random_state=42)
+# Randomized sample data
+np.random.seed(42)
+X = np.random.rand(1000, 1) * 5
+y = 3 * X + 2 + np.random.normal(0, 0.5, size=(1000, 1))
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# # Preprocess data
+# scaler = StandardScaler()
+# X_train = scaler.fit_transform(X_train)
+# X_test = scaler.transform(X_test)
+
+# Initialize weights and bias
+np.random.seed(42)
+weights = np.random.randn(X_train.shape[1], 1)
+bias = np.zeros(1)
+
+# Hyperparameters
+learning_rate = 0.01
+epochs = 100
+batch_size = 32
+
+
+# Linear regression function
+def linear_regression(X, weights, bias):
+    return np.dot(X, weights) + bias
+
+
 # Mean Squared Error loss function
 def mse_loss(y_true, y_pred):
     return np.mean(np.square(y_true - y_pred))
 
-# Define the backpropagation function for Mean Squared Error
-def backpropagation_mse(X, y_true, y_pred, a1, z1, a2, z2, weights, biases, learning_rate):
-    delta3 = 2 * (y_pred - y_true)
-    gradients_w2 = np.dot(z2.T, delta3)
-    gradients_b2 = np.sum(delta3, axis=0)
 
-    delta2 = np.dot(delta3, weights[2].T) * relu_derivative(a2)
-    gradients_w1 = np.dot(z1.T, delta2)
-    gradients_b1 = np.sum(delta2, axis=0)
+# Backpropagation function for Mean Squared Error
+def backpropagation_mse(X, y_true, y_pred, weights, bias, learning_rate):
+    batch_size = X.shape[0]
+    gradients_w = (2 / batch_size) * np.dot(X.T, (y_pred - y_true))
+    gradients_b = (2 / batch_size) * np.sum(y_pred - y_true)
 
-    delta1 = np.dot(delta2, weights[1].T) * relu_derivative(a1)
-    gradients_w0 = np.dot(X.T, delta1)
-    gradients_b0 = np.sum(delta1, axis=0)
+    # Update the weights and bias
+    weights -= learning_rate * gradients_w
+    bias -= learning_rate * gradients_b
 
-    # Update the weights and biases
-    weights[0] -= learning_rate * gradients_w0
-    biases[0] -= learning_rate * gradients_b0
-    weights[1] -= learning_rate * gradients_w1
-    biases[1] -= learning_rate * gradients_b1
-    weights[2] -= learning_rate * gradients_w2
-    biases[2] -= learning_rate * gradients_b2
 
-# Gradient descent optimization (backpropagation)
-for epoch in range(num_epochs):
-    # Forward pass
-    y_pred, a1, z1, a2, z2 = forward_pass(X_train, weights, biases)
+# Training loop
+for epoch in range(epochs):
+    for i in range(0, len(X_train), batch_size):
+        X_batch = X_train[i : i + batch_size]
+        y_batch = y_train[i : i + batch_size].reshape(-1, 1)
 
-    # Compute the loss
-    train_loss = mse_loss(y_train, y_pred)
+        y_pred = linear_regression(X_batch, weights, bias)
+        loss = mse_loss(y_batch, y_pred)
 
-    # Backward pass and update weights and biases
-    backpropagation_mse(X_train, y_train, y_pred, a1, z1, a2, z2, weights, biases, learning_rate)
+        backpropagation_mse(X_batch, y_batch, y_pred, weights, bias, learning_rate)
 
-    # Print progress
-    if (epoch + 1) % 100 == 0:
-        print(f"Epoch {epoch + 1}/{num_epochs} - Loss: {train_loss}")
+    if epoch % 10 == 0:
+        print(f"Epoch {epoch}, Loss: {loss}")
 
-# Make predictions on the test set
-y_pred_test, _, _, _, _ = forward_pass(X_test, weights, biases)
-
-# Compute the test accuracy
-y_test_labels = np.argmax(y_test, axis=1)
-y_pred_test_labels = np.argmax(y_pred_test, axis=1)
-test_accuracy = accuracy_score(y_test_labels, y_pred_test_labels)
-
-print(f"Test accuracy: {test_accuracy}")
+# Evaluate the model on the test set
+y_test_pred = linear_regression(X_test, weights, bias)
+test_loss = mean_squared_error(y_test, y_test_pred)
+print(f"Test loss: {test_loss}")
+print(weights, bias)
