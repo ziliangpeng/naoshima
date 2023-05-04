@@ -27,7 +27,7 @@ tensorboard_callback = tf.keras.callbacks.TensorBoard(
 
 # Train the model
 # Is there a way to visualize how the weights changed?
-history = model.fit(X, y, epochs=100, verbose=1,callbacks=[tensorboard_callback])
+history = model.fit(X, y, epochs=100, verbose=1, callbacks=[tensorboard_callback])
 
 # To view tensorboard result:
 # > tensorboard --logdir logs

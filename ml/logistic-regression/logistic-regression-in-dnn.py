@@ -1,6 +1,8 @@
 import tensorflow as tf
 from tensorflow.keras import layers
 import numpy as np
+import os
+import datetime
 
 # Load a dataset suitable for binary classification
 # In this example, we'll use the breast cancer dataset from scikit-learn
@@ -30,9 +32,18 @@ model.compile(optimizer='adam',
               loss='binary_crossentropy',
               metrics=['accuracy'])
 
+log_dir = os.path.join("logs", datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+
+# Create the TensorBoard callback
+tensorboard_callback = tf.keras.callbacks.TensorBoard(
+    log_dir=log_dir, histogram_freq=1, update_freq='epoch')
+
 # Train the model
-history = model.fit(X_train, y_train, epochs=100, validation_split=0.2)
+history = model.fit(X_train, y_train, epochs=200, validation_split=0.2, callbacks=[tensorboard_callback])
 
 # Evaluate the model on the test set
 test_loss, test_accuracy = model.evaluate(X_test, y_test)
 print(f"Test Loss: {test_loss}, Test Accuracy: {test_accuracy}")
+
+# To view tensorboard result:
+# > tensorboard --logdir logs
