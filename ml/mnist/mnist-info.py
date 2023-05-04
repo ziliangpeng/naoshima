@@ -4,7 +4,7 @@ from sklearn import datasets
 import matplotlib.pyplot as plt
 
 # Load the MNIST dataset
-mnist = datasets.fetch_openml('mnist_784', version=1, parser='auto')
+mnist = datasets.fetch_openml("mnist_784", version=1, parser="auto")
 X = mnist.data
 y = mnist.target
 
@@ -15,7 +15,7 @@ print("Number of classes:", len(np.unique(y)))
 
 # Create a DataFrame from the dataset
 df = pd.DataFrame(X)
-df['target'] = y
+df["target"] = y
 
 # Print descriptive statistics for each feature (showing only first 10 features)
 print("\nDescriptive statistics for the first 10 features:")
@@ -23,18 +23,18 @@ print(df.iloc[:, :10].describe())
 
 # Print the number of samples for each class
 print("\nNumber of samples for each class:")
-print(df['target'].value_counts())
+print(df["target"].value_counts())
 
 # Visualize some of the digits
 fig, axes = plt.subplots(2, 5, figsize=(12, 5))
 axes = axes.ravel()
 
 for i in range(10):
-    idx = df[df['target'] == str(i)].index[0]
-    img = X[idx].reshape(28, 28)
+    idx = np.where(y == str(i))[0][0]
+    img = X.values[idx].reshape(28, 28)
     axes[i].imshow(img, cmap=plt.cm.gray)
     axes[i].set_title(f"Digit: {i}")
-    axes[i].axis('off')
+    axes[i].axis("off")
 
 plt.tight_layout()
 plt.show()
