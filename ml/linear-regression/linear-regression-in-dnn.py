@@ -36,5 +36,3 @@ history = model.fit(X, y, epochs=100, verbose=1, callbacks=[tensorboard_callback
 weights, bias = model.layers[0].get_weights()
 print("Learned weight:", weights[0][0])
 print("Learned bias:", bias[0])
-print(weights)
-print(bias)
