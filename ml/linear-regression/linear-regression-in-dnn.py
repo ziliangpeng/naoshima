@@ -1,5 +1,7 @@
 import tensorflow as tf
 import numpy as np
+import os
+import datetime
 
 # Randomized sample data
 np.random.seed(42)
@@ -17,9 +19,18 @@ model.compile(
     metrics=["accuracy"],
 )
 
+log_dir = os.path.join("logs", datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+
+# Create the TensorBoard callback
+tensorboard_callback = tf.keras.callbacks.TensorBoard(
+    log_dir=log_dir, histogram_freq=1, update_freq='epoch')
+
 # Train the model
 # Is there a way to visualize how the weights changed?
-model.fit(X, y, epochs=100, verbose=1)
+history = model.fit(X, y, epochs=100, verbose=1,callbacks=[tensorboard_callback])
+
+# To view tensorboard result:
+# > tensorboard --logdir logs
 
 # Print the learned weights and bias
 weights, bias = model.layers[0].get_weights()

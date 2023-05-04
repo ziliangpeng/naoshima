@@ -87,6 +87,7 @@ print("slope: %d, intercept %d" % (slope, intercept))
 print("Optimized theta:", theta)
 
 
+# TODO: visualize the cost history
 # print(cost_history)
 if not os.path.exists("lrgs"):
     os.mkdir("lrgs")
