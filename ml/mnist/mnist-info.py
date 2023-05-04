@@ -17,9 +17,9 @@ print("Number of classes:", len(np.unique(y)))
 df = pd.DataFrame(X)
 df["target"] = y
 
-# Print descriptive statistics for each feature (showing only first 10 features)
-print("\nDescriptive statistics for the first 10 features:")
-print(df.iloc[:, :10].describe())
+# Print descriptive statistics for each feature (original GPT code showing only first 10 features)
+print("\nDescriptive statistics for the ALL features:")
+print(df.iloc[:, :].describe())
 
 # Print the number of samples for each class
 print("\nNumber of samples for each class:")
