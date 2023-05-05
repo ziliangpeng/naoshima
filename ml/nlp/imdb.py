@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 from tensorflow.keras.datasets import imdb
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import Sequential
@@ -27,9 +28,28 @@ model = Sequential([
 model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"])
 
 # Train the model
-model.fit(X_train, y_train, epochs=10, batch_size=256, validation_split=0.2, verbose=1)
+history = model.fit(X_train, y_train, epochs=10, batch_size=256, validation_split=0.2, verbose=1)
 
 # Evaluate the model
 y_pred = (model.predict(X_test) > 0.5).astype("int32")
 print("Accuracy:", accuracy_score(y_test, y_pred))
 print("Classification Report:\n", classification_report(y_test, y_pred))
+
+# Plot training and validation accuracy
+plt.figure(figsize=(12, 4))
+plt.subplot(1, 2, 1)
+plt.plot(history.history['accuracy'], label='Training Accuracy')
+plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
+plt.xlabel('Epoch')
+plt.ylabel('Accuracy')
+plt.legend(loc='lower right')
+
+# Plot training and validation loss
+plt.subplot(1, 2, 2)
+plt.plot(history.history['loss'], label='Training Loss')
+plt.plot(history.history['val_loss'], label='Validation Loss')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.legend(loc='upper right')
+
+plt.show()
