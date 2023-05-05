@@ -6,3 +6,4 @@ imageio-ffmpeg
 torch
 pandas
 seaborn
+nltk
