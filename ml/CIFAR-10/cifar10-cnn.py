@@ -33,8 +33,10 @@ tensorboard_callback = tf.keras.callbacks.TensorBoard(
     log_dir=log_dir, histogram_freq=1, update_freq='epoch')
 
 # Train the model
-history = model.fit(train_images, train_labels, epochs=10,
+history = model.fit(train_images, train_labels, epochs=50, batch_size=64,
                     validation_data=(test_images, test_labels), callbacks=[tensorboard_callback])
+# training code copied from FNN.
+# history = model.fit(train_images, train_labels, epochs=50, batch_size=64, validation_split=0.2, callbacks=[tensorboard_callback])
 
 # Evaluate the model on the test set
 test_loss, test_accuracy = model.evaluate(test_images, test_labels)
