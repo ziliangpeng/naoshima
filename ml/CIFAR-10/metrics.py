@@ -9,5 +9,5 @@ def make_tb(name):
         "logs", name + "-" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     )
     return tf.keras.callbacks.TensorBoard(
-        log_dir=log_dir, histogram_freq=1, update_freq="epoch"
+        log_dir=log_dir, histogram_freq=1, update_freq="batch"
     )
