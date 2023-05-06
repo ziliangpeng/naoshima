@@ -7,3 +7,6 @@ torch
 pandas
 seaborn
 nltk
+
+transformers
+datasets
