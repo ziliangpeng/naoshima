@@ -15,7 +15,7 @@ def make_tb(name):
         "logs", name + "-" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     )
     return tf.keras.callbacks.TensorBoard(
-        log_dir=log_dir, histogram_freq=1, update_freq="epoch"
+        log_dir=log_dir, histogram_freq=1, update_freq='batch'
     )
 
 # Set random seeds
@@ -55,14 +55,14 @@ def make_resnet_original(input_shape, num_classes, l2_lambda=0.0):
 
         shortcut = x
         if conv_shortcut:
-            shortcut = layers.Conv2D(filters, 1, strides=stride, kernel_regularizer=regularizer)(shortcut)
+            shortcut = layers.Conv2D(filters, 1, strides=stride, kernel_regularizer=regularizer, kernel_initializer=tf.keras.initializers.HeNormal())(shortcut)
             shortcut = layers.BatchNormalization()(shortcut)
 
-        x = layers.Conv2D(filters, kernel_size, strides=stride, padding='same', kernel_regularizer=regularizer)(x)
+        x = layers.Conv2D(filters, kernel_size, strides=stride, padding='same', kernel_regularizer=regularizer, kernel_initializer=tf.keras.initializers.HeNormal())(x)
         x = layers.BatchNormalization()(x)
         x = layers.ReLU()(x)
 
-        x = layers.Conv2D(filters, kernel_size, padding='same', kernel_regularizer=regularizer)(x)
+        x = layers.Conv2D(filters, kernel_size, padding='same', kernel_regularizer=regularizer, kernel_initializer=tf.keras.initializers.HeNormal())(x)
         x = layers.BatchNormalization()(x)
 
         x = layers.Add()([shortcut, x])
@@ -70,7 +70,8 @@ def make_resnet_original(input_shape, num_classes, l2_lambda=0.0):
         return x
 
     inputs = layers.Input(shape=input_shape)
-    x = layers.Conv2D(64, 3, padding='same', kernel_regularizer=regularizer)(inputs)
+    # Note: default initializer is Glorot. But He is better for ReLU.
+    x = layers.Conv2D(64, 3, padding='same', kernel_regularizer=regularizer, kernel_initializer=tf.keras.initializers.HeNormal())(inputs)
     x = layers.BatchNormalization()(x)
     x = layers.ReLU()(x)
 
@@ -95,7 +96,7 @@ def make_resnet_original(input_shape, num_classes, l2_lambda=0.0):
 
 models = {
     'resnet-original': make_resnet_original(input_shape=(32, 32, 3), num_classes=10),
-    'resnet-regularization': make_resnet_original(input_shape=(32, 32, 3), num_classes=10, l2_lambda=0.001),
+    'resnet-regularization': make_resnet_original(input_shape=(32, 32, 3), num_classes=10, l2_lambda=0.00005),
 }
 
 # Create and compile the custom ResNet model
@@ -105,4 +106,4 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 
 # Train the model
 # model.fit(X_train, y_train, epochs=50, batch_size=128, validation_data=(X_test, y_test), callbacks=[make_tb(MODEL_NAME)])
-model.fit(datagen.flow(X_train, y_train, batch_size=64), epochs=50, validation_data=(X_test, y_test), callbacks=[make_tb(MODEL_NAME)])
+model.fit(datagen.flow(X_train, y_train, batch_size=64), epochs=100, validation_data=(X_test, y_test), callbacks=[make_tb(MODEL_NAME)])
