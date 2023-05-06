@@ -44,7 +44,7 @@ for layer in base_model.layers:
 # Compile the model
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-log_dir = os.path.join("logs", 'resnet50-' + datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+log_dir = os.path.join("logs", 'resnet50-poor-' + datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
 
 # Create the TensorBoard callback
 tensorboard_callback = tf.keras.callbacks.TensorBoard(
