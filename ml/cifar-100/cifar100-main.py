@@ -3,11 +3,25 @@ from tensorflow.keras import layers, models, optimizers, regularizers
 from tensorflow.keras.datasets import cifar100
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.callbacks import ModelCheckpoint
 
 import random
 import os
 import numpy as np
 import datetime
+import re
+
+# Checkpoints
+checkpoint_dir = 'checkpoints'
+os.makedirs(checkpoint_dir, exist_ok=True)
+
+checkpoint_callback = ModelCheckpoint(
+    filepath=os.path.join(checkpoint_dir, 'model_epoch{epoch:04d}.h5'),
+    save_weights_only=True,
+    save_freq='epoch',
+    verbose=1
+)
+
 
 # Create the TensorBoard callback
 def make_tb(name):
@@ -100,6 +114,31 @@ MODEL_NAME = 'resnet-simple'
 model = models[MODEL_NAME]
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
+
+def find_latest_checkpoint(checkpoint_dir):
+    checkpoint_files = [f for f in os.listdir(checkpoint_dir) if f.endswith('.h5')]
+    if not checkpoint_files:
+        return None
+
+    checkpoint_epochs = [int(re.findall(r'epoch(\d+)', f)[0]) for f in checkpoint_files]
+    latest_epoch = max(checkpoint_epochs)
+    latest_checkpoint = f'model_epoch{latest_epoch:04d}.h5'
+
+    return os.path.join(checkpoint_dir, latest_checkpoint)
+
+latest_checkpoint = find_latest_checkpoint(checkpoint_dir)
+
+# Load the latest checkpoint
+# latest_checkpoint = tf.train.latest_checkpoint(checkpoint_dir)
+print(latest_checkpoint)
+last_epoch = 0
+if latest_checkpoint:
+    print(f'Restoring weights from {latest_checkpoint}')
+    model.load_weights(latest_checkpoint)
+
+    # Get the last completed epoch number from the checkpoint file name
+    last_epoch = int(latest_checkpoint.split('epoch')[-1].split('.')[0])
+
 # Train the model
 # model.fit(X_train, y_train, epochs=50, batch_size=128, validation_data=(X_test, y_test))
-model.fit(datagen.flow(X_train, y_train, batch_size=64), epochs=100, validation_data=(X_test, y_test), callbacks=[make_tb(MODEL_NAME)])
+model.fit(datagen.flow(X_train, y_train, batch_size=64), epochs=1000, initial_epoch=last_epoch, validation_data=(X_test, y_test), callbacks=[checkpoint_callback, make_tb(MODEL_NAME)])
