@@ -29,6 +29,7 @@ model = tf.keras.Sequential([
 
 # Compile the model
 model.compile(optimizer='sgd', loss='mean_squared_error')
+model.summary()
 
 # Train the model
 history = model.fit(X_train, y_train, epochs=200, batch_size=32, validation_split=0.2, verbose=1)

@@ -151,6 +151,8 @@ MODEL_NAME = 'densenet'
 model = models[MODEL_NAME]
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
+model.summary()
+
 # Train the model
 # model.fit(X_train, y_train, epochs=50, batch_size=128, validation_data=(X_test, y_test), callbacks=[make_tb(MODEL_NAME)])
 model.fit(datagen.flow(X_train, y_train, batch_size=64), epochs=100, validation_data=(X_test, y_test), callbacks=[make_tb(MODEL_NAME)])

@@ -36,6 +36,7 @@ model = tf.keras.Sequential(
 # Compile the model
 # model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
 model.compile(optimizer="sgd", loss="categorical_crossentropy", metrics=["accuracy"])
+model.summary()
 
 # Train the model
 model.fit(X_train, y_train, epochs=500, batch_size=1, validation_split=0.1)

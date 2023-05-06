@@ -18,6 +18,7 @@ model.compile(
     loss=tf.keras.losses.MeanSquaredError(),
     metrics=["accuracy"],
 )
+model.summary()
 
 log_dir = os.path.join("logs", datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
 
