@@ -141,7 +141,7 @@ def make_resnet_original(input_shape, num_classes, l2_lambda=0.0):
 models = {
     # This can achive 90+% after ~60 epochs.
     'resnet-original': make_resnet_original(input_shape=(32, 32, 3), num_classes=10),
-    'resnet-regularization': make_resnet_original(input_shape=(32, 32, 3), num_classes=10, l2_lambda=0.00005),
+    'resnet-regularization': make_resnet_original(input_shape=(32, 32, 3), num_classes=10, l2_lambda=0.00002),
     'densenet': make_densenet(input_shape=(32, 32, 3), num_classes=10),
 }
 
@@ -155,4 +155,4 @@ model.summary()
 
 # Train the model
 # model.fit(X_train, y_train, epochs=50, batch_size=128, validation_data=(X_test, y_test), callbacks=[make_tb(MODEL_NAME)])
-model.fit(datagen.flow(X_train, y_train, batch_size=64), epochs=100, validation_data=(X_test, y_test), callbacks=[make_tb(MODEL_NAME)])
+model.fit(datagen.flow(X_train, y_train, batch_size=128), epochs=1000, validation_data=(X_test, y_test), callbacks=[make_tb(MODEL_NAME)])
