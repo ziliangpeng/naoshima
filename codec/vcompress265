@@ -9,7 +9,7 @@ function compress {
     echo "Width: $w"
     echo "Height: $h"
 
-    outfile="$input_file-converted-libx264-q24.mp4"
+    outfile="$input_file-converted-libx265-q24.mp4"
     tmpfile="$outfile.tmp.mp4"
 
   if [ -f "$outfile" ]; then
