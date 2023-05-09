@@ -32,6 +32,7 @@ if __name__ == "__main__":
             prompt = input("\nSay: ")
             generated_text = chat(prompt, history, model=GPT_3_TURBO)
             print(generated_text)
-        except:
+        except Exception as e:
+            print(e)
             print("there is an error")
             continue
