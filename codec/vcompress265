@@ -1,0 +1,4 @@
+#!/bin/bash
+
+ffmpeg -i $1 -vcodec libx265 -crf 24 "$1-libx265-q24.mp4"
+

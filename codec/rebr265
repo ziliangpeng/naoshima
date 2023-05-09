@@ -1,0 +1,48 @@
+#!/bin/bash
+
+
+
+# function compress {
+#     res=`ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=s=x:p=0 $1`
+#     w=`echo $res | cut -f 1 -d 'x'`
+#     h=`echo $res | cut -f 2 -d 'x'`
+#     echo "Width: $w"
+#     echo "Height: $h"
+#     # For a 4 multiplier, 1080p~=8Mbp/s, 4K~=32Mbp/s.
+#     # For a 5 multiplier, 1080p~=10Mbp/s, 4K~=40Mbp/s.
+#     # Sony Alpha 7IV has 4K=45Mbp/s.
+#     # Tried HEVC but can't see difference in quality.
+#     # multiplier of 2 seems too bad (1 can see compression grids, 2 can see blur).
+#     bitrate=$((w*h*4))
+#     echo "Bitrate: $bitrate"
+
+#     outfile="$1-converted-br-$bitrate.mp4"
+#     tmpfile="$outfile.tmp.mp4"
+
+#   if [ -f "$outfile" ]; then
+#     echo "skipping..."
+#   else
+#     echo "working..."
+#     ffmpeg -i $1 -map_metadata 0 -c:v h264_videotoolbox -b:v "$bitrate" "$tmpfile"
+#     if [ $? -ne 0 ]; then
+#       echo "is interrupted."
+#       return 1
+#     else
+#       mv "$tmpfile" "$outfile"
+#       mdate.py "$outfile"
+#     fi
+#   fi
+
+# }
+
+
+#     # For a 4 multiplier, 1080p~=8Mbp/s, 4K~=32Mbp/s.
+#     # For a 5 multiplier, 1080p~=10Mbp/s, 4K~=40Mbp/s.
+#     # Sony Alpha 7IV has 4K=45Mbp/s.
+#     # Tried HEVC but can't see difference in quality.
+#     # multiplier of 2 seems too bad (1 can see compression grids, 2 can see blur).
+# Update(20230508): GPT says that H265 can achieve same quality with half bitrate
+for fname in "$@"
+do
+    rebr265_n 2 $fname
+done

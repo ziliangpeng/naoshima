@@ -1,0 +1,16 @@
+#!/bin/bash
+
+list_file="concat-vid-$1-${@: -1}.tmp"
+
+for fname in $@
+do 
+    echo "file $fname" >> $list_file
+done
+
+outfile="$1-concat-${@: -1}"
+tmpfname="$outfile.tmp.MP4"
+ffmpeg -f concat -safe 0 -i $list_file -c copy $tmpfname
+ffmpeg -i $1 -i $tmpfname -map 1 -map_metadata 0 -c copy -movflags use_metadata_tags "$outfile"
+mdate.py "$outfile"
+rm $list_file
+rm $tmpfname
