@@ -1,4 +1,35 @@
 #!/bin/bash
 
-ffmpeg -i $1 -vcodec libx265 -crf 24 "$1-libx265-q24.mp4"
 
+function compress {
+    input_file=$1
+    res=`ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=s=x:p=0 $input_file`
+    w=`echo $res | cut -f 1 -d 'x'`
+    h=`echo $res | cut -f 2 -d 'x'`
+    echo "Width: $w"
+    echo "Height: $h"
+
+    outfile="$input_file-converted-libx264-q24.mp4"
+    tmpfile="$outfile.tmp.mp4"
+
+  if [ -f "$outfile" ]; then
+    echo "skipping..."
+  else
+    echo "working..."
+    # ffmpeg -i $input_file -map_metadata 0 -c:v h264_videotoolbox -b:v "$bitrate" "$tmpfile"
+    ffmpeg -i $input_file -map_metadata 0 -vcodec libx265 -crf 24 "$tmpfile"
+    if [ $? -ne 0 ]; then
+      echo "is interrupted."
+      return 1
+    else
+      mv "$tmpfile" "$outfile"
+      mdate.py "$outfile"
+    fi
+  fi
+
+}
+
+for fname in "$@"
+do
+    compress $fname
+done
