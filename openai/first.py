@@ -13,6 +13,7 @@ token_count = 0
 def chat(prompt, initial_history, history, model="gpt-3.5-turbo"):
     global token_count
     print()
+    history.append({"role": "user", "content": prompt})
     full_response_text = ""
     session_token_count = 0
     too_long = False
@@ -55,12 +56,12 @@ def chat(prompt, initial_history, history, model="gpt-3.5-turbo"):
     if too_long:
         print("Encountered some toolong error. trimming")
         trim_history(history)
+        # TODO: if too long, remove the last user question.
         return ""
 
     token_count += session_token_count
     print()
     print()
-    history.append({"role": "user", "content": prompt})
     history.append({"role": "assistant", "content": full_response_text})
     print("Model: " + model)
     print(
