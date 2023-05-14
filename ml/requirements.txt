@@ -12,3 +12,6 @@ transformers
 datasets
 
 python-gflags
+
+tensorflow_datasets
+
