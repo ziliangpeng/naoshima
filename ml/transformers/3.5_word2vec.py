@@ -49,14 +49,26 @@ labels = np.array(labels, dtype="int32")
 
 # Define the model
 class Word2Vec(Model):
+    # def __init__(self, vocabulary_size, vector_dim):
+    #     super(Word2Vec, self).__init__()
+    #     self.embedding = Embedding(
+    #         vocabulary_size, vector_dim, input_length=1, name="embedding"
+    #     )
+    #     self.dot = Dense(1, activation="sigmoid")
+
+    # def call(self, pair_first, pair_second):
+    #     first = self.embedding(pair_first)
+    #     second = self.embedding(pair_second)
+    #     dots = self.dot(first * second)
+    #     return dots
+
     def __init__(self, vocabulary_size, vector_dim):
         super(Word2Vec, self).__init__()
-        self.embedding = Embedding(
-            vocabulary_size, vector_dim, input_length=1, name="embedding"
-        )
-        self.dot = Dense(1, activation="sigmoid")
+        self.embedding = Embedding(vocabulary_size, vector_dim, input_length=1, name='embedding')
+        self.dot = Dense(1, activation='sigmoid')
 
-    def call(self, pair_first, pair_second):
+    def call(self, pair):
+        pair_first, pair_second = pair[:, 0], pair[:, 1]
         first = self.embedding(pair_first)
         second = self.embedding(pair_second)
         dots = self.dot(first * second)
