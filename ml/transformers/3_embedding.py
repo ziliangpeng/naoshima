@@ -1,3 +1,4 @@
+import os
 import time
 from gensim.models import Word2Vec
 from gensim.scripts.glove2word2vec import glove2word2vec
@@ -57,8 +58,13 @@ def load_word2vec_formatted_glove():
     glove_model = KeyedVectors.load_word2vec_format(WORD2VEC_OUTPUT_FILE, binary=False)
 
     # Get the vector for a word
-    vector = glove_model["cat"]
-    print('Vector for "cat":', vector)
+    w = "cat"
+    vector = glove_model[w]
+    print(f'Vector for "{w}": {vector}')
+
+    w = "dog"
+    vector = glove_model[w]
+    print(f'Vector for "{w}": {vector}')
 
 
 def main():
@@ -66,9 +72,10 @@ def main():
     train_word2vec()
 
     # Try loading pretrained GloVe embeddings.
-    start_time = time.time()
-    load_pretrained_glove()
-    print("Time taken:", time.time() - start_time)
+    if not os.path.exists(WORD2VEC_OUTPUT_FILE):
+        start_time = time.time()
+        load_pretrained_glove()
+        print("Time taken:", time.time() - start_time)
 
     # Try loading Word2Vec-formatted GloVe embeddings.
     load_word2vec_formatted_glove()
