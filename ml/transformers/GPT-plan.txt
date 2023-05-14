@@ -1,0 +1,81 @@
+OK, I'm trying to learn about transformer again, after failed for a few times. I already know python very well, and have already written a few DNN and CNN code using tensorflow. Give me a progressive plan that i can learn by writing code to master new knowledge, and eventually understand how transformer works.
+
+=================================================================
+
+Sure, learning about Transformers can be a bit challenging, especially if you're new to natural language processing (NLP). But your background in Python and experience with DNN and CNN will help you a lot. Here's a progressive plan that you can follow:
+
+Week 1: Background Knowledge
+
+Day 1-2: Review concepts of RNNs and LSTMs if you are not already familiar with them. Transformers were initially designed to solve some of the limitations of these architectures.
+Day 3-4: Study the concept of word embeddings (like word2vec and GloVe) and the idea of context-based word embeddings.
+Day 5-7: Learn about attention mechanisms. This is the core concept used in Transformers.
+
+
+Week 2: Introduction to Transformers
+
+Day 1-3: Read the original "Attention is All You Need" paper by Vaswani et al. Don't worry if you don't understand everything at first.
+Day 4-7: Implement a simple attention mechanism in TensorFlow. You can find many tutorials online. Implementing it from scratch will help you understand the details of how it works.
+
+
+Week 3: Diving Deeper
+
+Day 1-2: Study the architecture of Transformers more deeply. Understand concepts like multi-head attention, positional encoding, and the overall encoder-decoder structure.
+Day 3-5: Implement a simple Transformer model for a sequence-to-sequence task, like machine translation. Start with a small model and a small dataset to make sure you understand what's going on.
+
+
+Week 4: BERT and GPT
+
+Day 1-3: Study the BERT architecture. Understand how it's different from the original Transformer model, especially the concept of masked language modeling and next sentence prediction.
+Day 4-5: Fine-tune a pre-trained BERT model for a downstream task, like text classification or named entity recognition. You can use the Hugging Face Transformers library for this.
+Day 6-7: Study the GPT architecture. Understand how it's different from BERT and the original Transformer. Try fine-tuning a pre-trained GPT model for a text generation task.
+
+
+Week 5: Advanced Topics
+
+Day 1-3: Study more recent Transformer variants, like Transformer-XL, T5, and GPT-3. Understand the problems they're trying to solve and how they solve them.
+Day 4-7: Try implementing one of these advanced models, or at least a key component of them. Alternatively, you can try fine-tuning one of these models for a task of your interest.
+
+
+Week 6: Final Project
+
+Day 1-7: Now that you've gained a good understanding of Transformers, pick a challenging NLP task and try to solve it using a Transformer model. You could either implement the model from scratch, fine-tune a pre-trained model, or use some combination of the two. This will help you consolidate your understanding and give you practical experience in using Transformers.
+
+
+Remember, it's important to not just read about these concepts, but also to implement them in code and experiment with them. That's the best way to gain a deep understanding of how they work. Good luck!
+
+=================================================================
+
+give me a plan to learn NLP before starting the RNN study
+
+--
+Now give me the same plan but with a programming assignment for each week
+
+===================================================
+
+Absolutely, adding programming assignments will help you solidify your understanding of the concepts. Here's a revised version of the plan with programming assignments:
+
+Week 1: Basics of Text Processing
+
+Learn about basic text processing steps: tokenization, cleaning, stop word removal, stemming, and lemmatization.
+Assignment: Write a Python script that takes raw text as input and outputs cleaned, tokenized text. Implement this with both NLTK and SpaCy, and note the differences.
+Week 2: Feature Extraction Techniques
+
+Learn about the Bag of Words (BoW) and Term Frequency-Inverse Document Frequency (TF-IDF) techniques.
+Assignment: Implement BoW and TF-IDF from scratch in Python. Then, do the same using Scikit-learn. Use these techniques to convert a corpus of text into a matrix of features.
+Week 3: Word Embeddings
+
+Learn about Word2Vec and GloVe, two popular word embedding techniques.
+Assignment: Use Gensim to train Word2Vec embeddings on a corpus of your choice. Then, load pre-trained GloVe embeddings using Gensim and compare the two sets of embeddings.
+Week 4: Basic Text Classification
+
+Learn about text classification and implement a simple text classifier in Python.
+Assignment: Build a Naive Bayes classifier for a text classification task, such as spam detection. Use Scikit-learn and experiment with different features (BoW, TF-IDF, word embeddings).
+Week 5: Sentiment Analysis
+
+Learn about sentiment analysis and implement a sentiment analysis model in Python.
+Assignment: Build a sentiment analysis model for movie reviews using the IMDB dataset. Start with a simple model like Logistic Regression, and experiment with different features.
+Week 6: Introduction to Sequence Models
+
+Learn about sequence models and n-gram language models.
+Assignment: Implement a simple n-gram language model in Python. Use it to generate text based on a given dataset, and experiment with different values of n.
+Remember, the key to learning these concepts is not just understanding them, but also implementing them and experimenting with them. Don't be afraid to play around with the code and try different things. Happy learning!
