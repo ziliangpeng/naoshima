@@ -48,6 +48,8 @@ def tf_idf(corpus):
     return vectors, vocab
 
 corpus = ["the cat sat on the mat", "the dog sat on the log", "cats and dogs are great"]
+for c in corpus:
+    print(c)
 vectors, vocab = tf_idf(corpus)
 print('Vocabulary:', vocab)
 # print('Vectors:', vectors)
