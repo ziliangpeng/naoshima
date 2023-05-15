@@ -1,3 +1,4 @@
 glove.*.zip
 glove.*.txt
 glove.*.word2vec
+logs/
