@@ -44,13 +44,12 @@ Day 1-7: Now that you've gained a good understanding of Transformers, pick a cha
 Remember, it's important to not just read about these concepts, but also to implement them in code and experiment with them. That's the best way to gain a deep understanding of how they work. Good luck!
 
 =================================================================
-
 give me a plan to learn NLP before starting the RNN study
 
 --
 Now give me the same plan but with a programming assignment for each week
 
-===================================================
+=================================================================
 
 Absolutely, adding programming assignments will help you solidify your understanding of the concepts. Here's a revised version of the plan with programming assignments:
 
