@@ -7,12 +7,15 @@ pipe = pipe.to("mps")
 pipe.enable_attention_slicing()
 
 # prompt = "a photo of an astronaut riding a horse on mars"
-prompt = input("Enter a prompt: ")
+while True:
+    prompt = input("Enter a prompt: ")
+    if not prompt:
+        break
 
-# First-time "warmup" pass if PyTorch version is 1.13 (see explanation above)
-_ = pipe(prompt, num_inference_steps=1)
+    # First-time "warmup" pass if PyTorch version is 1.13 (see explanation above)
+    _ = pipe(prompt, num_inference_steps=1)
 
-# Results match those from the CPU device after the warmup pass.
-filename = prompt.replace(" ", "_")
-for i, image in enumerate(pipe(prompt).images):
-    image.save(f"{filename}-{i}.png")
+    # Results match those from the CPU device after the warmup pass.
+    filename = prompt.replace(" ", "_")[:64]
+    for i, image in enumerate(pipe(prompt).images):
+        image.save(f"{filename}-{i}.png")
