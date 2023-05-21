@@ -1,0 +1,4 @@
+#!/bin/bash
+
+input_file=$1
+ffmpeg -i $input_file -f ffmetadata

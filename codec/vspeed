@@ -1,0 +1,30 @@
+#!/bin/bash
+
+function speedupn {
+    speed=$1
+    input_file=$2
+    outfile="$input_file-speedup-${speed}x.mp4"
+    input_no_audio="$input_file-no-audio.mp4"
+    rate=$(echo "scale=10; 1/$speed" | bc)
+    echo $rate
+    # ffmpeg -i "$input_file" -map_metadata 0 -an "$input_no_audio"  # This seems very slow
+    ffmpeg -i "$input_file" -map_metadata 0 -map 0:v -c copy "$input_no_audio"
+    tmpfile="$outfile.tmp.mp4"
+    # -an removes audio
+    ffmpeg -i "$input_no_audio" -map_metadata 0 -vf "setpts=$rate*PTS" "$tmpfile"
+    if [ $? -ne 0 ]; then
+        echo "is interrupted."
+        return 1
+    else
+        mv "$tmpfile" "$outfile"
+        mdate.py "$outfile"
+        rm "$input_no_audio"
+    fi
+}
+
+# TODO: refactor this is make it parameterized
+speed=30
+for fname in "$@"
+do
+    speedupn $speed $fname
+done
