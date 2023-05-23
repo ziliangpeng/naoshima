@@ -11,14 +11,14 @@ function compress {
     bitrate=$((w*h*scale))
     echo "Bitrate: $bitrate"
 
-    outfile="$input_file-converted-h265br-$bitrate.mp4"
+    outfile="$input_file-converted-h265br-hvc1-$bitrate.mp4"
     tmpfile="$outfile.tmp.mp4"
 
   if [ -f "$outfile" ]; then
     echo "skipping..."
   else
     echo "working..."
-    ffmpeg -i $input_file -map_metadata 0 -c:v hevc_videotoolbox -b:v "$bitrate" "$tmpfile"
+    ffmpeg -i $input_file -map_metadata 0 -c:v hevc_videotoolbox -tag:v hvc1 -b:v "$bitrate" "$tmpfile"
     if [ $? -ne 0 ]; then
       echo "is interrupted."
       return 1
