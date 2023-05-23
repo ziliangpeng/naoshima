@@ -11,7 +11,7 @@ function compress {
     bitrate=$((w*h*scale))
     echo "Bitrate: $bitrate"
 
-    outfile="$input_file-converted-h265br-hvc1-$bitrate.mp4"
+    outfile="$input_file-converted-hvc1-br-$bitrate.mp4"
     tmpfile="$outfile.tmp.mp4"
 
   if [ -f "$outfile" ]; then
