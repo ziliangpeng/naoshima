@@ -17,7 +17,7 @@ function compress {
     echo "skipping..."
   else
     echo "working..."
-    # TODO: need a ARM-built ffmpeg with hevc_videotoolbox
+    # need a ARM-built ffmpeg with hevc_videotoolbox
     ffmpeg -i $input_file -map_metadata 0 -c:v hevc_videotoolbox -q:v "$crf" -tag:v hvc1 "$tmpfile"
     if [ $? -ne 0 ]; then
       echo "is interrupted."
