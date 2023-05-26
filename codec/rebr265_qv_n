@@ -25,6 +25,7 @@ function compress {
     else
       mv "$tmpfile" "$outfile"
       mdate.py "$outfile"
+      br-fname.py "$outfile"
     fi
   fi
 
