@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Need to `brew install imagemagick`
+ffmpeg -i $1 -vf "fps=5,scale=640:-1:flags=lanczos" -c:v pam -f image2pipe - | convert -delay 10 - -loop 0 -layers optimize $1.gif
+
+# ffmpeg -i $1 -vf "fps=10,scale=640:-1:flags=lanczos,palettegen" palette.png
+# ffmpeg -i $1 -i palette.png -filter_complex "fps=5,scale=640:-1:flags=lanczos [x]; [x][1:v] paletteuse" output.gif
+
+
