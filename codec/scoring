@@ -2,3 +2,9 @@
 # ssim for SSIM
 # libvmaf for VMAF
 ffmpeg -i $1 -i $2 -filter_complex "psnr" -f null -
+
+
+# NOTE:
+# PSNR: 30+ is good. higher better. (I will aim for 40+)
+# SSIM: 0.9+ is good. higher better.
+# VMAF: 80+ is good. higher better. ( I will aim for 90+)
