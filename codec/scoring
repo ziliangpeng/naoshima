@@ -1,0 +1,4 @@
+# PSNR score (also works for SSIM).
+# ssim for SSIM
+# libvmaf for VMAF
+ffmpeg -i $1 -i $2 -filter_complex "psnr" -f null -
