@@ -1,0 +1,12 @@
+# PSNR score (also works for SSIM).
+# ssim for SSIM
+# libvmaf for VMAF
+ffmpeg -i $1 -i $2 -filter_complex "psnr" -f null - >> $2.txt 2>&1
+ffmpeg -i $1 -i $2 -filter_complex "ssim" -f null - >> $2.txt 2>&1
+ffmpeg -i $2 -i $1 -filter_complex "libvmaf" -vsync 2 -f null - >> $2.txt 2>&1
+
+
+# NOTE:
+# PSNR: 30+ is good. higher better. (I will aim for 40+)
+# SSIM: 0.9+ is good. higher better.
+# VMAF: 80+ is good. higher better. ( I will aim for 90+)
