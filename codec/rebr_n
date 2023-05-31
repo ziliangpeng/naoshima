@@ -18,7 +18,7 @@ function compress {
     echo "skipping..."
   else
     echo "working..."
-    ffmpeg -i $input_file -movflags use_metadata_tags -map_metadata 0 -c:v h264_videotoolbox -b:v "$bitrate" "$tmpfile"
+    ffmpeg -i $input_file -map_metadata 0 -movflags use_metadata_tags -c:v h264_videotoolbox -b:v "$bitrate" "$tmpfile"
     if [ $? -ne 0 ]; then
       echo "is interrupted."
       return 1
