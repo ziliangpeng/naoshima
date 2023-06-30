@@ -1,31 +1,22 @@
+from collections import defaultdict
+from datetime import datetime
 import os
 import time
 import cv2
 import pyheif
 import face_recognition
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 from PIL.ExifTags import TAGS, GPSTAGS
 import pillow_heif
 from PIL import ExifTags
 from pillow_heif import register_heif_opener
 import numpy as np
 
+WORKING_DIR = "ichi-video"
 VIDEO_HEIGHT = 2048
 VIDEO_WIDTH = 2048
 FACE_WIDTH = 512
 
-
-# def heic_to_jpg(heic_path, jpg_path):
-#     heif_file = pyheif.read(heic_path)
-#     image = Image.frombytes(
-#         heif_file.mode, 
-#         heif_file.size, 
-#         heif_file.data,
-#         "raw",
-#         heif_file.mode,
-#         heif_file.stride,
-#     )
-#     return image
 
 def find_face(fname):
     # Load the jpg file into a numpy array
@@ -34,36 +25,26 @@ def find_face(fname):
     # Find all faces in the image
     face_locations = face_recognition.face_locations(image)
 
-
-    # Convert the numpy array image into pil image object
-    pil_image = Image.fromarray(image)
-
-    # Create a ImageDraw instance
-    d = ImageDraw.Draw(pil_image)
-
-    # assert len(face_locations) == 1, f"There should be only one face in the image {fname} but we got {len(face_locations)}"
     if len(face_locations) != 1:
-        print(f"There should be only one face in the image {fname} but we got {len(face_locations)}")
+        print(f"should be only one face {fname} but got {len(face_locations)}")
         return None
 
-    for face_location in face_locations:
-
-        # Print the location of each face in this image
-        top, right, bottom, left = face_location
-        # print("A face is located at pixel location Top: {}, Left: {}, Bottom: {}, Right: {}".format(top, left, bottom, right))
-
-        # Draw a box around faces
-        d.rectangle([left, top, right, bottom], outline=(255, 255, 255))
-
-    # Show the picture
-    # pil_image.show()
     return face_locations[0]
 
 
-def heif_ctime(img_path):
+def img_ctime_exif(img_path):
     image = Image.open(img_path)
-    image_exif = image.getexif()
-    print(image_exif)
+    exif_data = image.getexif()
+    if exif_data is not None:
+        for tag, value in exif_data.items():
+            tag_name = TAGS.get(tag, tag)
+
+            if tag_name == "DateTime":
+                # print(f"Image creation time: {value}")
+                return value
+    print("No exif data found for ", img_path)
+    return None
+
 
 def transform_face(filename, image):
     face_loc = find_face(filename)
@@ -101,85 +82,119 @@ def transform_face(filename, image):
 
     return image
 
-
-def make_video():
-
-    def img_ctime_exif(img_path):
-        image = Image.open(img_path)
-        exif_data = image.getexif()
-        if exif_data is not None:
-            for tag, value in exif_data.items():
-                tag_name = TAGS.get(tag, tag)
-                
-                if tag_name == "DateTime":
-                    # print(f"Image creation time: {value}")
-                    return value
-        print("No exif data found for ", img_path)
-        print(exif_data)
-
-    # list all file and sort by file creation date:
-    working_dir = "ichi-video"
-    print(os.listdir(working_dir))
-    files = os.listdir(working_dir)
-    # files = filter(lambda x: not x.endswith(".HEIC"), files)
-    files = filter(lambda x: not x.endswith(".DS_Store"), files)
-    files = [os.path.join(working_dir, f) for f in files] # add path to each file
-    files = filter(img_ctime_exif, files)
+def get_files():
+    print(os.listdir(WORKING_DIR))
+    files = os.listdir(WORKING_DIR)
+    files = [os.path.join(WORKING_DIR, f) for f in files]  # add path to each file
     files = filter(os.path.isfile, files)
+    files = filter(lambda x: not x.endswith(".DS_Store"), files)
+    files = filter(lambda x: not x.endswith(".MP4"), files)
+    files = filter(img_ctime_exif, files)
     files = [f for f in files]
-    files.sort(key=img_ctime_exif) # os.path.getctime(x))
-    # print("sorted")
-    for file in files:
-        # mtime = os.path.getctime(file)
-        ctime = img_ctime_exif(file)
-        # print(ctime)
-        # convert mtime to string
-        # str_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(ctime))
-        str_time = ctime
-
-        # print(file, str_time)
-
-    # video = cv2.VideoWriter('video.avi', cv2.VideoWriter_fourcc(*'DIVX'), 1, (1024, 1024))
-    video = cv2.VideoWriter('video.avi', 0, 1, (VIDEO_HEIGHT, VIDEO_WIDTH))
+    files.sort(key=img_ctime_exif)
+    return files
 
 
-    # loop thorugh all files in the directory
-    for filename in files:
-        # if filename.endswith(".HEIC"):
-        #     continue
-        if filename.endswith('.DS_Store'):
-            continue
+def make_video(img_count=1000000000):
+    files = get_files()
 
+    now = datetime.now()
+    now_string = now.strftime("%Y-%m-%d-%H-%M-%S")
+    video = cv2.VideoWriter(f"ichi-{now_string}.avi", 0, 1, (VIDEO_HEIGHT, VIDEO_WIDTH))
+
+    for filename in files[:img_count]:
         print(filename)
-        full_fulename = filename
-        # heic_to_jpg(full_fulename, "output.jpg")
-        # location = show_face(full_fulename)
-
-        # for image in processed_images:
-            # video.write(cv2.imread(image))
-
+        print(img_ctime_exif(filename))
         # Open an image file with Pillow
-        pil_image = Image.open(full_fulename)
-        pil_image = transform_face(full_fulename, pil_image)
+        pil_image = Image.open(filename)
+        pil_image = transform_face(filename, pil_image)
         if pil_image is None:
             continue
+
+        d = ImageDraw.Draw(pil_image)
+
+        # Choose a font
+        # Calculate the width and height of the text
+        days = get_days(filename)
+        text = str(days)
+        # font = ImageFont.load_default()
+        font = ImageFont.truetype("Keyboard.ttf", 256)
+        textbbox_val = d.textbbox((0,0), text, font=font)
+        _, _, text_width, text_height = textbbox_val
+
+        # print(textbbox_val)
+        # text_width, text_height = d.textsize(text, font)
+        # Calculate the x and y coordinates for the text
+        x = (pil_image.width - text_width) / 2
+        y = pil_image.height - text_height - 21
+        # Add text to image at calculated coordinates, fill color and font
+        d.text((x, y), text, fill=(255,255,255), font=font)
+
+
         # Convert the Pillow image into a numpy array
         numpy_image = np.array(pil_image)
         # Convert the numpy array to a color image that OpenCV can handle
         opencv_image = cv2.cvtColor(numpy_image, cv2.COLOR_RGB2BGR)
-        img = opencv_image
 
-        # img = cv2.imread(full_fulename)
-        crop_img = img[0:VIDEO_HEIGHT, 0:VIDEO_WIDTH]
-        # video.write(cv2.imread(full_fulename))
+        crop_img = opencv_image[0:VIDEO_HEIGHT, 0:VIDEO_WIDTH]
         video.write(crop_img)
 
     cv2.destroyAllWindows()
     video.release()
 
+def get_days(filename):
+    birth = datetime(2022, 7, 17)
+    ctime = img_ctime_exif(filename)
+    cdate = ctime.split(" ")[0]
+    y, m, d = cdate.split(":")
 
-register_heif_opener()
+    cdate = datetime(int(y), int(m), int(d))
+    difference = cdate - birth
+    days = difference.days
+    return days
 
-# heif_ctime("ichi-video/IMG_5764.HEIC")
 
-make_video()
+
+def stats():
+    birth = datetime(2022, 7, 17)
+
+    files = get_files()
+    week_dict = defaultdict(int)
+    month_dict = defaultdict(int)
+
+    with open("ichi_img_dates.txt", "w") as f:
+        for file in files:
+            if not find_face(file):
+                continue
+            ctime = img_ctime_exif(file)
+            cdate = ctime.split(" ")[0]
+            y, m, d = cdate.split(":")
+            f.write(f"{y}-{m}-{d}\n")
+
+            cdate = datetime(int(y), int(m), int(d))
+            difference = cdate - birth
+            days = difference.days
+
+            weeks = days // 7
+            month = f"{y}-{m}"
+            week_dict[weeks] += 1
+            month_dict[month] += 1
+
+    with open("ichi_weeks.txt", "w") as f:
+        for week, count in week_dict.items():
+            f.write(f"{week} {count}\n")
+
+    with open("ichi_months.txt", "w") as f:
+        for month, count in month_dict.items():
+            f.write(f"{month} {count}\n")
+
+
+
+def main():
+    make_video()
+    # stats()
+
+
+if __name__ == "__main__":
+    register_heif_opener()
+    main()
