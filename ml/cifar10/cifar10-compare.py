@@ -38,6 +38,44 @@ tf.random.set_seed(SEED)
 # Force TensorFlow to use deterministic GPU algorithms
 os.environ['TF_DETERMINISTIC_OPS'] = '1'
 
+def make_alexnet(input_shape, num_classes):
+    model = models.Sequential([
+        layers.Conv2D(32, (3, 3), activation='relu', input_shape=input_shape),
+        layers.MaxPooling2D((2, 2)),
+        layers.Conv2D(64, (3, 3), activation='relu'),
+        layers.MaxPooling2D((2, 2)),
+        layers.Conv2D(64, (3, 3), activation='relu'),
+        layers.Flatten(),
+        layers.Dense(64, activation='relu'),
+        layers.Dense(num_classes, activation='softmax')
+    ])
+    return model
+
+def make_alexnet2(input_shape, num_classes):
+    # Create AlexNet model
+    model = models.Sequential([
+        layers.Conv2D(96, 3, padding='same', activation='relu', input_shape=input_shape),
+        layers.BatchNormalization(),
+        layers.MaxPooling2D(pool_size=(2, 2)),
+        layers.Conv2D(256, 3, padding='same', activation='relu'),
+        layers.BatchNormalization(),
+        layers.MaxPooling2D(pool_size=(2, 2)),
+        layers.Conv2D(384, 3, padding='same', activation='relu'),
+        layers.BatchNormalization(),
+        layers.Conv2D(384, 3, padding='same', activation='relu'),
+        layers.BatchNormalization(),
+        layers.Conv2D(256, 3, padding='same', activation='relu'),
+        layers.BatchNormalization(),
+        layers.MaxPooling2D(pool_size=(2, 2)),
+        layers.Flatten(),
+        layers.Dense(4096, activation='relu'),
+        layers.Dropout(0.5),
+        layers.Dense(4096, activation='relu'),
+        layers.Dropout(0.5),
+        layers.Dense(num_classes, activation='softmax')
+    ])
+    return model
+
 
 def make_densenet(input_shape, num_classes):
     def dense_block(x, growth_rate, num_layers):
@@ -155,12 +193,14 @@ def main():
         'resnet-simple': make_resnet_original(input_shape=(32, 32, 3), num_classes=10),
         'resnet-regularization': make_resnet_original(input_shape=(32, 32, 3), num_classes=10, l2_lambda=0.00002),
         'densenet': make_densenet(input_shape=(32, 32, 3), num_classes=10),
+        'alexnet': make_alexnet2(input_shape=(32, 32, 3), num_classes=10),
     }
 
     # Create and compile the custom ResNet model
     MODEL_NAME = 'resnet-regularization'
     MODEL_NAME = 'densenet'
     MODEL_NAME = 'resnet-simple'
+    MODEL_NAME = 'alexnet'
     model = models[MODEL_NAME]
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
