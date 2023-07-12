@@ -1,2 +1,4 @@
 tensorflow-macos
 tensorflow-metal
+
+pytorch-m1
