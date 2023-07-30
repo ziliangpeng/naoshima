@@ -6,7 +6,7 @@ ACTIONS = ['left', 'right']  # available actions
 EPSILON = 0.9  # for exploitation
 ALPHA = 0.1  # learning rate
 GAMMA = 0.9  # discount factor
-MAX_EPISODES = 13  # maximum episodes
+MAX_EPISODES = 42  # maximum episodes
 FRESH_TIME = 0.3  # fresh time for one move
 
 # Create Q-table
@@ -29,7 +29,8 @@ def get_env_feedback(state, action_index):
             reward = 0
         elif state == 2:
             next_state = state - 1
-            reward = 1
+            # reward = 1
+            reward = 0
         else:
             next_state = state - 1
             reward = 0
@@ -39,7 +40,8 @@ def get_env_feedback(state, action_index):
             reward = 1
         else:
             next_state = state + 1
-            reward = 0
+            # reward = 0
+            reward = 1
     return next_state, reward
 
 
@@ -49,7 +51,7 @@ def update_env(state, episode, step_counter):
         print('Episode {}: total_steps = {}'.format(episode + 1, step_counter))
     else:
         env_list[state] = 'o'
-        print(''.join(env_list))
+        # print(''.join(env_list))
 
 
 def rl():
