@@ -2,7 +2,7 @@ import numpy as np
 
 # Constants
 N_STATES = 6  # number of states
-ACTIONS = ['left', 'right']  # available actions
+ACTIONS = ["left", "right"]  # available actions
 EPSILON = 0.9  # for exploitation
 ALPHA = 0.1  # learning rate
 GAMMA = 0.9  # discount factor
@@ -36,7 +36,7 @@ def get_env_feedback(state, action_index):
             reward = 0
     else:  # move right
         if state == N_STATES - 1:
-            next_state = 'terminal'
+            next_state = "terminal"
             reward = 1
         else:
             next_state = state + 1
@@ -46,11 +46,11 @@ def get_env_feedback(state, action_index):
 
 
 def update_env(state, episode, step_counter):
-    env_list = ['-'] * (N_STATES - 1) + ['T']  # '---------T' our environment
-    if state == 'terminal':
-        print('Episode {}: total_steps = {}'.format(episode + 1, step_counter))
+    env_list = ["-"] * (N_STATES - 1) + ["T"]  # '---------T' our environment
+    if state == "terminal":
+        print("Episode {}: total_steps = {}".format(episode + 1, step_counter))
     else:
-        env_list[state] = 'o'
+        env_list[state] = "o"
         # print(''.join(env_list))
 
 
@@ -64,7 +64,7 @@ def rl():
             action_index = choose_action(state, q_table)
             next_state, reward = get_env_feedback(state, action_index)
             q_predict = q_table[state, action_index]
-            if next_state != 'terminal':
+            if next_state != "terminal":
                 q_target = reward + GAMMA * np.max(q_table[next_state, :])
             else:
                 q_target = reward

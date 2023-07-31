@@ -2,7 +2,7 @@ import numpy as np
 
 # Constants
 N_STATES = 25  # number of states
-ACTIONS = ['up', 'down', 'left', 'right']  # available actions
+ACTIONS = ["up", "down", "left", "right"]  # available actions
 EPSILON = 0.9  # for exploitation
 ALPHA = 0.1  # learning rate
 GAMMA = 0.9  # discount factor
@@ -24,19 +24,25 @@ def choose_action(state, q_table):
 
 def get_env_feedback(state, action_index, maze):
     row, col = state // 5, state % 5
-    if ACTIONS[action_index] == 'up':
+    if ACTIONS[action_index] == "up":
         next_row, next_col = row - 1, col
-    elif ACTIONS[action_index] == 'down':
+    elif ACTIONS[action_index] == "down":
         next_row, next_col = row + 1, col
-    elif ACTIONS[action_index] == 'left':
+    elif ACTIONS[action_index] == "left":
         next_row, next_col = row, col - 1
-    elif ACTIONS[action_index] == 'right':
+    elif ACTIONS[action_index] == "right":
         next_row, next_col = row, col + 1
 
-    if next_row < 0 or next_row >= 5 or next_col < 0 or next_col >= 5 or maze[next_row][next_col] == 'X':
+    if (
+        next_row < 0
+        or next_row >= 5
+        or next_col < 0
+        or next_col >= 5
+        or maze[next_row][next_col] == "X"
+    ):
         next_state = state
         reward = -1
-    elif maze[next_row][next_col] == 'G':
+    elif maze[next_row][next_col] == "G":
         next_state = 24
         reward = 1
     else:
@@ -57,28 +63,28 @@ def update_env(state, episode, step_counter, maze):
     env_list = []
     for i in range(5):
         for j in range(5):
-            if maze[i][j] == 'X':
-                env_list.append('X')
-            elif maze[i][j] == 'G':
-                env_list.append('G')
+            if maze[i][j] == "X":
+                env_list.append("X")
+            elif maze[i][j] == "G":
+                env_list.append("G")
             elif i * 5 + j == state:
-                env_list.append('A')
+                env_list.append("A")
             else:
-                env_list.append('-')
-        env_list.append('\n')
-    print(''.join(env_list))
+                env_list.append("-")
+        env_list.append("\n")
+    print("".join(env_list))
 
     if state == 24:
-        print('Episode {}: total_steps = {}'.format(episode + 1, step_counter))
+        print("Episode {}: total_steps = {}".format(episode + 1, step_counter))
 
 
 # Define the maze
 maze = [
-    ['O', 'O', 'O', 'O', 'O'],
-    ['O', 'X', 'O', 'X', 'O'],
-    ['O', 'O', 'O', 'O', 'O'],
-    ['O', 'X', 'O', 'X', 'O'],
-    ['O', 'O', 'O', 'O', 'G']
+    ["O", "O", "O", "O", "O"],
+    ["O", "X", "O", "X", "O"],
+    ["O", "O", "O", "O", "O"],
+    ["O", "X", "O", "X", "O"],
+    ["O", "O", "O", "O", "G"],
 ]
 
 # Main loop
