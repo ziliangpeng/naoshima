@@ -188,27 +188,29 @@ def main():
     datagen.fit(X_train)
 
 
-    models = {
-        # This can achive 90+% after ~60 epochs.
-        'resnet-simple': make_resnet_original(input_shape=(32, 32, 3), num_classes=10),
-        'resnet-regularization': make_resnet_original(input_shape=(32, 32, 3), num_classes=10, l2_lambda=0.00002),
-        'densenet': make_densenet(input_shape=(32, 32, 3), num_classes=10),
-        'alexnet': make_alexnet2(input_shape=(32, 32, 3), num_classes=10),
-    }
+    strategy = tf.distribute.MirroredStrategy()
+    with strategy.scope():
+        models = {
+            # This can achive 90+% after ~60 epochs.
+            'resnet-simple': make_resnet_original(input_shape=(32, 32, 3), num_classes=10),
+            'resnet-regularization': make_resnet_original(input_shape=(32, 32, 3), num_classes=10, l2_lambda=0.00002),
+            'densenet': make_densenet(input_shape=(32, 32, 3), num_classes=10),
+            'alexnet': make_alexnet2(input_shape=(32, 32, 3), num_classes=10),
+        }
 
-    # Create and compile the custom ResNet model
-    MODEL_NAME = 'resnet-regularization'
-    MODEL_NAME = 'densenet'
-    MODEL_NAME = 'resnet-simple'
-    MODEL_NAME = 'alexnet'
-    model = models[MODEL_NAME]
-    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+        # Create and compile the custom ResNet model
+        MODEL_NAME = 'resnet-regularization'
+        MODEL_NAME = 'densenet'
+        MODEL_NAME = 'resnet-simple'
+        MODEL_NAME = 'alexnet'
+        model = models[MODEL_NAME]
+        model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-    model.summary()
+        model.summary()
 
-    # Train the model
-    # model.fit(X_train, y_train, epochs=50, batch_size=128, validation_data=(X_test, y_test), callbacks=[make_tb(MODEL_NAME)])
-    model.fit(datagen.flow(X_train, y_train, batch_size=128), epochs=1000, validation_data=(X_test, y_test), callbacks=[make_tb(MODEL_NAME)])
+        # Train the model
+        # model.fit(X_train, y_train, epochs=50, batch_size=128, validation_data=(X_test, y_test), callbacks=[make_tb(MODEL_NAME)])
+        model.fit(datagen.flow(X_train, y_train, batch_size=128), epochs=1000, validation_data=(X_test, y_test), callbacks=[make_tb(MODEL_NAME)])
 
 if __name__ == '__main__':
     main()
