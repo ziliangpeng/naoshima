@@ -57,6 +57,22 @@ def gradient_descent(X, y, theta, learning_rate, num_iterations):
         # (1,          (ye,
         #  x) * (ye) =  ye*x) theta.
         # still not quite understand this. may need spend more t ime.
+        #
+        # =================
+        #
+        # I now understand.
+        # given a known x, loss = x * W + b - y (this is using error, not square error)
+        # Now, we calculate gradient for W and b separately.
+        # To calculate derivative of W, let x and b be constants.
+        # d(loss)/dW = x = d(x * W + b - y)/dW = x
+        # gradient of W is x, so we can update W by W -= learning_rate * x * loss
+        #
+        # To calculate derivative of b, let x and W be constants.
+        # d(loss)/db = 1 = d(x * W + b - y)/db = 1
+        # gradient of b is 1, so we can update b by b -= learning_rate * 1 * loss
+        #
+        # If we use squre error, then loss = (x * W + b - y)^2, and gradient calculate will be different.
+
         theta_history.append(theta.copy())
         cost_history[i] = compute_cost(X, y, theta)
 
