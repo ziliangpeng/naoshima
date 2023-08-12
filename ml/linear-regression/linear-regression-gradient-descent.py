@@ -100,6 +100,8 @@ num_iterations = 1000
 # theta, cost_history, theta_history = gradient_descent(
 #     X, y, theta, learning_rate, num_iterations
 # )
+
+# Above function use full batch; below function use mini-batch.
 theta, cost_history, theta_history = gradient_descent_batch(
     X, y, theta, learning_rate, num_iterations, 32
 )
