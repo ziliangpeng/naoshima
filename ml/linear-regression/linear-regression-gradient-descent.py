@@ -56,6 +56,25 @@ def gradient_descent(X, y, theta, learning_rate, num_iterations):
 
     return theta, cost_history, theta_history
 
+def gradient_descent_batch(X, y, theta, learning_rate, num_iterations, batch_size):
+    m = y.shape[0]
+    num_batches = int(np.ceil(m / batch_size))
+    cost_history = np.zeros(num_iterations)
+    theta_history = [theta]
+    for i in range(num_iterations):
+        shuffled_indices = np.random.permutation(m)
+        X_shuffled = X[shuffled_indices]
+        y_shuffled = y[shuffled_indices]
+        for j in range(num_batches):
+            start_index = j * batch_size
+            end_index = min((j + 1) * batch_size, m)
+            X_batch = X_shuffled[start_index:end_index]
+            y_batch = y_shuffled[start_index:end_index]
+            predictions = X_batch.dot(theta)
+            theta -= (1 / (end_index - start_index)) * learning_rate * (X_batch.T.dot(predictions - y_batch))
+        theta_history.append(theta.copy())
+        cost_history[i] = compute_cost(X, y, theta)
+    return theta, cost_history, theta_history
 
 # Generate random data
 num_points = 1000
@@ -78,8 +97,11 @@ learning_rate = 0.1
 num_iterations = 1000
 
 # Perform gradient descent
-theta, cost_history, theta_history = gradient_descent(
-    X, y, theta, learning_rate, num_iterations
+# theta, cost_history, theta_history = gradient_descent(
+#     X, y, theta, learning_rate, num_iterations
+# )
+theta, cost_history, theta_history = gradient_descent_batch(
+    X, y, theta, learning_rate, num_iterations, 32
 )
 
 # Print the optimized theta values
@@ -87,6 +109,7 @@ print("slope: %d, intercept %d" % (slope, intercept))
 print("Optimized theta:", theta)
 
 
+print("making video...")
 # TODO: visualize the cost history
 # print(cost_history)
 if not os.path.exists("lrgs"):
