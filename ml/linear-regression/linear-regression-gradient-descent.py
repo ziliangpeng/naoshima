@@ -51,10 +51,17 @@ def gradient_descent(X, y, theta, learning_rate, num_iterations):
         # based on the video, intercept is learned very fast, but slop is very slow.
         # is there a way to use adaptive learning rate?
         theta -= (1 / m) * learning_rate * (X.T.dot(predictions - y))
+        # X * theta -> y  :   (N, 2) * (2, 1) -> (N, 1)
+        # X.T * (y-y') -> theta : (2, N) * (N, 1) -> (2, 1)
+        # To narrow to 1 sample:
+        # (1,          (ye,
+        #  x) * (ye) =  ye*x) theta.
+        # still not quite understand this. may need spend more t ime.
         theta_history.append(theta.copy())
         cost_history[i] = compute_cost(X, y, theta)
 
     return theta, cost_history, theta_history
+
 
 def gradient_descent_batch(X, y, theta, learning_rate, num_iterations, batch_size):
     m = y.shape[0]
@@ -71,10 +78,15 @@ def gradient_descent_batch(X, y, theta, learning_rate, num_iterations, batch_siz
             X_batch = X_shuffled[start_index:end_index]
             y_batch = y_shuffled[start_index:end_index]
             predictions = X_batch.dot(theta)
-            theta -= (1 / (end_index - start_index)) * learning_rate * (X_batch.T.dot(predictions - y_batch))
+            theta -= (
+                (1 / (end_index - start_index))
+                * learning_rate
+                * (X_batch.T.dot(predictions - y_batch))
+            )
         theta_history.append(theta.copy())
         cost_history[i] = compute_cost(X, y, theta)
     return theta, cost_history, theta_history
+
 
 # Generate random data
 num_points = 1000
