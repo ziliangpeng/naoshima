@@ -27,7 +27,7 @@ weights = np.random.rand(3)
 
 # Hyperparameters
 learning_rate = 0.0001
-epochs = 10000
+epochs = 100000
 
 # Gradient Descent
 for epoch in range(epochs):

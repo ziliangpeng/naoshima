@@ -72,6 +72,11 @@ def gradient_descent(X, y, theta, learning_rate, num_iterations):
         # gradient of b is 1, so we can update b by b -= learning_rate * 1 * loss
         #
         # If we use squre error, then loss = (x * W + b - y)^2, and gradient calculate will be different.
+        #
+        # =================
+        #
+        # After some more digging it seems like this is the gradient of the mean squred error.
+        # :/ quite confused. poor math.
 
         theta_history.append(theta.copy())
         cost_history[i] = compute_cost(X, y, theta)
