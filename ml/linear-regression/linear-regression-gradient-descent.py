@@ -89,6 +89,12 @@ def gradient_descent(X, y, theta, learning_rate, num_iterations):
         #
         # =================
         # Also, I tried using a sigmoid activation function in the second degree regression, but it converges too slowly.
+        #
+        # =================
+        # SGD vs GD:
+        #  GD: entire sample as one giant batch. stable, but prone to local minima (overfitting)
+        # SGD: one sample at a time. unstable, but less prone to local minima (overfitting)
+        # mix: mini-batching.
 
         theta_history.append(theta.copy())
         cost_history[i] = compute_cost(X, y, theta)
