@@ -77,6 +77,18 @@ def gradient_descent(X, y, theta, learning_rate, num_iterations):
         #
         # After some more digging it seems like this is the gradient of the mean squred error.
         # :/ quite confused. poor math.
+        #
+        # =================
+        #
+        # OK, one more time to explain:
+        # this is the gradient of the mean squred error.
+        # loss = (x * W + b - y)^2
+        # dloss / dW = 2 * (x * W + b - y) * x = 2 * ye * x
+        # dloss / db = 2 * (x * W + b - y) * 1 = 2 * ye * 1
+        # the original update has a slight error of omitting the 2. but this is fine since it's a constant.
+        #
+        # =================
+        # Also, I tried using a sigmoid activation function in the second degree regression, but it converges too slowly.
 
         theta_history.append(theta.copy())
         cost_history[i] = compute_cost(X, y, theta)
