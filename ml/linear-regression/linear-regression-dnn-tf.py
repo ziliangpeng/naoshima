@@ -6,7 +6,7 @@ import datetime
 # Randomized sample data
 np.random.seed(42)
 X = np.random.rand(1000, 1) * 5
-y = 3 * X + 2 + np.random.normal(0, 0.5, size=(1000, 1))
+y = 3 * X + 2 + np.random.normal(0, 0.5, size=(1000, 1)) / 10
 
 # Define the neural network model (one-layer DNN)
 model = tf.keras.Sequential([tf.keras.layers.Dense(1, input_shape=(1,))])

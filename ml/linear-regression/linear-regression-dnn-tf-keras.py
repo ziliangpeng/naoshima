@@ -9,7 +9,7 @@ from sklearn.preprocessing import StandardScaler
 # Randomized sample data
 np.random.seed(42)
 X = np.random.rand(1000, 1) * 5
-y = 3 * X + 2 + np.random.normal(0, 0.5, size=(1000, 1))
+y = 3 * X + 2 + np.random.normal(0, 0.5, size=(1000, 1)) / 10
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # Preprocess data
