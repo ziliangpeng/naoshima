@@ -24,8 +24,8 @@ class NeuralNetwork:
         # Compute the derivative of the error with respect to the output
         self.delta1 = self.error
 
-        dW1 = np.dot(X.T, self.delta1)
-        db1 = np.sum(self.delta1, axis=0)
+        dW1 = np.dot(X.T, self.delta1) / X.shape[0]
+        db1 = np.sum(self.delta1, axis=0) / X.shape[0]
 
         # Update the weights and biases using the gradients and learning rate
         self.W1 -= learning_rate * dW1
@@ -54,7 +54,7 @@ def main():
     nn = NeuralNetwork(1, 1, 1)
 
     # Train the neural network for 1000 epochs with a learning rate of 0.01
-    nn.train(X, y, 10000, 0.0001)
+    nn.train(X, y, 10000, 0.01)
 
     # Print the final weights and biases
     print("Final weights and biases:")

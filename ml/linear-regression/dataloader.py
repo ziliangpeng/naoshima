@@ -16,6 +16,6 @@ def generate_data():
     B = FLAGS.B
     print(f"y = {A}x + {B}")
     np.random.seed(42)
-    X = np.random.randn(100, 1)
-    y = A * X + B + np.random.randn(100, 1) / 1000
+    X = np.random.randn(1000, 1)
+    y = A * X + B + np.random.randn(1000, 1) / 1000
     return X, y
