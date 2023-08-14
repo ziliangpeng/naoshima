@@ -1,4 +1,5 @@
 import numpy as np
+import dataloader
 
 
 # This is just a simple Dense layer.
@@ -14,9 +15,7 @@ class NeuralNetwork:
 
     def forward(self, X):
         # Compute the dot product of input and weights, and add bias
-        self.z1 = np.dot(X, self.W1) + self.b1
-        y_hat = self.z1
-        return y_hat
+        return np.dot(X, self.W1) + self.b1
 
     def backward(self, X, y, y_hat, learning_rate):
         # Compute the error between predicted and actual values
@@ -49,12 +48,7 @@ class NeuralNetwork:
 
 
 def main():
-    # Generate some random data
-    A = 42
-    B = 99
-    print(f"y = {A}x + {B}")
-    X = np.random.randn(100, 1)
-    y = A * X + B + np.random.randn(100, 1) / 1000
+    X, y = dataloader.generate_data()
 
     # Create a neural network with 1 input, 10 hidden, and 1 output units
     nn = NeuralNetwork(1, 1, 1)
