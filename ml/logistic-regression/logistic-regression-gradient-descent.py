@@ -1,9 +1,10 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.datasets import load_breast_cancer
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score
+
+VISUALIZE = True
 
 
 def sigmoid(x):
@@ -40,7 +41,9 @@ def logistic_regression(X, y, num_iterations, learning_rate):
 
 
 data = load_breast_cancer()
-X = data.data[:, :2]  # Select the first two features for visualization
+# Total of 30 features
+FEATURES_TO_USE = 2
+X = data.data[:, :FEATURES_TO_USE]  # Select the first two features for visualization
 y = data.target[:, np.newaxis]
 
 X_train, X_test, y_train, y_test = train_test_split(
@@ -63,24 +66,7 @@ accuracy = accuracy_score(y_test, y_test_pred)
 print(f"Accuracy: {accuracy}")
 
 # Visualization
-plt.scatter(
-    X_train[y_train.ravel() == 0, 0],
-    X_train[y_train.ravel() == 0, 1],
-    label="Class 0",
-    alpha=0.5,
-)
-plt.scatter(
-    X_train[y_train.ravel() == 1, 0],
-    X_train[y_train.ravel() == 1, 1],
-    label="Class 1",
-    alpha=0.5,
-)
+if VISUALIZE:
+    import viz
 
-x_values = np.linspace(X_train[:, 0].min() - 1, X_train[:, 0].max() + 1, 100)
-y_values = -(bias + weights[0] * x_values) / weights[1]
-
-plt.plot(x_values, y_values, label="Decision Boundary")
-plt.xlabel("Feature 1")
-plt.ylabel("Feature 2")
-plt.legend()
-plt.show()
+    viz.visualize(X_train, y_train, weights, bias)
