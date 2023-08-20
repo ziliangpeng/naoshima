@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torchvision import datasets, transforms
 
+
 # Define the neural network architecture
 class FNN(nn.Module):
     def __init__(self):
@@ -18,9 +19,14 @@ class FNN(nn.Module):
         x = self.fc3(x)
         return x
 
+
 # Load the MNIST dataset
-train_dataset = datasets.MNIST(root='./data', train=True, transform=transforms.ToTensor(), download=True)
-test_dataset = datasets.MNIST(root='./data', train=False, transform=transforms.ToTensor())
+train_dataset = datasets.MNIST(
+    root="./data", train=True, transform=transforms.ToTensor(), download=True
+)
+test_dataset = datasets.MNIST(
+    root="./data", train=False, transform=transforms.ToTensor()
+)
 
 # Define the data loaders
 train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
@@ -45,10 +51,16 @@ for epoch in range(10):
     with torch.no_grad():
         for data, target in test_loader:
             output = model(data)
-            test_loss += nn.functional.cross_entropy(output, target, reduction='sum').item()
+            test_loss += nn.functional.cross_entropy(
+                output, target, reduction="sum"
+            ).item()
             pred = output.argmax(dim=1, keepdim=True)
             correct += pred.eq(target.view_as(pred)).sum().item()
 
     test_loss /= len(test_loader.dataset)
-    accuracy = 100. * correct / len(test_loader.dataset)
-    print('Epoch: {} Test set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)'.format(epoch, test_loss, correct, len(test_loader.dataset), accuracy))
+    accuracy = 100.0 * correct / len(test_loader.dataset)
+    print(
+        "Epoch: {} Test set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)".format(
+            epoch, test_loss, correct, len(test_loader.dataset), accuracy
+        )
+    )
