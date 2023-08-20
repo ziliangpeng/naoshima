@@ -3,7 +3,7 @@ import jax.numpy as jnp
 from jax import grad, jit, vmap
 from jax import random
 
-""" Does not work yet. """
+""" Only running on CPU. Have not figured out how to run JAX on Metal (Apple GPU)"""
 
 # Define the neural network architecture
 def init_params(rng):
