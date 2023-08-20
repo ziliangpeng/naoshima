@@ -35,8 +35,12 @@ def compute_cost(a, y):
 # Implement the backward propagation algorithm
 def backward_propagation(X, a, y):
     m = y.shape[0]
+    # DLoss/Dz = a - y. Need to figure out why.
+    # z is value before activation function.
     dz = a - y
+    # DLoss/Dw = DLoss/Dz * Dz/Dw = DLoss/Dz * X
     dw = (1/m) * np.dot(X.T, dz)
+    # DLoss/Db = DLoss/Dz * Dz/Db = DLoss/Dz * 1
     db = (1/m) * np.sum(dz)
     return dw, db
 
