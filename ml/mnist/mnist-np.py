@@ -29,9 +29,15 @@ b1 = np.zeros((1, hidden_size))
 W2 = np.random.randn(hidden_size, output_size)
 b2 = np.zeros((1, output_size))
 
+# Carefully initialize the weights to avoid extremely large or small values at the start of training.
+# A common practice is to use small random values scaled by the square root of the number of units in the preceding layer
+W1 = np.random.randn(input_size, hidden_size) / np.sqrt(input_size)
+W2 = np.random.randn(hidden_size, output_size) / np.sqrt(hidden_size)
+
 # Hyperparameters
 # 0.000005 rate gets NaN in epoch 2 and 3, and improves after epoch 4; very strange.
 # 0.000003 has 4 NaN epochs.
+# better initial weights can helps.
 learning_rate = 0.000005
 epochs = 42
 
@@ -54,6 +60,9 @@ for epoch in range(epochs):
     loss = -np.sum(train_labels * np.log(output_layer)) / train_images.shape[0]
 
     # Backpropagation
+    # My understanding is:
+    # backprop calculates all gradient for every place: DLoss / Dsomething.
+    # Each gradient of the "something" should be calculatable/differentiable as to how its change affects the loss.
     d_output = output_layer - train_labels
     d_W2 = np.dot(hidden_layer.T, d_output)
     d_b2 = np.sum(d_output, axis=0, keepdims=True)
