@@ -16,3 +16,5 @@ python-gflags
 
 tensorflow_datasets
 
+
+jax
