@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score
 
-VISUALIZE = True
+VISUALIZE = False
 
 
 def sigmoid(x):
@@ -68,5 +68,4 @@ print(f"Accuracy: {accuracy}")
 # Visualization
 if VISUALIZE:
     import viz
-
     viz.visualize(X_train, y_train, weights, bias)
