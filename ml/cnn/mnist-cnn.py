@@ -31,17 +31,53 @@ def make_tb(name):
         log_dir=log_dir, histogram_freq=1, update_freq='batch'
     )
 
+def alexnet():
+    model = models.Sequential([
+        layers.Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)),
+        layers.MaxPooling2D((2, 2)),
+        layers.Conv2D(64, (3, 3), activation='relu'),
+        layers.MaxPooling2D((2, 2)),
+        layers.Conv2D(64, (3, 3), activation='relu'),
+        layers.Flatten(),
+        layers.Dense(64, activation='relu'),
+        layers.Dense(10, activation='softmax')
+    ])
+    return model
+
+def alexnet2():
+    # Create AlexNet model
+    model = models.Sequential([
+        layers.Conv2D(96, 3, padding='same', activation='relu', input_shape=(28, 28, 1)),
+        layers.BatchNormalization(),
+        layers.MaxPooling2D(pool_size=(2, 2)),
+        layers.Conv2D(256, 3, padding='same', activation='relu'),
+        layers.BatchNormalization(),
+        layers.MaxPooling2D(pool_size=(2, 2)),
+        layers.Conv2D(384, 3, padding='same', activation='relu'),
+        layers.BatchNormalization(),
+        layers.Conv2D(384, 3, padding='same', activation='relu'),
+        layers.BatchNormalization(),
+        layers.Conv2D(256, 3, padding='same', activation='relu'),
+        layers.BatchNormalization(),
+        layers.MaxPooling2D(pool_size=(2, 2)),
+        layers.Flatten(),
+        layers.Dense(4096, activation='relu'),
+        layers.Dropout(0.5),
+        layers.Dense(4096, activation='relu'),
+        layers.Dropout(0.5),
+        layers.Dense(10, activation='softmax')
+    ])
+    return model
+
 
 def model1():
     return models.Sequential(
         [
-            layers.Conv2D(32, (3, 3), activation="relu", input_shape=(28, 28, 1)),
+            layers.Conv2D(32, (5, 5), activation="relu", input_shape=(28, 28, 1)),
             layers.MaxPooling2D((2, 2)),
             layers.Conv2D(64, (3, 3), activation="relu"),
             layers.MaxPooling2D((2, 2)),
-            layers.Conv2D(64, (3, 3), activation="relu"),
-            layers.MaxPooling2D((2, 2)),
-            layers.Conv2D(64, (3, 3), activation="relu"),
+            layers.Conv2D(96, (3, 3), activation="relu"),
             layers.Flatten(),
             layers.Dense(64, activation="relu"),
             layers.Dense(10, activation="softmax"),
@@ -60,7 +96,7 @@ def model2():
     )
 
 
-model = model2()
+model = alexnet2()
 
 def run(lr, batch_size, epoch, verbose=False, tensorboard=False):
     # Compile the model
@@ -83,7 +119,7 @@ def run(lr, batch_size, epoch, verbose=False, tensorboard=False):
 
 
 def run_once():
-    run(0.001, 128, 50, verbose=True, tensorboard=True)
+    run(0.001, 128, 1000, verbose=True, tensorboard=True)
 
 def run_many():
     for lr_cnt in range(5):
