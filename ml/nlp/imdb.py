@@ -40,12 +40,27 @@ model = Sequential([
     Dense(16, activation="relu"),
     Dense(1, activation="sigmoid")
 ])
+"""
+layers.Embedding(vocab_size, 128, input_length=max_length),
+and a simple Flatten and Dense layer, will get 86% accuracy
+LSTM/RNN cannot get more than 80% accuracy.
+"""
 # Define the RNN model
 model = keras.Sequential(
     [
         layers.Embedding(vocab_size, 128),
-        # layers.Bidirectional(layers.SimpleRNN(64, return_sequences=False)),
-        layers.LSTM(128, dropout=0.2, recurrent_dropout=0.2),
+        layers.Bidirectional(layers.SimpleRNN(64, return_sequences=False)),
+        # layers.LSTM(128, dropout=0.2, recurrent_dropout=0.2),
+        # layers.Dense(64, activation="relu"),
+        layers.Dense(1, activation='sigmoid'),
+    ]
+)
+
+small_model = keras.Sequential(
+    [
+        layers.Embedding(vocab_size, 16),
+        layers.SimpleRNN(32, return_sequences=False),
+        # layers.LSTM(128, dropout=0.2, recurrent_dropout=0.2),
         # layers.Dense(64, activation="relu"),
         layers.Dense(1, activation='sigmoid'),
     ]
