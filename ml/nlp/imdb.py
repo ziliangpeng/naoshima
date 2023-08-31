@@ -24,7 +24,7 @@ def make_tb(name):
     )
 
 # Load dataset
-vocab_size = 10000
+vocab_size = 20000
 max_length = 250
 
 (X_train, y_train), (X_test, y_test) = imdb.load_data(num_words=vocab_size)
@@ -43,10 +43,11 @@ model = Sequential([
 # Define the RNN model
 model = keras.Sequential(
     [
-        layers.Embedding(vocab_size, 64),
-        layers.Bidirectional(layers.SimpleRNN(64, return_sequences=False)),
-        layers.Dense(64, activation="relu"),
-        layers.Dense(1),
+        layers.Embedding(vocab_size, 128),
+        # layers.Bidirectional(layers.SimpleRNN(64, return_sequences=False)),
+        layers.LSTM(128, dropout=0.2, recurrent_dropout=0.2),
+        # layers.Dense(64, activation="relu"),
+        layers.Dense(1, activation='sigmoid'),
     ]
 )
 

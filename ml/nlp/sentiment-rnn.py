@@ -22,7 +22,7 @@ binary sentiment analysis dataset available in TensorFlow datasets.
 )
 
 # Print the dataset info
-print(dataset_info)
+# print(dataset_info)
 
 # Prepare the data for training
 BUFFER_SIZE = 10000
