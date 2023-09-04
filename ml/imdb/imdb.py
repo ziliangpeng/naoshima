@@ -33,44 +33,47 @@ max_length = 250
 X_train = pad_sequences(X_train, maxlen=max_length, padding="post", truncating="post")
 X_test = pad_sequences(X_test, maxlen=max_length, padding="post", truncating="post")
 
-# Create the model
-model = Sequential([
-    Embedding(vocab_size, 16),
-    GlobalAveragePooling1D(),
-    Dense(16, activation="relu"),
-    Dense(1, activation="sigmoid")
-])
-"""
-layers.Embedding(vocab_size, 128, input_length=max_length),
-and a simple Flatten and Dense layer, will get 86% accuracy
-LSTM/RNN cannot get more than 80% accuracy.
-"""
-# Define the RNN model
-model = keras.Sequential(
-    [
-        layers.Embedding(vocab_size, 128),
-        layers.Bidirectional(layers.SimpleRNN(64, return_sequences=False)),
-        # layers.LSTM(128, dropout=0.2, recurrent_dropout=0.2),
-        # layers.Dense(64, activation="relu"),
-        layers.Dense(1, activation='sigmoid'),
-    ]
-)
+# with open('file.txt', 'r') as no_op: # No op, use this for GPU?
+with tf.device('/CPU:0'):
 
-small_model = keras.Sequential(
-    [
-        layers.Embedding(vocab_size, 16),
-        layers.SimpleRNN(32, return_sequences=False),
-        # layers.LSTM(128, dropout=0.2, recurrent_dropout=0.2),
-        # layers.Dense(64, activation="relu"),
-        layers.Dense(1, activation='sigmoid'),
-    ]
-)
+    # Create the model
+    model = Sequential([
+        Embedding(vocab_size, 16),
+        GlobalAveragePooling1D(),
+        Dense(16, activation="relu"),
+        Dense(1, activation="sigmoid")
+    ])
+    """
+    layers.Embedding(vocab_size, 128, input_length=max_length),
+    and a simple Flatten and Dense layer, will get 86% accuracy
+    LSTM/RNN cannot get more than 80% accuracy.
+    """
+    # Define the RNN model
+    model = keras.Sequential(
+        [
+            layers.Embedding(vocab_size, 128),
+            layers.Bidirectional(layers.LSTM(128, return_sequences=False)),
+            # layers.LSTM(128, dropout=0.2, recurrent_dropout=0.2),
+            # layers.Dense(64, activation="relu"),
+            layers.Dense(1, activation='sigmoid'),
+        ]
+    )
 
-# Compile the model
-model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"])
+    small_model = keras.Sequential(
+        [
+            layers.Embedding(vocab_size, 16),
+            layers.SimpleRNN(32, return_sequences=False),
+            # layers.LSTM(128, dropout=0.2, recurrent_dropout=0.2),
+            # layers.Dense(64, activation="relu"),
+            layers.Dense(1, activation='sigmoid'),
+        ]
+    )
 
-# Train the model
-history = model.fit(X_train, y_train, epochs=10, batch_size=256, validation_split=0.2, verbose=1, callbacks=[make_tb("model")])
+    # Compile the model
+    model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"])
+
+    # Train the model
+    history = model.fit(X_train, y_train, epochs=42, batch_size=256, validation_split=0.2, verbose=1, callbacks=[make_tb("model")])
 
 # # Evaluate the model
 # y_pred = (model.predict(X_test) > 0.5).astype("int32")
