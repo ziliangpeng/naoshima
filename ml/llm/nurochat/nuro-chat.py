@@ -113,8 +113,9 @@ NURO_PREFIX = [
 
 
 def main():
-    nuro_crawler = Crawler(NURO_SEED, NURO_PREFIX)
-    nuro_crawler.crawl()
+    crawler = Crawler(AURORA_SEED)
+    # crawler = Crawler(NURO_SEED, NURO_PREFIX)
+    crawler.crawl()
 
 
 if __name__ == "__main__":
