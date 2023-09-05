@@ -113,9 +113,13 @@ NURO_PREFIX = [
 
 
 def main():
-    crawler = Crawler(AURORA_SEED)
-    # crawler = Crawler(NURO_SEED, NURO_PREFIX)
+    # crawler = Crawler(AURORA_SEED)
+    crawler = Crawler(NURO_SEED, NURO_PREFIX)
     crawler.crawl()
+
+    with open("data/nuro.txt", "w") as f:
+        for t in crawler.archive.values():
+            f.write(t + "\n\n")
 
 
 if __name__ == "__main__":
