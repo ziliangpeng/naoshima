@@ -46,24 +46,25 @@ def alexnet():
 
 def alexnet2():
     # Create AlexNet model
+    activation = 'relu'  # Make if flag
     model = models.Sequential([
-        layers.Conv2D(96, 3, padding='same', activation='relu', input_shape=(28, 28, 1)),
+        layers.Conv2D(96, 3, padding='same', activation=activation, input_shape=(28, 28, 1)),
         layers.BatchNormalization(),
         layers.MaxPooling2D(pool_size=(2, 2)),
-        layers.Conv2D(256, 3, padding='same', activation='relu'),
+        layers.Conv2D(256, 3, padding='same', activation=activation),
         layers.BatchNormalization(),
         layers.MaxPooling2D(pool_size=(2, 2)),
-        layers.Conv2D(384, 3, padding='same', activation='relu'),
+        layers.Conv2D(384, 3, padding='same', activation=activation),
         layers.BatchNormalization(),
-        layers.Conv2D(384, 3, padding='same', activation='relu'),
+        layers.Conv2D(384, 3, padding='same', activation=activation),
         layers.BatchNormalization(),
-        layers.Conv2D(256, 3, padding='same', activation='relu'),
+        layers.Conv2D(256, 3, padding='same', activation=activation),
         layers.BatchNormalization(),
         layers.MaxPooling2D(pool_size=(2, 2)),
         layers.Flatten(),
-        layers.Dense(4096, activation='relu'),
+        layers.Dense(4096, activation=activation),
         layers.Dropout(0.5),
-        layers.Dense(4096, activation='relu'),
+        layers.Dense(4096, activation=activation),
         layers.Dropout(0.5),
         layers.Dense(10, activation='softmax')
     ])
