@@ -105,6 +105,7 @@ def run(lr, batch_size, epoch, verbose=False, tensorboard=False):
     model.compile(
         optimizer=optimizer, loss="sparse_categorical_crossentropy", metrics=["accuracy"]
     )
+    model.summary()
 
     # Train the model
     cb = []
