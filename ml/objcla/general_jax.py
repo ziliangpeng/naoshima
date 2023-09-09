@@ -8,6 +8,25 @@ from loguru import logger
 import click
 
 
+def predict(params, x):
+    x = x.ravel()
+
+    w1, b1 = params
+    logits = jnp.dot(x, w1) + b1
+    return logits
+
+
+def correct(params, x, y):
+    preds = predict(params, x)
+    return jnp.argmax(preds, axis=0) == jnp.argmax(y, axis=0)
+
+
+def loss(params, x, y):
+    preds = predict(params, x)
+    l = -jnp.mean(jax.nn.log_softmax(preds) * y)
+    return l
+
+
 def main():
     # loader = dataloader.load_cifar10
     loader = dataloader.load_mnist
@@ -25,22 +44,6 @@ def main():
         w1 = jnp.array(random.normal(rng, (FC_len, num_classes)))
         b1 = jnp.zeros((num_classes,))
         return (w1, b1)
-
-    def predict(params, x):
-        x = x.ravel()
-
-        w1, b1 = params
-        logits = jnp.dot(x, w1) + b1
-        return logits
-
-    def correct(params, x, y):
-        preds = predict(params, x)
-        return jnp.argmax(preds, axis=0) == jnp.argmax(y, axis=0)
-
-    def loss(params, x, y):
-        preds = predict(params, x)
-        l = -jnp.mean(jax.nn.log_softmax(preds) * y)
-        return l
 
     params = init_params(rng)
 
