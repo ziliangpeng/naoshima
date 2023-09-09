@@ -4,7 +4,9 @@ from loguru import logger
 import click
 
 
-def train_eval(x_train, y_train, x_test, y_test, onehot):
+def train_eval(loader, onehot):
+    logger.info(f"Using one-hot encoding: {onehot}")
+    x_train, y_train, x_test, y_test = loader(onehot=onehot)
     image_shape = x_train[0].shape
     if onehot:
         num_classes = y_train.shape[1]
@@ -31,12 +33,10 @@ def train_eval(x_train, y_train, x_test, y_test, onehot):
     "--onehot/--no-onehot", default=False, help="Whether to use one-hot encoding or not"
 )
 def main(onehot):
-    # Use the `onehot` variable here to determine whether to use one-hot encoding or not
-    print(f"Using one-hot encoding: {onehot}")
-    train_eval(*(dataloader.load_mnist(onehot=onehot)), onehot=onehot)
-    train_eval(*(dataloader.load_fashion_mnist(onehot=onehot)), onehot=onehot)
-    train_eval(*(dataloader.load_cifar10(onehot=onehot)), onehot=onehot)
-    train_eval(*(dataloader.load_cifar100(onehot=onehot)), onehot=onehot)
+    train_eval(dataloader.load_mnist, onehot)
+    train_eval(dataloader.load_fashion_mnist, onehot)
+    train_eval(dataloader.load_cifar10, onehot)
+    train_eval(dataloader.load_cifar100, onehot)
 
 
 if __name__ == "__main__":
