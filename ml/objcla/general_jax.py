@@ -9,6 +9,7 @@ import click
 
 
 def main():
+    # loader = dataloader.load_cifar10
     loader = dataloader.load_mnist
     x_train, y_train, x_test, y_test = loader(onehot=True)
 
