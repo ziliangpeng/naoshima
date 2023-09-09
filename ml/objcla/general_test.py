@@ -17,7 +17,7 @@ def train_eval(loader, onehot):
     model = models.Sequential(
         [
             layers.Flatten(input_shape=image_shape),
-            layers.Dense(64, activation="relu"),
+            # layers.Dense(64, activation="relu"),
             layers.Dense(num_classes, activation="softmax"),
         ]
     )
