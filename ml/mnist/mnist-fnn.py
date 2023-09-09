@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow.keras.datasets import mnist, fashion_mnist
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Flatten
-from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import SGD
 from tensorflow.keras.losses import SparseCategoricalCrossentropy
 import matplotlib.pyplot as plt
 import numpy as np
@@ -26,13 +26,13 @@ model = Sequential(
 
 # Compile the model
 model.compile(
-    optimizer=Adam(), loss=SparseCategoricalCrossentropy(), metrics=["accuracy"]
+    optimizer=SGD(), loss=SparseCategoricalCrossentropy(), metrics=["accuracy"]
 )
 
 # Train the model using CPU
 with tf.device("/GPU:0"):
     history = model.fit(
-        x_train, y_train, epochs=5, batch_size=32, validation_split=0.2
+        x_train, y_train, epochs=100, batch_size=64, validation_split=0.2
     )
 
 # Evaluate the model on the test set

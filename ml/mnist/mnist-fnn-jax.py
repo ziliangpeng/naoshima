@@ -56,7 +56,7 @@ def update(params, x, y, lr):
 
 # Train the neural network
 batch_size = 64
-num_epochs = 42
+num_epochs = 100
 learning_rate = 0.001
 num_batches = train_images.shape[0] // batch_size
 
