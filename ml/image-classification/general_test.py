@@ -34,7 +34,7 @@ def main(onehot):
     # Use the `onehot` variable here to determine whether to use one-hot encoding or not
     print(f"Using one-hot encoding: {onehot}")
     train_eval(*(dataloader.load_mnist(onehot=onehot)), onehot=onehot)
-    train_eval(*(dataloader.load_fashion_mnist(fashion=True, onehot=onehot)), onehot=onehot)
+    train_eval(*(dataloader.load_fashion_mnist(onehot=onehot)), onehot=onehot)
     train_eval(*(dataloader.load_cifar10(onehot=onehot)), onehot=onehot)
     train_eval(*(dataloader.load_cifar100(onehot=onehot)), onehot=onehot)
 
