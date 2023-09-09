@@ -15,22 +15,21 @@ import dataloader
 def main(fashion):
     x_train, y_train, x_test, y_test = dataloader.load_mnist(fashion=fashion)
 
-    # Create a simple DNN model
+    image_shape = x_train[0].shape # (28, 28)
+
     model = Sequential(
         [
-            Flatten(input_shape=(28, 28)),
+            Flatten(input_shape=image_shape),
             Dense(128, activation="relu"),
             Dense(64, activation="relu"),
             Dense(10, activation="softmax"),
         ]
     )
 
-    # Compile the model
     model.compile(
-        optimizer=SGD(), loss=SparseCategoricalCrossentropy(), metrics=["accuracy"]
+        optimizer="adam", loss=SparseCategoricalCrossentropy(), metrics=["accuracy"]
     )
 
-    # Train the model using CPU
     with tf.device("/GPU:0"):
         history = model.fit(
             x_train, y_train, epochs=42, batch_size=64, validation_split=0.2
@@ -41,13 +40,13 @@ def main(fashion):
     print(f"Test loss: {loss:.4f}")
     print(f"Test accuracy: {accuracy:.4f}")
 
-    # print weights
-    for l in model.layers:
-        if not l.get_weights():
-            continue
-        weights, bias = l.get_weights()
-        print("Learned weight:", weights[0][0])
-        print("Learned bias:", bias[0])
+    # # print weights
+    # for l in model.layers:
+    #     if not l.get_weights():
+    #         continue
+    #     weights, bias = l.get_weights()
+    #     print("Learned weight:", weights[0][0])
+    #     print("Learned bias:", bias[0])
 
 
 if __name__ == "__main__":
