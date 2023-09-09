@@ -33,7 +33,7 @@ max_length = 250
 X_train = pad_sequences(X_train, maxlen=max_length, padding="post", truncating="post")
 X_test = pad_sequences(X_test, maxlen=max_length, padding="post", truncating="post")
 
-# with open('file.txt', 'r') as no_op: # No op, use this for GPU?
+# with tf.device("/GPU:0"):
 with tf.device('/CPU:0'):
 
     # Create the model

@@ -32,7 +32,7 @@ model.compile(
 # Train the model using CPU
 with tf.device("/GPU:0"):
     history = model.fit(
-        x_train, y_train, epochs=100, batch_size=64, validation_split=0.2
+        x_train, y_train, epochs=42, batch_size=64, validation_split=0.2
     )
 
 # Evaluate the model on the test set
