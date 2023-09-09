@@ -5,7 +5,7 @@ from loguru import logger
 from functools import partial
 
 
-def _load(loader, name, onehot):
+def _load_keras(loader, name, onehot):
     (x_train, y_train), (x_test, y_test) = loader()
     logger.info(f"Using {name} dataset")
 
@@ -23,10 +23,10 @@ def _load(loader, name, onehot):
     return x_train, y_train, x_test, y_test
 
 
-load_cifar10 = partial(_load, cifar10.load_data, "cifar10")
-load_cifar100 = partial(_load, cifar100.load_data, "cifar100")
-load_mnist = partial(_load, mnist.load_data, "mnist")
-load_fashion_mnist = partial(_load, fashion_mnist.load_data, "fashion")
+load_cifar10 = partial(_load_keras, cifar10.load_data, "cifar10")
+load_cifar100 = partial(_load_keras, cifar100.load_data, "cifar100")
+load_mnist = partial(_load_keras, mnist.load_data, "mnist")
+load_fashion_mnist = partial(_load_keras, fashion_mnist.load_data, "fashion")
 
 
 if __name__ == "__main__":
