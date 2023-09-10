@@ -11,10 +11,11 @@ import click
 num_filters = 1
 
 
-# @jax.jit
+@jax.jit
 def predict_batch(params, inputs):
     conv_w, conv_b, w1, b1 = params
     conved = jnp.zeros((inputs.shape[0], 26, 26, num_filters))
+
     for a in range(inputs.shape[0]):
         for i in range(26):
             for j in range(26):
@@ -25,19 +26,30 @@ def predict_batch(params, inputs):
                         + conv_b[k]
                     )
 
+    # for a in range(inputs.shape[0]):
+    #     for i in range(26):
+    #         for j in range(26):
+    #             # for k in range(num_filters):
+    #             image = inputs[a]
+    #             conved = conved.at[a, i, j, :].set(
+    #                 jnp.sum(image[i : i + 3, j : j + 3] * conv_w[:, :, :])
+    #                 + conv_b[:]
+    #             )
+
+
     conved = jnp.reshape(conved, (conved.shape[0], -1))
     logits = jnp.dot(conved, w1) + b1
     # logger.info('done train')
     return logits
 
 
-# @jax.jit
+@jax.jit
 def correct_batch(params, inputs, targets):
     preds = predict_batch(params, inputs)
     return jnp.sum(jnp.argmax(preds, axis=1) == jnp.argmax(targets, axis=1))
 
 
-# @jax.jit
+@jax.jit
 def loss_batch(params, inputs, targets):
     preds = predict_batch(params, inputs)
     l = -jnp.mean(jax.nn.log_softmax(preds) * targets)
@@ -48,7 +60,7 @@ def loss_batch(params, inputs, targets):
 def train_batch(x_train, y_train, x_test, y_test, params, lr):
     batch_size = 128
     num_batches = x_train.shape[0] // batch_size
-    epochs = 1
+    epochs = 5
     for epoch in range(epochs):
         start_time = time.time()
         for i in range(num_batches):
@@ -74,8 +86,8 @@ def main():
     # loader = dataloader.load_cifar10
     loader = dataloader.load_mnist
     x_train, y_train, x_test, y_test = loader(onehot=True)
-    x_train = x_train[:3]
-    y_train = y_train[:3]
+    x_train = x_train[:30]
+    y_train = y_train[:30]
     x_test = x_test[:2]
     y_test = y_test[:2]
 
