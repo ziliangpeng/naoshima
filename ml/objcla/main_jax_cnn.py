@@ -11,7 +11,7 @@ import click
 num_filters = 1
 
 
-@jax.jit
+# @jax.jit
 def predict_batch(params, inputs):
     conv_w, conv_b, w1, b1 = params
     conved = jnp.zeros((inputs.shape[0], 26, 26, num_filters))
@@ -20,15 +20,10 @@ def predict_batch(params, inputs):
             for j in range(26):
                 for k in range(num_filters):
                     image = inputs[a]
-                    # conved = jax.ops.index_update(
-                    #     conved, jax.ops.index[i, j], jnp.sum(image[i : i + 3, j : j + 3] * conv_w, axis=(0, 1, 2)) + conv_b
-                    # )
                     conved = conved.at[a, i, j, k].set(
-                        # jnp.sum(image[i : i + 3, j : j + 3] * conv_w[k], axis=(0, 1, 2)) + conv_b
                         jnp.sum(image[i : i + 3, j : j + 3] * conv_w[:, :, k])
                         + conv_b[k]
                     )
-        # logger.info(f'at {a}')
 
     conved = jnp.reshape(conved, (conved.shape[0], -1))
     logits = jnp.dot(conved, w1) + b1
@@ -53,7 +48,7 @@ def loss_batch(params, inputs, targets):
 def train_batch(x_train, y_train, x_test, y_test, params, lr):
     batch_size = 128
     num_batches = x_train.shape[0] // batch_size
-    epochs = 1000
+    epochs = 1
     for epoch in range(epochs):
         start_time = time.time()
         for i in range(num_batches):
