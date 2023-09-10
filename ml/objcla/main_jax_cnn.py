@@ -8,23 +8,41 @@ import operator
 from loguru import logger
 import click
 
+num_filters = 1
+
 
 @jax.jit
 def predict_batch(params, inputs):
-    inputs = jnp.reshape(inputs, (inputs.shape[0], -1))
+    conv_w, conv_b, w1, b1 = params
+    conved = jnp.zeros((inputs.shape[0], 26, 26, num_filters))
+    for a in range(inputs.shape[0]):
+        for i in range(26):
+            for j in range(26):
+                for k in range(num_filters):
+                    image = inputs[a]
+                    # conved = jax.ops.index_update(
+                    #     conved, jax.ops.index[i, j], jnp.sum(image[i : i + 3, j : j + 3] * conv_w, axis=(0, 1, 2)) + conv_b
+                    # )
+                    conved = conved.at[a, i, j, k].set(
+                        # jnp.sum(image[i : i + 3, j : j + 3] * conv_w[k], axis=(0, 1, 2)) + conv_b
+                        jnp.sum(image[i : i + 3, j : j + 3] * conv_w[:, :, k])
+                        + conv_b[k]
+                    )
+        # logger.info(f'at {a}')
 
-    w1, b1 = params
-    logits = jnp.dot(inputs, w1) + b1
+    conved = jnp.reshape(conved, (conved.shape[0], -1))
+    logits = jnp.dot(conved, w1) + b1
+    # logger.info('done train')
     return logits
 
 
-@jax.jit
+# @jax.jit
 def correct_batch(params, inputs, targets):
     preds = predict_batch(params, inputs)
     return jnp.sum(jnp.argmax(preds, axis=1) == jnp.argmax(targets, axis=1))
 
 
-@jax.jit
+# @jax.jit
 def loss_batch(params, inputs, targets):
     preds = predict_batch(params, inputs)
     l = -jnp.mean(jax.nn.log_softmax(preds) * targets)
@@ -44,6 +62,7 @@ def train_batch(x_train, y_train, x_test, y_test, params, lr):
             inputs = x_train[start_idx:end_idx]
             labels = y_train[start_idx:end_idx]
             grads = jax.grad(loss_batch)(params, inputs, labels)
+            # logger.info('got grads')
             params = [(param - lr * grad) for param, grad in zip(params, grads)]
 
         end_train_time = time.time()
@@ -60,6 +79,10 @@ def main():
     # loader = dataloader.load_cifar10
     loader = dataloader.load_mnist
     x_train, y_train, x_test, y_test = loader(onehot=True)
+    x_train = x_train[:3]
+    y_train = y_train[:3]
+    x_test = x_test[:2]
+    y_test = y_test[:2]
 
     num_classes = y_train.shape[1]
 
@@ -70,9 +93,12 @@ def main():
     rng = random.PRNGKey(0)
 
     def init_params(rng):
-        w1 = jnp.array(random.normal(rng, (FC_len, num_classes)))
+        conv_w = jnp.array(random.normal(rng, (3, 3, num_filters)))
+        conv_b = jnp.zeros((num_filters,))
+
+        w1 = jnp.array(random.normal(rng, (26 * 26 * num_filters, num_classes)))
         b1 = jnp.zeros((num_classes,))
-        return (w1, b1)
+        return (conv_w, conv_b, w1, b1)
 
     params = init_params(rng)
 
