@@ -8,34 +8,23 @@ import operator
 from loguru import logger
 import click
 
-num_filters = 1
+num_filters = 8
 
 
-@jax.jit
+def fast_cnn(params, images, num_filters):
+    conv_w, conv_b = params
+    conved = jnp.zeros((images.shape[0], 26, 26, num_filters))
+    for i in range(26):
+        for j in range(26):
+            conved = conved.at[:, i, j, :].set(
+                jnp.sum(images[:, i : i + 3, j : j + 3, jnp.newaxis] * conv_w[:, :, :], axis=(1, 2)) + conv_b[:]
+            )
+    return conved
+
+# @jax.jit
 def predict_batch(params, inputs):
     conv_w, conv_b, w1, b1 = params
-    conved = jnp.zeros((inputs.shape[0], 26, 26, num_filters))
-
-    for a in range(inputs.shape[0]):
-        for i in range(26):
-            for j in range(26):
-                for k in range(num_filters):
-                    image = inputs[a]
-                    conved = conved.at[a, i, j, k].set(
-                        jnp.sum(image[i : i + 3, j : j + 3] * conv_w[:, :, k])
-                        + conv_b[k]
-                    )
-
-    # for a in range(inputs.shape[0]):
-    #     for i in range(26):
-    #         for j in range(26):
-    #             # for k in range(num_filters):
-    #             image = inputs[a]
-    #             conved = conved.at[a, i, j, :].set(
-    #                 jnp.sum(image[i : i + 3, j : j + 3] * conv_w[:, :, :])
-    #                 + conv_b[:]
-    #             )
-
+    conved = fast_cnn((conv_w, conv_b), inputs, num_filters)
 
     conved = jnp.reshape(conved, (conved.shape[0], -1))
     logits = jnp.dot(conved, w1) + b1
@@ -43,24 +32,33 @@ def predict_batch(params, inputs):
     return logits
 
 
-@jax.jit
+# @jax.jit
 def correct_batch(params, inputs, targets):
     preds = predict_batch(params, inputs)
-    return jnp.sum(jnp.argmax(preds, axis=1) == jnp.argmax(targets, axis=1))
+    # print(preds[0])
+    # print(jnp.argmax(preds[0]))
+    # print(jnp.argmax(preds, axis=1))
+    # print(jnp.argmax(targets, axis=1))
+    num_correct = jnp.sum(jnp.argmax(preds, axis=1) == jnp.argmax(targets, axis=1))
+    logger.info(f"num_correct: {num_correct} / {inputs.shape[0]}")
+    # return jnp.sum(jnp.argmax(preds, axis=1) == jnp.argmax(targets, axis=1))
+    return num_correct
 
 
-@jax.jit
+# @jax.jit
 def loss_batch(params, inputs, targets):
     preds = predict_batch(params, inputs)
     l = -jnp.mean(jax.nn.log_softmax(preds) * targets)
+    # logger.info(f"loss: {jnp.asarray(l)}")
+    # logger.info(l.shape)
     return l
 
 
 # @jax.jit
 def train_batch(x_train, y_train, x_test, y_test, params, lr):
-    batch_size = 128
+    batch_size = 512
     num_batches = x_train.shape[0] // batch_size
-    epochs = 5
+    epochs = 10000
     for epoch in range(epochs):
         start_time = time.time()
         for i in range(num_batches):
@@ -86,10 +84,14 @@ def main():
     # loader = dataloader.load_cifar10
     loader = dataloader.load_mnist
     x_train, y_train, x_test, y_test = loader(onehot=True)
-    x_train = x_train[:30]
-    y_train = y_train[:30]
-    x_test = x_test[:2]
-    y_test = y_test[:2]
+    # At least it can train and overfit on a small dataset.
+    num_images = 600 # 6000 * 3
+    num_vad = 100
+    x_train = x_train[:num_images]
+    y_train = y_train[:num_images]
+    x_test = x_test[:num_vad]
+    y_test = y_test[:num_vad]
+    logger.info(f"training sample {num_images}, validation sample {num_vad}")
 
     num_classes = y_train.shape[1]
 
@@ -109,7 +111,7 @@ def main():
 
     params = init_params(rng)
 
-    lr = 4e-3
+    lr = 0.01
     train_batch(x_train, y_train, x_test, y_test, params, lr)
 
 
