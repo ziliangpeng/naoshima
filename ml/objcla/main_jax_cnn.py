@@ -26,7 +26,6 @@ def fast_cnn(params, images, num_filters):
     return conved
 
 
-# @jax.jit
 def predict(params, inputs):
     conv_w, conv_b, w1, b1, w2, b2 = params
     conved = fast_cnn((conv_w, conv_b), inputs, num_filters)
@@ -36,31 +35,26 @@ def predict(params, inputs):
 
     hidden1 = jnp.dot(conved, w1) + b1
     logits = jnp.dot(jax.nn.relu(hidden1), w2) + b2
-    # logits = jnp.dot(conved, w1) + b1
-    # logger.info('done train')
     return logits
 
 
-# @jax.jit
 def correct(params, inputs, targets):
     preds = predict(params, inputs)
-    # print(preds[0])
-    # print(jnp.argmax(preds[0]))
-    # print(jnp.argmax(preds, axis=1))
-    # print(jnp.argmax(targets, axis=1))
     num_correct = jnp.sum(jnp.argmax(preds, axis=1) == jnp.argmax(targets, axis=1))
     logger.info(f"num_correct: {num_correct} / {inputs.shape[0]}")
-    # return jnp.sum(jnp.argmax(preds, axis=1) == jnp.argmax(targets, axis=1))
     return num_correct
 
 
-# @jax.jit
 def loss(params, inputs, targets):
     preds = predict(params, inputs)
     l = -jnp.mean(jax.nn.log_softmax(preds) * targets)
-    # logger.info(f"loss: {jnp.asarray(l)}")
-    # logger.info(l.shape)
     return l
+
+
+@jax.jit
+def update(params, x, y, lr):
+    grads = jax.grad(loss)(params, x, y)
+    return [(param - lr * grad) for param, grad in zip(params, grads)]
 
 
 # @jax.jit
@@ -75,9 +69,7 @@ def train(x_train, y_train, x_test, y_test, params, lr):
             end_idx = (i + 1) * batch_size
             inputs = x_train[start_idx:end_idx]
             labels = y_train[start_idx:end_idx]
-            grads = jax.grad(loss)(params, inputs, labels)
-            # logger.info('got grads')
-            params = [(param - lr * grad) for param, grad in zip(params, grads)]
+            params = update(params, inputs, labels, lr)
 
         end_train_time = time.time()
         corrects = correct(params, x_train, y_train)
