@@ -8,7 +8,7 @@ from loguru import logger
 import click
 
 
-def predict_batch(params, inputs):
+def predict(params, inputs):
     inputs = jnp.reshape(inputs, (inputs.shape[0], -1))
 
     w1, b1 = params
@@ -16,20 +16,20 @@ def predict_batch(params, inputs):
     return logits
 
 
-def correct_batch(params, inputs, targets):
-    preds = predict_batch(params, inputs)
+def correct(params, inputs, targets):
+    preds = predict(params, inputs)
     return jnp.sum(jnp.argmax(preds, axis=1) == jnp.argmax(targets, axis=1))
 
 
-def loss_batch(params, inputs, targets):
-    preds = predict_batch(params, inputs)
+def loss(params, inputs, targets):
+    preds = predict(params, inputs)
     l = -jnp.mean(jax.nn.log_softmax(preds) * targets)
     return l
 
 
 @jax.jit
 def update_batch(params, x, y, lr):
-    grads = jax.grad(loss_batch)(params, x, y)
+    grads = jax.grad(loss)(params, x, y)
     return [(param - lr * grad) for param, grad in zip(params, grads)]
 
 
@@ -45,8 +45,8 @@ def train_batch(x_train, y_train, x_test, y_test, params, lr):
             labels = y_train[start_idx:end_idx]
             params = update_batch(params, inputs, labels, lr)
 
-        corrects = correct_batch(params, x_train, y_train)
-        valid_corrects = correct_batch(params, x_test, y_test)
+        corrects = correct(params, x_train, y_train)
+        valid_corrects = correct(params, x_test, y_test)
         logger.info(
             f"Epoch {epoch}, train acc {corrects / x_train.shape[0]:.3f}, valid acc {valid_corrects / x_test.shape[0]:.3f}"
         )
