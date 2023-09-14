@@ -64,6 +64,11 @@ def train_single(x_train, y_train, x_test, y_test, params, lr):
             f"Epoch {epoch}, train acc {corrects / x_train.shape[0]:.3f}, valid acc {valid_corrects / x_test.shape[0]:.3f}"
         )
 
+@jax.jit
+def update_batch(params, x, y, lr):
+    grads = jax.grad(loss_batch)(params, x, y)
+    return [(param - lr * grad) for param, grad in zip(params, grads)]
+
 
 def train_batch(x_train, y_train, x_test, y_test, params, lr):
     batch_size = 128
@@ -75,8 +80,7 @@ def train_batch(x_train, y_train, x_test, y_test, params, lr):
             end_idx = (i + 1) * batch_size
             inputs = x_train[start_idx:end_idx]
             labels = y_train[start_idx:end_idx]
-            grads = jax.grad(loss_batch)(params, inputs, labels)
-            params = [(param - lr * grad) for param, grad in zip(params, grads)]
+            params = update_batch(params, inputs, labels, lr)
 
         corrects = correct_batch(params, x_train, y_train)
         valid_corrects = correct_batch(params, x_test, y_test)
@@ -87,8 +91,8 @@ def train_batch(x_train, y_train, x_test, y_test, params, lr):
 
 def main():
     # TODO: pass dataset name from cli
-    loader = dataloader.load_cifar10
-    # loader = dataloader.load_mnist
+    # loader = dataloader.load_cifar10
+    loader = dataloader.load_mnist
     x_train, y_train, x_test, y_test = loader(onehot=True)
 
     num_classes = y_train.shape[1]
@@ -107,8 +111,8 @@ def main():
     params = init_params(rng)
 
     lr = 4e-3
-    train_single(x_train, y_train, x_test, y_test, params, lr)
-    # train_batch(x_train, y_train, x_test, y_test, params, lr)
+    # train_single(x_train, y_train, x_test, y_test, params, lr)
+    train_batch(x_train, y_train, x_test, y_test, params, lr)
 
 
 if __name__ == "__main__":
