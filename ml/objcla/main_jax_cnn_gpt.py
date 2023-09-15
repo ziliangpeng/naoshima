@@ -63,7 +63,7 @@ params = [w1, b1, w2, b2, w3, b3]
 
 # Training Loop
 lr = 0.001
-for i in range(1000):
+for i in range(10):
     grad_fn = jit(grad(loss))
     gradients = grad_fn(params, jnp.array(train_images[:32]), jnp.array(train_labels[:32]))
     params = [w - lr * dw for w, dw in zip(params, gradients)]
