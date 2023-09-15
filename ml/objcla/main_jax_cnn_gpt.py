@@ -1,20 +1,9 @@
+import time
 import jax.numpy as jnp
 from jax import grad, jit, random, vmap
 import tensorflow as tf
+from loguru import logger
 
-# Convolution Layer
-# def conv2d(x, wi, b, stride=1):
-#     n, h, w, c = x.shape
-#     f, f, c, n_f = wi.shape
-#     h_out = (h - f) // stride + 1
-#     w_out = (w - f) // stride + 1
-#     x_col = jnp.array([x[i:i + f, j:j + f] for i in range(0, h, stride) for j in range(0, w, stride)])
-#     x_col = x_col.reshape(h_out * w_out, -1)
-#     w_col = wi.reshape(-1, n_f)
-#     out = x_col.dot(w_col) + b
-#     out = out.reshape(h_out, w_out, n_f, n)
-#     out = out.transpose(3, 0, 1, 2)
-#     return out
 def conv2d(x, w_filter, b_filter, stride=1):
     n_samples, h_input, w_input, n_channels = x.shape
     f_size, _, input_channels, n_filters = w_filter.shape
@@ -25,7 +14,7 @@ def conv2d(x, w_filter, b_filter, stride=1):
     x_col = jnp.array([x[:, i:i + f_size, j:j + f_size, :] 
                        for i in range(0, h_input - f_size + 1, stride) 
                        for j in range(0, w_input - f_size + 1, stride)])
-    x_col = x_col.reshape(h_output * w_output, -1)
+    x_col = x_col.reshape(h_output * w_output, x_col.shape[1],  -1)
 
     w_col = w_filter.reshape(-1, n_filters)
     
@@ -78,6 +67,7 @@ for i in range(1000):
     grad_fn = jit(grad(loss))
     gradients = grad_fn(params, jnp.array(train_images[:32]), jnp.array(train_labels[:32]))
     params = [w - lr * dw for w, dw in zip(params, gradients)]
+    logger.info(time.time())
 
 # Test the model (use a subset for demonstration)
 test_predictions = jit(forward)(jnp.array(test_images[:32]), params)
