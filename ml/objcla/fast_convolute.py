@@ -69,6 +69,39 @@ def for2(params, images, num_filters):
             )
     return conved
 
+Is = []
+Js = []
+I_end = []
+J_end = []
+for i in range(26):
+    for j in range(26):
+        Is.append(i)
+        Js.append(j)
+        I_end.append(i + 3)
+        J_end.append(j + 3)
+
+Is = jnp.array(Is)
+Js = jnp.array(Js)
+I_end = jnp.array(I_end)
+J_end = jnp.array(J_end)
+
+@timeit
+def for0(params, images, num_filters):
+    conv_w, conv_b = params
+    conved = jnp.zeros((images.shape[0], 26, 26, num_filters))
+    """
+    One way to vectorize the for loop is to use index using arrays.
+    WIP.
+    """
+    conved = conved.at[:, Is, Js, :].set(
+        jnp.sum(
+            # images[:, Is : I_end, Js : J_end, jnp.newaxis] * conv_w[:, :, :],
+            images[:, [0, 1, 2], [0, 1, 2], jnp.newaxis] * conv_w[:, :, :],
+            axis=(1, 2),
+        )
+        + conv_b[:])
+
+
 
 def test_scalability(full_images):
     rng = random.PRNGKey(0)
@@ -132,10 +165,11 @@ def test_accuracy(full_images):
     time4, ret4 = for4(params, images, num_filters)
     time3, ret3 = for3(params, images, num_filters)
     time2, ret2 = for2(params, images, num_filters)
+    time0, ret0 = for0(params, images, num_filters)
 
-    assert jnp.allclose(ret2, ret3)
-    assert jnp.allclose(ret2, ret4)
     assert jnp.allclose(ret3, ret4)
+    assert jnp.allclose(ret2, ret3)
+    assert jnp.allclose(ret0, ret2)
     logger.info("All close!")
 
 
@@ -147,5 +181,5 @@ if __name__ == "__main__":
     images, _, _, _ = loader(onehot=True)
 
     # test_scalability(images)
-    # test_accuracy(images)
-    test_parallelism(images)
+    test_accuracy(images)
+    # test_parallelism(images)
