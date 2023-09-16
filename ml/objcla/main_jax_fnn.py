@@ -74,6 +74,13 @@ def main():
     loader = dataloader.load_mnist
     x_train, y_train, x_test, y_test = loader(onehot=True)
 
+    num_images = 600  # 6000 * 3
+    num_vad = 100
+    x_train = x_train[:num_images]
+    y_train = y_train[:num_images]
+    x_test = x_test[:num_vad]
+    y_test = y_test[:num_vad]
+
     num_classes = y_train.shape[1]
 
     image_shape = x_train[0].shape

@@ -8,7 +8,15 @@ import operator
 from loguru import logger
 import click
 
-num_filters = 8
+
+"""
+CNN trains very slowly and I had to use ~600 training samples.
+The performance is thus much worse than FNN.
+
+I tries using only ~600 for FNN, and then CNN is better.
+"""
+
+num_filters = 32
 
 
 def fast_cnn(params, images, num_filters):
@@ -30,8 +38,8 @@ def predict(params, inputs):
     conv_w, conv_b, w1, b1, w2, b2 = params
     conved = fast_cnn((conv_w, conv_b), inputs, num_filters)
 
-    conved = jnp.reshape(conved, (conved.shape[0], -1))
     conved = jax.nn.relu(conved)
+    conved = jnp.reshape(conved, (conved.shape[0], -1))
 
     hidden1 = jnp.dot(conved, w1) + b1
     logits = jnp.dot(jax.nn.relu(hidden1), w2) + b2
@@ -114,7 +122,7 @@ def main():
 
     params = init_params(rng)
 
-    lr = 0.01
+    lr = 4e-3
     train(x_train, y_train, x_test, y_test, params, lr)
 
 
