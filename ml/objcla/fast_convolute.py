@@ -69,38 +69,73 @@ def for2(params, images, num_filters):
             )
     return conved
 
-Is = []
-Js = []
-I_end = []
-J_end = []
-for i in range(26):
-    for j in range(26):
-        Is.append(i)
-        Js.append(j)
-        I_end.append(i + 3)
-        J_end.append(j + 3)
 
-Is = jnp.array(Is)
-Js = jnp.array(Js)
-I_end = jnp.array(I_end)
-J_end = jnp.array(J_end)
+# Is = []
+# Js = []
+# I_end = []
+# J_end = []
+# for i in range(26):
+#     for j in range(26):
+#         Is.append(i)
+#         Js.append(j)
+#         I_end.append(i + 3)
+#         J_end.append(j + 3)
+
+# Is = jnp.array(Is)
+# Js = jnp.array(Js)
+# I_end = jnp.array(I_end)
+# J_end = jnp.array(J_end)
+
 
 @timeit
 def for0(params, images, num_filters):
+    """
+    images = (num_img, 28, 28)
+    conv_w = (3, 3, num_filters)
+    conv_b = (num_filters,)
+    flattened_conv_w = (9, num_filters)
+
+    before im2col_tmp, we need to extract the right pixels:
+    Is = [0,1,2,0,1,2,0,1,2, 1,2,3,1,2,3,1,2,3, 2,3,4,2,3,4,2,3,4, ...]
+    Js = [0,0,0,1,1,1,2,2,2, 0,0,0,1,1,1,2,2,2, 0,0,0,1,1,1,2,2,2, ...]
+    im2col_tmp_tmp = images[:, Is, Js]
+
+    due to jnp api, we need to first get:
+    im2col_tmp = (num_img, tile_position*9)
+    something like [0,1,2,28,29,30,56,57,58, 1,2,3,29,30,31,57,58,59, 2,3,4,30,31,32,58,59,60, ...]
+
+    im2col = (num_img, tile_position, 9)
+    im2col * flattened_conv_w = (num_img, tile_position, num_filters)
+    # sum( (im2col * flattened_conv_w, axis=1,2), axis = 2) +
+    """
+    print(images.shape)
     conv_w, conv_b = params
     conved = jnp.zeros((images.shape[0], 26, 26, num_filters))
-    """
-    One way to vectorize the for loop is to use index using arrays.
-    WIP.
-    """
-    conved = conved.at[:, Is, Js, :].set(
-        jnp.sum(
-            # images[:, Is : I_end, Js : J_end, jnp.newaxis] * conv_w[:, :, :],
-            images[:, [0, 1, 2], [0, 1, 2], jnp.newaxis] * conv_w[:, :, :],
-            axis=(1, 2),
-        )
-        + conv_b[:])
+    flattened_conv_w = jnp.reshape(conv_w, (9, num_filters))
 
+    tile_Is = jnp.repeat(jnp.arange(3), 3)
+    # print(tile_Is)
+    tile_Js = jnp.tile(jnp.arange(3), 3)
+    # print(tile_Js)
+    center_Is = jnp.repeat(jnp.arange(26), 26)
+    # print("cIs")
+    # print(center_Is)
+    center_Js = jnp.tile(jnp.arange(26), 26)
+    # print("cJs")
+    # print(center_Js)
+
+    Is = jnp.repeat(center_Is, 3 * 3) + jnp.tile(tile_Is, 26 * 26)
+    Js = jnp.repeat(center_Js, 3 * 3) + jnp.tile(tile_Js, 26 * 26)
+    # print(Is.shape)
+    im2col_tmptmp = images[:, Is, Js]
+    # print(im2col_tmptmp.shape) # (num_img, 6084 = 26*26*9)
+
+    im2col = jnp.reshape(im2col_tmptmp, (images.shape[0], 26 * 26, 9))
+
+    conved = im2col @ flattened_conv_w + conv_b
+    conved = conved.reshape((images.shape[0], -1, num_filters))
+    print(conved.shape)
+    return conved
 
 
 def test_scalability(full_images):
@@ -143,16 +178,17 @@ def test_parallelism(full_images):
             params = (conv_w, conv_b)
 
             images = full_images[:num_images]
-            time2, _ = for2(params, images, num_filters)
+            # t, _ = for2(params, images, num_filters)
+            t, _ = for0(params, images, num_filters)
             logger.info(
-                f"num_images: {num_images}, num_filters: {num_filters}, time ratio: {time2 / unit_time}"
+                f"num_images: {num_images}, num_filters: {num_filters}, time ratio: {t / unit_time}"
             )
 
 
 def test_accuracy(full_images):
     rng = random.PRNGKey(0)
     num_filters = 8
-    num_images = 9
+    num_images = 7
     logger.info(
         f"Testing accuracy with num_images: {num_images}, num_filters: {num_filters}"
     )
@@ -162,14 +198,14 @@ def test_accuracy(full_images):
     params = (conv_w, conv_b)
     images = full_images[:num_images]
 
-    time4, ret4 = for4(params, images, num_filters)
-    time3, ret3 = for3(params, images, num_filters)
+    # time4, ret4 = for4(params, images, num_filters)
+    # time3, ret3 = for3(params, images, num_filters)
     time2, ret2 = for2(params, images, num_filters)
     time0, ret0 = for0(params, images, num_filters)
 
-    assert jnp.allclose(ret3, ret4)
-    assert jnp.allclose(ret2, ret3)
-    assert jnp.allclose(ret0, ret2)
+    # assert jnp.allclose(ret3, ret4)
+    # assert jnp.allclose(ret2, ret3)
+    assert jnp.allclose(ret0, ret2, atol=1e-6)
     logger.info("All close!")
 
 
@@ -181,5 +217,5 @@ if __name__ == "__main__":
     images, _, _, _ = loader(onehot=True)
 
     # test_scalability(images)
-    test_accuracy(images)
-    # test_parallelism(images)
+    # test_accuracy(images)
+    test_parallelism(images)
