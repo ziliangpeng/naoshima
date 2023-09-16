@@ -85,7 +85,7 @@ def loss(params, inputs, targets):
     return l
 
 
-# @jax.jit
+@jax.jit
 def update(params, x, y, lr):
     grads = jax.grad(loss)(params, x, y)
     return [(param - lr * grad) for param, grad in zip(params, grads)]
