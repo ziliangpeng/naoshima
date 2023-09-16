@@ -1,0 +1,2 @@
+- try to do a fast convolute with for0 (vectorize indexing, im2col, etc.)
+
