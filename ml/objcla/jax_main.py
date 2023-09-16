@@ -13,6 +13,7 @@ from jax_pass import init_cnn_params, init_fnn_params, cnn_predict, fnn_predict
 TODOs:
 - Something is still harcoded, e.g. the image shape, the number of classes, etc. Need to make them parameterizable.
 - make it work for other datasets, e.g. cifar10, cifar100, etc.
+- run CNN in GPU
 """
 
 
