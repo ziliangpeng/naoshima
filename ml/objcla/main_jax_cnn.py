@@ -16,7 +16,32 @@ The performance is thus much worse than FNN.
 I tries using only ~600 for FNN, and then CNN is better.
 """
 
-num_filters = 32
+num_filters = 64
+"""
+32 filters is giving only ~10+% accuracy.
+64 suddenly gives ~70% accuracy at first epoch.
+"""
+
+
+def superfast_cnn(params, images, num_filters):
+    conv_w, conv_b = params
+    conved = jnp.zeros((images.shape[0], 26, 26, num_filters))
+    flattened_conv_w = jnp.reshape(conv_w, (9, num_filters))
+
+    tile_Is = jnp.repeat(jnp.arange(3), 3)
+    tile_Js = jnp.tile(jnp.arange(3), 3)
+    center_Is = jnp.repeat(jnp.arange(26), 26)
+    center_Js = jnp.tile(jnp.arange(26), 26)
+
+    Is = jnp.repeat(center_Is, 3*3) + jnp.tile(tile_Is, 26 * 26)
+    Js = jnp.repeat(center_Js, 3*3) + jnp.tile(tile_Js, 26 * 26)
+    im2col_tmptmp = images[:, Is, Js]
+
+    im2col = jnp.reshape(im2col_tmptmp, (images.shape[0], 26 * 26, 9))
+
+    conved = im2col @ flattened_conv_w + conv_b
+    conved = conved.reshape((images.shape[0], -1, num_filters))
+    return conved
 
 
 def fast_cnn(params, images, num_filters):
@@ -36,7 +61,8 @@ def fast_cnn(params, images, num_filters):
 
 def predict(params, inputs):
     conv_w, conv_b, w1, b1, w2, b2 = params
-    conved = fast_cnn((conv_w, conv_b), inputs, num_filters)
+    # conved = fast_cnn((conv_w, conv_b), inputs, num_filters)
+    conved = superfast_cnn((conv_w, conv_b), inputs, num_filters)
 
     conved = jax.nn.relu(conved)
     conved = jnp.reshape(conved, (conved.shape[0], -1))

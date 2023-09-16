@@ -52,7 +52,7 @@ def update_batch(params, x, y, lr):
 def train_batch(x_train, y_train, x_test, y_test, params, lr):
     batch_size = 128
     num_batches = x_train.shape[0] // batch_size
-    epochs = 10
+    epochs = 100
     for epoch in range(epochs):
         for i in range(num_batches):
             start_idx = i * batch_size
