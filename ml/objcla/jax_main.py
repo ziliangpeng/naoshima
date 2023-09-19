@@ -63,10 +63,12 @@ def train(x_train, y_train, x_test, y_test, params, lr):
 
 @click.command()
 @click.option("--model", default="fnn", help="")
-def main(model):
+@click.option("--dataset", default="mnist", help="")
+def main(model, dataset):
     # TODO: pass dataset name from cli
     # loader = dataloader.load_cifar10
-    loader = dataloader.load_mnist
+    # loader = dataloader.load_mnist
+    loader = getattr(dataloader, f"load_{dataset}")
     x_train, y_train, x_test, y_test = loader(onehot=True)
     # At least it can train and overfit on a small dataset.
     num_images = 600  # 6000 * 3
