@@ -5,11 +5,11 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
-from tensorflow.keras.datasets import imdb
-from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Embedding, GlobalAveragePooling1D
 from sklearn.metrics import accuracy_score, classification_report
+
+import dataloader
 
 # Create the TensorBoard callback
 def make_tb(name):
@@ -27,11 +27,8 @@ def make_tb(name):
 vocab_size = 20000
 max_length = 250
 
-(X_train, y_train), (X_test, y_test) = imdb.load_data(num_words=vocab_size)
 
-# Pad sequences
-X_train = pad_sequences(X_train, maxlen=max_length, padding="post", truncating="post")
-X_test = pad_sequences(X_test, maxlen=max_length, padding="post", truncating="post")
+X_train, y_train, X_test, y_test = dataloader.load(vocab_size, max_length)
 
 # with tf.device("/GPU:0"):
 with tf.device('/CPU:0'):
