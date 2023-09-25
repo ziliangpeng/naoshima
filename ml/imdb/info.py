@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 from tensorflow.keras.datasets import imdb
 from collections import Counter
 
+from loguru import logger
+
 # Load dataset
 vocab_size = 10000
 max_length = 250
@@ -11,8 +13,8 @@ max_length = 250
 
 # Get word index and reverse it
 word_index = imdb.get_word_index()
-print(word_index)
-print(len(word_index))
+# logger.info(word_index)
+logger.info(f"Number of words: {len(word_index)}")  # 88584
 index_word = {i + 3: w for w, i in word_index.items()}
 index_word[0] = "<PAD>"
 index_word[1] = "<START>"
@@ -21,7 +23,8 @@ index_word[2] = "<UNK>"
 # Calculate average review length
 review_lengths = [len(review) for review in X_train]
 avg_review_length = np.mean(review_lengths)
-print(f"Average review length: {avg_review_length:.2f}")
+logger.info(f"Average review length: {avg_review_length:.2f}")  # 238.71
+logger.info(f"Max review length: {np.max(review_lengths)}")  # 2494
 
 # # Plot distribution of review lengths
 # plt.hist(review_lengths, bins=50)
