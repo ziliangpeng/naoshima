@@ -11,18 +11,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Embedding, GlobalAveragePooling1D
 from sklearn.metrics import accuracy_score, classification_report
 
-
-# Create the TensorBoard callback
-def make_tb(name):
-    prefix = name
-    # if FLAGS.tag:
-    #     prefix += '-' + FLAGS.tag
-    log_dir = os.path.join(
-        "logs", prefix + "-" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    )
-    return tf.keras.callbacks.TensorBoard(
-        log_dir=log_dir, histogram_freq=1, update_freq="batch"
-    )
+from loguru import logger
 
 
 # hyperparameter tuning
@@ -39,37 +28,38 @@ def train(e, v, m):
     X_train = pad_sequences(X_train, maxlen=m, padding="post", truncating="post")
     X_test = pad_sequences(X_test, maxlen=m, padding="post", truncating="post")
 
-    model = keras.Sequential(
-        [
-            layers.Embedding(vocab_size, e, input_length=m),
-            layers.Flatten(),
-            layers.Dense(1, activation="sigmoid"),
-        ]
-    )
+    with tf.device("/CPU:0"):
+        model = keras.Sequential(
+            [
+                layers.Embedding(vocab_size, e, input_length=m),
+                layers.Flatten(),
+                layers.Dense(1, activation="sigmoid"),
+            ]
+        )
 
-    # Compile the model
-    model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"])
+        # Compile the model
+        model.compile(
+            optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"]
+        )
 
     # Train the model
     history = model.fit(
-        X_train,
-        y_train,
-        epochs=2,
-        batch_size=256,
-        validation_split=0.2,
-        verbose=1,
-        callbacks=[make_tb("model")],
+        X_train, y_train, epochs=2, batch_size=256, validation_split=0.2, verbose=0
     )
     end_time = datetime.datetime.now()
     diff_time = end_time - start_time
-    print("Hyperparameters/time: ", e, v, m, diff_time)
-    print("=====================================")
+    # print("Hyperparameters/time: ", e, v, m, diff_time)
+    # print("=====================================")
+    return history.history["val_accuracy"][-1], diff_time
 
 
-train(embedding_dim, vocab_size, max_length)
+# train(embedding_dim, vocab_size, max_length)
 
 
-# for embedding_dim in [128, 512, 2048]:
-#     for vocab_size in [800, 3200, 12800]:
-#         for max_length in [200, 400, 800, 1600, 3200]:
-#             train(embedding_dim, vocab_size, max_length)
+for embedding_dim in [2, 4, 8, 16, 32, 64, 128]:
+    for vocab_size in [100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600]:
+        for max_length in [4, 8, 16, 32, 64, 128, 256]:
+            val_acc, train_time = train(embedding_dim, vocab_size, max_length)
+            logger.info(
+                f"Hyperparameters/time/acc  : {embedding_dim}, {vocab_size}, {max_length}, {train_time}, {val_acc:.4f}"
+            )
