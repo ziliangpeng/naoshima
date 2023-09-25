@@ -66,7 +66,6 @@ def train(x_train, y_train, x_test, y_test, params, lr):
 @click.option("--dataset", default="mnist", help="")
 @click.option("--training_size", default=600, help="")
 def main(model, dataset, training_size):
-    # TODO: pass dataset name from cli
     # loader = dataloader.load_cifar10
     # loader = dataloader.load_mnist
     loader = getattr(dataloader, f"load_{dataset}")

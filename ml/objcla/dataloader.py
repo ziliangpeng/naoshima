@@ -5,6 +5,26 @@ from loguru import logger
 from functools import partial
 
 
+# untested
+def load_mnist_from_huggingface():
+    tokenizer = AutoTokenizer.from_pretrained("mnist")
+    model = AutoModelForSequenceClassification.from_pretrained("mnist")
+    nlp = pipeline("text-classification", model=model, tokenizer=tokenizer)
+
+    train_dataset = nlp.tokenizer(["train"], padding=True, truncation=True, return_tensors="pt")
+    test_dataset = nlp.tokenizer(["test"], padding=True, truncation=True, return_tensors="pt")
+
+    train_inputs = train_dataset["input_ids"]
+    train_labels = train_dataset["attention_mask"]
+    test_inputs = test_dataset["input_ids"]
+    test_labels = test_dataset["attention_mask"]
+
+    logger.info("Using MNIST dataset from HuggingFace")
+
+    return train_inputs, train_labels, test_inputs, test_labels
+    
+
+
 def _load_keras(loader, name, onehot):
     (x_train, y_train), (x_test, y_test) = loader()
     logger.info(f"Using {name} dataset")
