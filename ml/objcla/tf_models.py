@@ -34,7 +34,7 @@ def TfCnn(image_shape):
     )
 
 
-def AlexNet(image_shape):
+def AlexNet(image_shape, num_classes):
     activation = "relu"  # Make if flag
     return Sequential(
         [
@@ -58,6 +58,6 @@ def AlexNet(image_shape):
             Dropout(0.5),
             Dense(4096, activation=activation),
             Dropout(0.5),
-            Dense(10, activation="softmax"),
+            Dense(num_classes, activation="softmax"),
         ]
     )
