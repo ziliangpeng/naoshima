@@ -31,59 +31,68 @@ vocab_size = 20000
 max_length = 250
 
 
-X_train, y_train, X_test, y_test = dataloader.load(vocab_size, max_length)
+@click.command()
+@click.option("--model", default="simplernn", help="")
+def train(model):
+    X_train, y_train, X_test, y_test = dataloader.load(vocab_size, max_length)
 
-# with tf.device("/GPU:0"):
-with tf.device("/CPU:0"):
-    # Create the model
-    model = Sequential(
-        [
-            Embedding(vocab_size, 16),
-            GlobalAveragePooling1D(),
-            Dense(16, activation="relu"),
-            Dense(1, activation="sigmoid"),
-        ]
-    )
-    """
-    layers.Embedding(vocab_size, 128, input_length=max_length),
-    and a simple Flatten and Dense layer, will get 86% accuracy
-    LSTM/RNN cannot get more than 80% accuracy.
-    """
-    # Define the RNN model
-    model = keras.Sequential(
-        [
-            layers.Embedding(vocab_size, 128),
-            layers.Bidirectional(layers.LSTM(128, return_sequences=False)),
-            # layers.LSTM(128, dropout=0.2, recurrent_dropout=0.2),
-            # layers.Dense(64, activation="relu"),
-            layers.Dense(1, activation="sigmoid"),
-        ]
-    )
+    # with tf.device("/GPU:0"):
+    with tf.device("/CPU:0"):
+        mlp = Sequential(
+            [
+                Embedding(vocab_size, 16),
+                GlobalAveragePooling1D(),
+                Dense(16, activation="relu"),
+                Dense(1, activation="sigmoid"),
+            ]
+        )
+        """
+        layers.Embedding(vocab_size, 128, input_length=max_length),
+        and a simple Flatten and Dense layer, will get 86% accuracy
+        LSTM/RNN cannot get more than 80% accuracy.
+        """
+        # Define the RNN model
+        lstm = keras.Sequential(
+            [
+                layers.Embedding(vocab_size, 128),
+                layers.Bidirectional(layers.LSTM(128, return_sequences=False)),
+                # layers.LSTM(128, dropout=0.2, recurrent_dropout=0.2),
+                # layers.Dense(64, activation="relu"),
+                layers.Dense(1, activation="sigmoid"),
+            ]
+        )
 
-    small_model = keras.Sequential(
-        [
-            layers.Embedding(vocab_size, 128),
-            layers.SimpleRNN(128, return_sequences=False), # RNN won't really work.
-            # layers.LSTM(128, return_sequences=False), # can go as high as 75% - 80%
-            # layers.Dense(64, activation="relu"),
-            layers.Dense(1, activation="sigmoid"),
-        ]
-    )
+        simplernn = keras.Sequential(
+            [
+                layers.Embedding(vocab_size, 128),
+                layers.SimpleRNN(128, return_sequences=False),  # RNN won't really work.
+                # layers.LSTM(128, return_sequences=False), # can go as high as 75% - 80%
+                # layers.Dense(64, activation="relu"),
+                layers.Dense(1, activation="sigmoid"),
+            ]
+        )
 
-    # Compile the model
-    model = small_model
-    model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"])
+        models = {
+            "mlp": mlp,
+            "lstm": lstm,
+            "simplernn": simplernn,
+        }
 
-    # Train the model
-    history = model.fit(
-        X_train,
-        y_train,
-        epochs=42,
-        batch_size=256,
-        validation_split=0.2,
-        verbose=1,
-        callbacks=[make_tb("model")],
-    )
+        model = models[model]
+        model.compile(
+            optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"]
+        )
+
+        # Train the model
+        history = model.fit(
+            X_train,
+            y_train,
+            epochs=42,
+            batch_size=256,
+            validation_split=0.2,
+            verbose=1,
+            callbacks=[make_tb("model")],
+        )
 
 
 # # Evaluate the model
@@ -118,4 +127,7 @@ def plot(plot):
     plt.show()
 
 
-plot()
+if __name__ == "__main__":
+    train()
+    evaluate()
+    plot()
