@@ -10,6 +10,7 @@ from tensorflow.keras.layers import Dense, Embedding, GlobalAveragePooling1D
 from sklearn.metrics import accuracy_score, classification_report
 
 import dataloader
+from dataloader import VOCAB_SIZE, MAX_LENGTH
 import click
 
 
@@ -26,21 +27,16 @@ def make_tb(name):
     )
 
 
-# Load dataset
-vocab_size = 20000
-max_length = 250
-
-
 @click.command()
 @click.option("--model", default="simplernn", help="")
 def train(model):
-    X_train, y_train, X_test, y_test = dataloader.load(vocab_size, max_length)
+    X_train, y_train, X_test, y_test = dataloader.load()
 
     # with tf.device("/GPU:0"):
     with tf.device("/CPU:0"):
         mlp = Sequential(
             [
-                Embedding(vocab_size, 16),
+                Embedding(VOCAB_SIZE, 16),
                 GlobalAveragePooling1D(),
                 Dense(16, activation="relu"),
                 Dense(1, activation="sigmoid"),
@@ -54,8 +50,9 @@ def train(model):
         # Define the RNN model
         lstm = keras.Sequential(
             [
-                layers.Embedding(vocab_size, 128),
-                layers.Bidirectional(layers.LSTM(128, return_sequences=False)),
+                layers.Embedding(VOCAB_SIZE, 128),
+                # layers.Bidirectional(layers.LSTM(128, return_sequences=False)),
+                layers.LSTM(128, return_sequences=False), # can go as high as 75% - 80%
                 # layers.LSTM(128, dropout=0.2, recurrent_dropout=0.2),
                 # layers.Dense(64, activation="relu"),
                 layers.Dense(1, activation="sigmoid"),
@@ -64,7 +61,7 @@ def train(model):
 
         simplernn = keras.Sequential(
             [
-                layers.Embedding(vocab_size, 128),
+                layers.Embedding(VOCAB_SIZE, 128),
                 layers.SimpleRNN(128, return_sequences=False),  # RNN won't really work.
                 # layers.LSTM(128, return_sequences=False), # can go as high as 75% - 80%
                 # layers.Dense(64, activation="relu"),
