@@ -1,2 +1,6 @@
 mlenv/
 linear-regression/lrgs/
+
+**/.ipynb_checkpoints/
+
+**/Untitled*.ipynb
