@@ -1,0 +1,4 @@
+- train a good model and analyze what are the remaining wrong predictions
+- try to visualize activation
+- try semilarity search
+- try out inference speed and optimization
