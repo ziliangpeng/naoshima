@@ -42,7 +42,7 @@ def train(model):
                 # Dense(4096, activation="tanh"),
                 # Dense(512, activation="tanh"),
                 # Dense(128, activation="tanh"),
-                # Dense(32, activation="tanh", input_shape=(MAX_LENGTH, 16)),
+                Dense(32, activation="tanh"),
                 Dense(1, activation="sigmoid"),
             ]
         )
