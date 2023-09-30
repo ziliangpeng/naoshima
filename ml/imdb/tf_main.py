@@ -6,19 +6,18 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Embedding, GlobalAveragePooling1D
+from tensorflow.keras.layers import Dense, Embedding, GlobalAveragePooling1D, Flatten
 from sklearn.metrics import accuracy_score, classification_report
 
 import dataloader
 from dataloader import VOCAB_SIZE, MAX_LENGTH
 import click
+from loguru import logger
 
 
 # Create the TensorBoard callback
 def make_tb(name):
     prefix = name
-    # if FLAGS.tag:
-    #     prefix += '-' + FLAGS.tag
     log_dir = os.path.join(
         "logs", prefix + "-" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     )
@@ -28,7 +27,7 @@ def make_tb(name):
 
 
 @click.command()
-@click.option("--model", default="simplernn", help="")
+@click.option("--model", default="mlp", help="")
 def train(model):
     X_train, y_train, X_test, y_test = dataloader.load()
 
@@ -36,9 +35,14 @@ def train(model):
     with tf.device("/CPU:0"):
         mlp = Sequential(
             [
-                Embedding(VOCAB_SIZE, 16),
-                GlobalAveragePooling1D(),
-                Dense(16, activation="relu"),
+                # CAn achieve 88% accuracy
+                Embedding(VOCAB_SIZE, 1, input_length=MAX_LENGTH),
+                # GlobalAveragePooling1D(),
+                Flatten(),
+                # Dense(4096, activation="tanh"),
+                # Dense(512, activation="tanh"),
+                # Dense(128, activation="tanh"),
+                # Dense(32, activation="tanh", input_shape=(MAX_LENGTH, 16)),
                 Dense(1, activation="sigmoid"),
             ]
         )
@@ -47,12 +51,11 @@ def train(model):
         and a simple Flatten and Dense layer, will get 86% accuracy
         LSTM/RNN cannot get more than 80% accuracy.
         """
-        # Define the RNN model
         lstm = keras.Sequential(
             [
                 layers.Embedding(VOCAB_SIZE, 128),
                 # layers.Bidirectional(layers.LSTM(128, return_sequences=False)),
-                layers.LSTM(128, return_sequences=False), # can go as high as 75% - 80%
+                layers.LSTM(128, return_sequences=False),  # can go as high as 75% - 80%
                 # layers.LSTM(128, dropout=0.2, recurrent_dropout=0.2),
                 # layers.Dense(64, activation="relu"),
                 layers.Dense(1, activation="sigmoid"),
@@ -75,6 +78,7 @@ def train(model):
             "simplernn": simplernn,
         }
 
+        logger.info(f"Training model: {model}")
         model = models[model]
         model.compile(
             optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"]
