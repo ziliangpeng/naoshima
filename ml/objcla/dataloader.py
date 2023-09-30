@@ -50,5 +50,7 @@ load_fashion_mnist = partial(_load_keras, fashion_mnist.load_data, "fashion")
 
 
 if __name__ == "__main__":
-    load_mnist()
-    load_cifar10()
+    load_mnist(onehot=True)
+    load_cifar10(onehot=False)
+    X_train, y_train, X_test, y_test = load_mnist(onehot=True)
+    logger.info(type(X_train[0])) # type should be numpy.narray

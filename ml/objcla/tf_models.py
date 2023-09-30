@@ -6,6 +6,8 @@ from tensorflow.keras.layers import (
     Flatten,
     BatchNormalization,
     Dropout,
+    RandomRotation,
+    RandomTranslation,
 )
 
 
@@ -34,30 +36,33 @@ def TfCnn(image_shape):
     )
 
 
-def AlexNet(image_shape, num_classes):
+def AlexNet(image_shape, num_classes, augmentation=False):
     activation = "relu"  # Make if flag
-    return Sequential(
-        [
-            Conv2D(
-                96, 3, padding="same", activation=activation, input_shape=image_shape
-            ),
-            BatchNormalization(),
-            MaxPooling2D(pool_size=(2, 2)),
-            Conv2D(256, 3, padding="same", activation=activation),
-            BatchNormalization(),
-            MaxPooling2D(pool_size=(2, 2)),
-            Conv2D(384, 3, padding="same", activation=activation),
-            BatchNormalization(),
-            Conv2D(384, 3, padding="same", activation=activation),
-            BatchNormalization(),
-            Conv2D(256, 3, padding="same", activation=activation),
-            BatchNormalization(),
-            MaxPooling2D(pool_size=(2, 2)),
-            Flatten(),
-            Dense(4096, activation=activation),
-            Dropout(0.5),
-            Dense(4096, activation=activation),
-            Dropout(0.5),
-            Dense(num_classes, activation="softmax"),
-        ]
-    )
+    layers = [
+        Conv2D(96, 3, padding="same", activation=activation, input_shape=image_shape),
+        BatchNormalization(),
+        MaxPooling2D(pool_size=(2, 2)),
+        Conv2D(256, 3, padding="same", activation=activation),
+        BatchNormalization(),
+        MaxPooling2D(pool_size=(2, 2)),
+        Conv2D(384, 3, padding="same", activation=activation),
+        BatchNormalization(),
+        Conv2D(384, 3, padding="same", activation=activation),
+        BatchNormalization(),
+        Conv2D(256, 3, padding="same", activation=activation),
+        BatchNormalization(),
+        MaxPooling2D(pool_size=(2, 2)),
+        Flatten(),
+        Dense(4096, activation=activation),
+        Dropout(0.5),
+        Dense(4096, activation=activation),
+        Dropout(0.5),
+        Dense(num_classes, activation="softmax"),
+    ]
+
+    if augmentation:
+        layers = [
+            RandomRotation(0.1),
+            RandomTranslation(0.1, 0.1),
+        ] + layers
+    return Sequential(layers)
