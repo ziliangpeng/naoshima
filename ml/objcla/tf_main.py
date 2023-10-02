@@ -13,9 +13,8 @@ import dataloader
 from tf_models import *
 
 
-@click.command()
-@click.option("--dataset", default="mnist", help="Use fashion dataset instead of MNIST")
-def main(dataset):
+
+def train(dataset):
     loader = getattr(dataloader, f"load_{dataset}")
     x_train, y_train, x_test, y_test = loader(onehot=True)
 
@@ -39,6 +38,12 @@ def main(dataset):
     loss, accuracy = model.evaluate(x_test, y_test)
     print(f"Test loss: {loss:.4f}")
     print(f"Test accuracy: {accuracy:.4f}")
+    return model
+
+@click.command()
+@click.option("--dataset", default="mnist", help="Use fashion dataset instead of MNIST")
+def main(dataset):
+    train(dataset)
 
 
 if __name__ == "__main__":
