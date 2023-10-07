@@ -1,0 +1,124 @@
+#!/usr/bin/python3
+
+"""
+Master video compression scripts to support parameters.
+
+Main parameters:
+- gpu
+- quality (low, standard, high)
+- resize (1080, 2.7k, 4k)
+
+
+GPU cmd:
+    ffmpeg -i $input_file -map_metadata 0 -movflags use_metadata_tags -c:v hevc_videotoolbox -tag:v hvc1 -b:v "$bitrate" "$tmpfile"
+CPU cmd:
+    ffmpeg -i $input_file -map_metadata 0 -movflags use_metadata_tags -vcodec libx265 -tag:v hvc1 -crf 23 "$tmpfile"
+
+"""
+
+
+import os
+from pathlib import Path
+import sys
+import click
+from loguru import logger
+import subprocess
+import mdate
+
+
+def get_size(filename):
+    probe_cmd = [
+        "ffprobe",
+        "-v",
+        "error",
+        "-select_streams",
+        "v:0",
+        "-show_entries",
+        "stream=width,height",
+        "-of",
+        "csv=s=x:p=0",
+        filename,
+    ]
+    result = subprocess.run(probe_cmd, capture_output=True, text=True)
+    logger.info(f"Size of video: {result.stdout}")
+    w, h = result.stdout.split("x")
+    return int(w), int(h)
+
+
+def calcualte_resize(resize, w, h):
+    if resize == "-1":
+        return w, h
+    elif resize == "1080":
+        return w * (1080 / h), 1080
+    elif resize == "2.7k":
+        return 2704, h * (2704 / w)
+    elif resize == "4k":
+        return 3840, h * (3840 / w)
+    else:
+        raise ValueError(f"Unknown resize: {resize}")
+
+
+def process_video(gpu, quality, resize, filename):
+    logger.info(f"GPU: {gpu}")
+    logger.info(f"Quality: {quality}")
+    logger.info(f"Resize: {resize}")
+    logger.info(f"Filename: {filename}")
+    assert quality in ["low", "high"]
+    assert resize in ["1080", "2.7k", "4k", "-1"]
+    w, h = get_size(filename)
+
+    target_w, target_h = calcualte_resize(resize, w, h)
+    target_w, target_h = int(target_w), int(target_h)
+    logger.info(f"Target size: {target_w}x{target_h}")
+
+    output_filename = filename + "-conVerted"
+
+    cmd = [
+        "ffmpeg",
+        "-i",
+        filename,
+        "-map_metadata",
+        "0",
+        "-movflags",
+        "use_metadata_tags",
+    ]
+    if gpu:
+        cmd += ["-c:v", "hevc_videotoolbox", "-tag:v", "hvc1"]
+        bitrate = {"low": 2, "high": 4}[quality] * target_w * target_h
+        cmd += ["-b:v", f"{bitrate}"]
+        output_filename += f"-hvc1-br-{bitrate}"
+    else:
+        cmd += ["-vcodec", "libx265", "-tag:v", "hvc1"]
+        crf = {"low": 28, "high": 23}[quality]
+        cmd += ["-crf", str(crf)]
+        output_filename += f"-libx265-hvc1-crf-{crf}"
+
+    if resize != "-1":
+        cmd += ["-vf", f"scale={target_w}:-1"]
+        output_filename += f"-{target_w}x{target_h}"
+
+    output_filename += ".mp4"
+
+    if os.path.exists(output_filename):
+        logger.info(f"File exists: {output_filename}")
+        return
+    tmp_filename = output_filename + ".tmp.mp4"
+    cmd += [tmp_filename]
+    subprocess.run(cmd)
+    os.rename(tmp_filename, output_filename)
+    mdate.change_date(output_filename)
+
+
+@click.command()
+@click.argument("files", nargs=-1)
+@click.option("--gpu", is_flag=True, default=False, help="GPU to use")
+@click.option("--quality", default="high", help="Quality to use")
+@click.option("--resize", default="-1", help="Resolution to use")
+def main(gpu, quality, resize, files):
+    logger.info(f"Filenames: {files}")
+    for f in files:
+        process_video(gpu, quality, resize, f)
+
+
+if __name__ == "__main__":
+    main()
