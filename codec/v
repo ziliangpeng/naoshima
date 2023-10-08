@@ -41,19 +41,21 @@ def get_size(filename):
     ]
     result = subprocess.run(probe_cmd, capture_output=True, text=True)
     logger.info(f"Size of video: {result.stdout}")
-    w, h = result.stdout.split("x")
+    w, h = result.stdout.split("x")[:2]
     return int(w), int(h)
 
 
 def calcualte_resize(resize, w, h):
     if resize == "-1":
         return w, h
-    elif resize == "1080":
+    elif resize == "1080":  # 1920x1080
         return w * (1080 / h), 1080
-    elif resize == "2.7k":
-        return 2704, h * (2704 / w)
-    elif resize == "4k":
-        return 3840, h * (3840 / w)
+    elif resize == "2.7k":  # 2704x1520
+        # return 2704, h * (2704 / w)
+        return w * (1520 / h), 1520
+    elif resize == "4k":  # 3840x2160
+        # return 3840, h * (3840 / w)
+        return w * (2160 / h), 2160
     else:
         raise ValueError(f"Unknown resize: {resize}")
 
@@ -94,7 +96,7 @@ def process_video(gpu, quality, resize, filename):
         output_filename += f"-libx265-hvc1-crf-{crf}"
 
     if resize != "-1":
-        cmd += ["-vf", f"scale={target_w}:-1"]
+        cmd += ["-vf", f"scale=-1:{target_h}"]
         output_filename += f"-{target_w}x{target_h}"
 
     output_filename += ".mp4"
@@ -104,6 +106,7 @@ def process_video(gpu, quality, resize, filename):
         return
     tmp_filename = output_filename + ".tmp.mp4"
     cmd += [tmp_filename]
+    logger.info(cmd)
     subprocess.run(cmd)
     os.rename(tmp_filename, output_filename)
     mdate.change_date(output_filename)
