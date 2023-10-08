@@ -1,5 +1,6 @@
 from tensorflow.keras.models import Sequential
-from tensorflow.keras import regularizers
+from tensorflow.keras import regularizers, initializers
+from tensorflow.keras import layers, models
 from tensorflow.keras.layers import (
     Conv2D,
     MaxPooling2D,
@@ -74,3 +75,51 @@ def AlexNet(image_shape, num_classes, augmentation=False, l2_lambda=0.0):
             RandomTranslation(0.2, 0.2),
         ] + layers
     return Sequential(layers)
+
+def ResNet(input_shape, num_classes, l2_lambda=0.0):
+    # Note: l2_lambda=0.0 means no regularization
+    regularizer = regularizers.l2(l2_lambda)
+
+    # Define custom ResNet architecture for CIFAR-10
+    def resnet_block(x, filters, kernel_size=3, stride=1, conv_shortcut=True):
+
+        shortcut = x
+        if conv_shortcut:
+            shortcut = layers.Conv2D(filters, 1, strides=stride, kernel_regularizer=regularizer, kernel_initializer=initializers.HeNormal())(shortcut)
+            shortcut = layers.BatchNormalization()(shortcut)
+
+        x = layers.Conv2D(filters, kernel_size, strides=stride, padding='same', kernel_regularizer=regularizer, kernel_initializer=initializers.HeNormal())(x)
+        x = layers.BatchNormalization()(x)
+        x = layers.ReLU()(x)
+
+        x = layers.Conv2D(filters, kernel_size, padding='same', kernel_regularizer=regularizer, kernel_initializer=initializers.HeNormal())(x)
+        x = layers.BatchNormalization()(x)
+
+        x = layers.Add()([shortcut, x])
+        x = layers.ReLU()(x)
+        return x
+
+    inputs = layers.Input(shape=input_shape)
+    # Note: default initializer is Glorot. But He is better for ReLU.
+    x = layers.Conv2D(64, 3, padding='same', kernel_regularizer=regularizer, kernel_initializer=initializers.HeNormal())(inputs)
+    x = layers.BatchNormalization()(x)
+    x = layers.ReLU()(x)
+
+    x = resnet_block(x, 64)
+    x = layers.Dropout(0.2)(x)
+    x = resnet_block(x, 64)
+    x = resnet_block(x, 128, stride=2)
+    x = layers.Dropout(0.3)(x)
+    x = resnet_block(x, 128)
+    x = resnet_block(x, 256, stride=2)
+    x = layers.Dropout(0.4)(x)
+    x = resnet_block(x, 256)
+    # trying to add another layer
+    # x = resnet_block(x, 512, stride=2)
+    # x = resnet_block(x, 512)
+
+    x = layers.GlobalAveragePooling2D()(x)
+    x = layers.Dense(num_classes, activation='softmax', kernel_regularizer=regularizer)(x)
+
+    model = models.Model(inputs, x)
+    return model

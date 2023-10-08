@@ -23,7 +23,7 @@ def train(dataset):
         x_test = x_test[..., np.newaxis]
     image_shape = x_train[0].shape  # (28, 28)
 
-    model = AlexNet(image_shape, num_classes=y_train.shape[1])
+    model = ResNet(image_shape, num_classes=y_train.shape[1])
 
     model.compile(
         optimizer="adam", loss=CategoricalCrossentropy(), metrics=["accuracy"]
