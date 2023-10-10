@@ -85,6 +85,7 @@ def ResNet(input_shape, num_classes, augmentation=False, l2_lambda=0.0):
 
         shortcut = x
         if conv_shortcut:
+            # 1x1 convolution to match the dimensions between the residual and identity blocks
             shortcut = layers.Conv2D(filters, 1, strides=stride, kernel_regularizer=regularizer, kernel_initializer=initializers.HeNormal())(shortcut)
             shortcut = layers.BatchNormalization()(shortcut)
 
@@ -110,6 +111,9 @@ def ResNet(input_shape, num_classes, augmentation=False, l2_lambda=0.0):
     x = layers.BatchNormalization()(x)
     x = layers.ReLU()(x)
 
+    # image sizes are [32, 16, 8]
+    # filter counts are [16, 32, 64] # 32 * 16 = 16 * 32 = 8 * 64 = 512
+    # good for cifar10.
     x = resnet_block(x, 16)
     for i in range(3):
         x = resnet_block(x, 16, conv_shortcut=False)

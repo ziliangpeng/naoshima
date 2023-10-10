@@ -14,7 +14,7 @@ from tf_models import *
 
 
 
-def train(dataset):
+def train(dataset, epoch):
     loader = getattr(dataloader, f"load_{dataset}")
     x_train, y_train, x_test, y_test = loader(onehot=True)
 
@@ -23,7 +23,9 @@ def train(dataset):
         x_test = x_test[..., np.newaxis]
     image_shape = x_train[0].shape  # (28, 28)
 
-    model = ResNet(image_shape, num_classes=y_train.shape[1])
+    # ResNet without augmentation, 42 epochs, 83% accuracy
+    # ResNet with augmentation, 42 epochs, 79% accuracy. Still climbing.
+    model = ResNet(image_shape, num_classes=y_train.shape[1], augmentation=True)
 
     model.compile(
         optimizer="adam", loss=CategoricalCrossentropy(), metrics=["accuracy"]
@@ -31,7 +33,7 @@ def train(dataset):
 
     with tf.device("/GPU:0"):
         history = model.fit(
-            x_train, y_train, epochs=42, batch_size=64, validation_split=0.2
+            x_train, y_train, epochs=epoch, batch_size=64, validation_split=0.2
         )
 
     # Evaluate the model on the test set
@@ -42,8 +44,9 @@ def train(dataset):
 
 @click.command()
 @click.option("--dataset", default="mnist", help="Use fashion dataset instead of MNIST")
-def main(dataset):
-    train(dataset)
+@click.option("--epoch", default=42, help="Use fashion dataset instead of MNIST")
+def main(dataset, epoch):
+    train(dataset, epoch)
 
 
 if __name__ == "__main__":
