@@ -12,6 +12,8 @@ import dataloader
 
 from tf_models import *
 
+from loguru import logger
+
 
 
 def train(dataset, epoch):
@@ -38,8 +40,8 @@ def train(dataset, epoch):
 
     # Evaluate the model on the test set
     loss, accuracy = model.evaluate(x_test, y_test)
-    print(f"Test loss: {loss:.4f}")
-    print(f"Test accuracy: {accuracy:.4f}")
+    logger.info(f"Test loss: {loss:.4f}")
+    logger.info(f"Test accuracy: {accuracy:.4f}")
     return model
 
 @click.command()
