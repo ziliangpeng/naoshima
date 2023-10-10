@@ -10,6 +10,7 @@ from tensorflow.keras.layers import (
     Dropout,
     RandomRotation,
     RandomTranslation,
+    RandomFlip,
     LeakyReLU,
 )
 
@@ -103,6 +104,7 @@ def ResNet(input_shape, num_classes, augmentation=False, l2_lambda=0.0):
     inputs = layers.Input(shape=input_shape)
     x = inputs
     if augmentation:
+        x = RandomFlip("horizontal")(x)
         x = RandomRotation(0.2)(x)
         x = RandomTranslation(0.2, 0.2)(x)
         
