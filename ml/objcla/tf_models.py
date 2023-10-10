@@ -105,8 +105,8 @@ def ResNet(input_shape, num_classes, augmentation=False, l2_lambda=0.0):
     x = inputs
     if augmentation:
         x = RandomFlip("horizontal")(x)
-        x = RandomRotation(0.2)(x)
-        x = RandomTranslation(0.2, 0.2)(x)
+        x = RandomRotation(0.1)(x)
+        x = RandomTranslation(0.1, 0.1)(x)
         
     # Note: default initializer is Glorot. But He is better for ReLU.
     x = layers.Conv2D(64, 3, padding='same', kernel_regularizer=regularizer, kernel_initializer=initializers.HeNormal())(x)
