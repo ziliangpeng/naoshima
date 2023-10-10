@@ -1,3 +1,5 @@
+import datetime
+import os
 import click
 
 import tensorflow as tf
@@ -14,6 +16,15 @@ from tf_models import *
 
 from loguru import logger
 
+
+def make_tb(name):
+    prefix = name
+    log_dir = os.path.join(
+        "logs", prefix + "-" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    )
+    return tf.keras.callbacks.TensorBoard(
+        log_dir=log_dir, histogram_freq=1, update_freq="batch"
+    )
 
 
 def train(dataset, epoch):
@@ -35,7 +46,12 @@ def train(dataset, epoch):
 
     with tf.device("/GPU:0"):
         history = model.fit(
-            x_train, y_train, epochs=epoch, batch_size=64, validation_split=0.2
+            x_train,
+            y_train,
+            epochs=epoch,
+            batch_size=64,
+            validation_split=0.2,
+            callbacks=[make_tb("resnet-" + dataset + "-augmented")],
         )
 
     # Evaluate the model on the test set
@@ -43,6 +59,7 @@ def train(dataset, epoch):
     logger.info(f"Test loss: {loss:.4f}")
     logger.info(f"Test accuracy: {accuracy:.4f}")
     return model
+
 
 @click.command()
 @click.option("--dataset", default="mnist", help="Use fashion dataset instead of MNIST")
