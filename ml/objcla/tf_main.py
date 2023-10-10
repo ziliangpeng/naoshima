@@ -50,7 +50,8 @@ def train(dataset, epoch):
             y_train,
             epochs=epoch,
             batch_size=64,
-            validation_split=0.2,
+            # validation_split=0.2,
+            validation_data=(x_test, y_test),
             callbacks=[make_tb("resnet-" + dataset + "-augmented")],
         )
 

@@ -104,6 +104,7 @@ def ResNet(input_shape, num_classes, augmentation=False, l2_lambda=0.0):
     inputs = layers.Input(shape=input_shape)
     x = inputs
     if augmentation:
+        # Adding a flip and use smaller rotation/translation seems to improve quite a bit.
         x = RandomFlip("horizontal")(x)
         x = RandomRotation(0.05)(x)
         x = RandomTranslation(0.1, 0.1)(x)
