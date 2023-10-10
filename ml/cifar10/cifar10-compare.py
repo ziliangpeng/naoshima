@@ -1,3 +1,4 @@
+import click
 import tensorflow as tf
 from tensorflow.keras import layers, models, optimizers, regularizers
 from tensorflow.keras.datasets import cifar10
@@ -169,7 +170,9 @@ def make_resnet_original(input_shape, num_classes, l2_lambda=0.0):
     model = models.Model(inputs, x)
     return model
 
-def main():
+@click.command()
+@click.option('--model', default='resnet-simple', help='Model to use')
+def main(model):
     # Load and preprocess the CIFAR-10 dataset
     (X_train, y_train), (X_test, y_test) = cifar10.load_data()
     X_train = X_train / 255.0
@@ -203,6 +206,7 @@ def main():
         MODEL_NAME = 'densenet'
         MODEL_NAME = 'resnet-simple'
         MODEL_NAME = 'alexnet'
+        MODEL_NAME = model
         model = models[MODEL_NAME]
         model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
