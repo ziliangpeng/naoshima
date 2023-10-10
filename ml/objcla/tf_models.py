@@ -76,7 +76,7 @@ def AlexNet(image_shape, num_classes, augmentation=False, l2_lambda=0.0):
         ] + layers
     return Sequential(layers)
 
-def ResNet(input_shape, num_classes, l2_lambda=0.0):
+def ResNet(input_shape, num_classes, augmentation=False, l2_lambda=0.0):
     # Note: l2_lambda=0.0 means no regularization
     regularizer = regularizers.l2(l2_lambda)
 
@@ -100,23 +100,36 @@ def ResNet(input_shape, num_classes, l2_lambda=0.0):
         return x
 
     inputs = layers.Input(shape=input_shape)
+    x = inputs
+    if augmentation:
+        x = RandomRotation(0.2)(x)
+        x = RandomTranslation(0.2, 0.2)(x)
+        
     # Note: default initializer is Glorot. But He is better for ReLU.
-    x = layers.Conv2D(64, 3, padding='same', kernel_regularizer=regularizer, kernel_initializer=initializers.HeNormal())(inputs)
+    x = layers.Conv2D(64, 3, padding='same', kernel_regularizer=regularizer, kernel_initializer=initializers.HeNormal())(x)
     x = layers.BatchNormalization()(x)
     x = layers.ReLU()(x)
 
-    x = resnet_block(x, 64)
+    x = resnet_block(x, 16)
+    for i in range(3):
+        x = resnet_block(x, 16, conv_shortcut=False)
     x = layers.Dropout(0.2)(x)
-    x = resnet_block(x, 64)
-    x = resnet_block(x, 128, stride=2)
-    x = layers.Dropout(0.3)(x)
-    x = resnet_block(x, 128)
-    x = resnet_block(x, 256, stride=2)
-    x = layers.Dropout(0.4)(x)
-    x = resnet_block(x, 256)
+    
+    x = resnet_block(x, 32, stride=2)
+    for i in range(4):
+        x = resnet_block(x, 32, conv_shortcut=False)
+    x = layers.Dropout(0.2)(x)
+
+    x = resnet_block(x, 64, stride=2)
+    for i in range(6):
+        x = resnet_block(x, 64, conv_shortcut=False)
+    x = layers.Dropout(0.2)(x)
+    
     # trying to add another layer
-    # x = resnet_block(x, 512, stride=2)
-    # x = resnet_block(x, 512)
+    x = resnet_block(x, 128, stride=2)
+    for i in range(3):
+        x = resnet_block(x, 128, conv_shortcut=False)
+    x = layers.Dropout(0.2)(x)
 
     x = layers.GlobalAveragePooling2D()(x)
     x = layers.Dense(num_classes, activation='softmax', kernel_regularizer=regularizer)(x)
