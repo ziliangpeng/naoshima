@@ -49,8 +49,9 @@ def train(dataset, epoch, model_name):
     resnet = ResNet(image_shape, num_classes=y_train.shape[1], augmentation=True)
     alexnet = AlexNet(image_shape, num_classes=y_train.shape[1], augmentation=True)
     vggnet = VGGNet(image_shape, num_classes=y_train.shape[1], augmentation=True)
+    googlenet = GoogLeNet(image_shape, num_classes=y_train.shape[1])
 
-    model = {"alexnet": alexnet, "resnet": resnet, "vggnet": vggnet}[model_name]
+    model = {"alexnet": alexnet, "resnet": resnet, "vggnet": vggnet, "googlenet": googlenet}[model_name]
 
     model.compile(
         optimizer="adam", loss=CategoricalCrossentropy(), metrics=["accuracy"]
