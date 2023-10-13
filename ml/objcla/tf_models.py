@@ -167,31 +167,37 @@ def inception_module(x, filters):
     conv1 = Conv2D(
         filters=filters[0], kernel_size=(1, 1), padding="same", activation="relu"
     )(x)
+    conv1 = BatchNormalization()(conv1)
 
     # 1x1 Convolution followed by 3x3 Convolution
-    conv3_reduce = Conv2D(
+    conv3 = Conv2D(
         filters=filters[1], kernel_size=(1, 1), padding="same", activation="relu"
     )(x)
+    conv3 = BatchNormalization()(conv3)
     conv3 = Conv2D(
         filters=filters[2], kernel_size=(3, 3), padding="same", activation="relu"
-    )(conv3_reduce)
+    )(conv3)
+    conv3 = BatchNormalization()(conv3)
 
     # 1x1 Convolution followed by 5x5 Convolution
-    conv5_reduce = Conv2D(
+    conv5 = Conv2D(
         filters=filters[3], kernel_size=(1, 1), padding="same", activation="relu"
     )(x)
+    conv5 = BatchNormalization()(conv5)
     conv5 = Conv2D(
         filters=filters[4], kernel_size=(5, 5), padding="same", activation="relu"
-    )(conv5_reduce)
+    )(conv5)
+    conv5 = BatchNormalization()(conv5)
 
     # 3x3 Max Pooling followed by 1x1 Convolution
     pool = MaxPooling2D(pool_size=(3, 3), strides=(1, 1), padding="same")(x)
-    pool_proj = Conv2D(
+    pool = Conv2D(
         filters=filters[5], kernel_size=(1, 1), padding="same", activation="relu"
     )(pool)
+    pool = BatchNormalization()(pool)
 
     # Concatenate all the feature maps and return
-    output = concatenate([conv1, conv3, conv5, pool_proj], axis=-1)
+    output = concatenate([conv1, conv3, conv5, pool], axis=-1)
     return output
 
 
@@ -202,6 +208,7 @@ def GoogLeNet(input_shape, num_classes):
     x = Conv2D(64, (7, 7), padding="same", strides=(2, 2), activation="relu")(
         input_layer
     )
+    x = BatchNormalization()(x)
     x = MaxPooling2D((3, 3), padding="same", strides=(2, 2))(x)
 
     # Inception Modules followed by MaxPool
