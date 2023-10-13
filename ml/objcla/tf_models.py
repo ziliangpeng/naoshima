@@ -15,7 +15,7 @@ from tensorflow.keras.layers import (
 )
 
 
-def TfFnn(image_shape):
+def FNN(image_shape):
     return Sequential(
         [
             Flatten(input_shape=image_shape),
@@ -25,7 +25,7 @@ def TfFnn(image_shape):
     )
 
 
-def TfCnn(image_shape):
+def CNN(image_shape):
     return Sequential(
         [
             Conv2D(32, (5, 5), activation="relu", input_shape=image_shape),
