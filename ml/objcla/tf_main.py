@@ -41,8 +41,9 @@ def train(dataset, epoch, model_name):
     # ResNet with augmentation, 42 epochs, 79% accuracy. Still climbing.
     resnet = ResNet(image_shape, num_classes=y_train.shape[1], augmentation=True)
     alexnet = AlexNet(image_shape, num_classes=y_train.shape[1], augmentation=True)
+    vggnet = VGGNet(image_shape, num_classes=y_train.shape[1], augmentation=True)
 
-    model = {"alexnet": alexnet, "resnet": resnet}[model_name]
+    model = {"alexnet": alexnet, "resnet": resnet, "vggnet": vggnet}[model_name]
 
     model.compile(
         optimizer="adam", loss=CategoricalCrossentropy(), metrics=["accuracy"]

@@ -72,10 +72,55 @@ def AlexNet(image_shape, num_classes, augmentation=False, l2_lambda=0.0):
 
     if augmentation:
         layers = [
-            RandomRotation(0.2),
-            RandomTranslation(0.2, 0.2),
+            RandomRotation(0.1),
+            RandomTranslation(0.1, 0.1),
         ] + layers
     return Sequential(layers)
+
+def VGGNet(image_shape, num_classes, augmentation=False, l2_lambda=0.0):
+    model = Sequential()
+
+    if augmentation:
+        model.add(RandomRotation(0.1))
+        model.add(RandomTranslation(0.1, 0.1))
+
+    # Block 1
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same', input_shape=image_shape))
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+
+    # Block 2
+    model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+
+    # Block 3
+    model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+
+    # Block 4
+    model.add(Conv2D(512, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(512, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(512, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+
+    # The gen-code is for ImageNet, which is larger and can be pooled more times.
+    # This will error out for mnist, since image too small. maybe to intelligent pooling based on image size.
+    # # Block 5
+    # model.add(Conv2D(512, (3, 3), activation='relu', padding='same'))
+    # model.add(Conv2D(512, (3, 3), activation='relu', padding='same'))
+    # model.add(Conv2D(512, (3, 3), activation='relu', padding='same'))
+    # model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+
+    # FC layers
+    model.add(Flatten())
+    model.add(Dense(4096, activation='relu'))
+    model.add(Dense(1000, activation='relu'))
+    model.add(Dense(num_classes, activation='softmax'))
+
+    return model
 
 def ResNet(input_shape, num_classes, augmentation=False, l2_lambda=0.0):
     # Note: l2_lambda=0.0 means no regularization
