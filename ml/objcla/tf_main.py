@@ -16,6 +16,13 @@ from tf_models import *
 
 from loguru import logger
 
+"""
+CIFAR100, 42epochs, accuracy on training/test set:
+- AlexNet, 0.4830/0.4699
+- ResNet, 0.6936/0.5754
+- VGGNet,
+"""
+
 
 def make_tb(name):
     prefix = name

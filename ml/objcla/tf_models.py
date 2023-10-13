@@ -78,6 +78,7 @@ def AlexNet(image_shape, num_classes, augmentation=False, l2_lambda=0.0):
     return Sequential(layers)
 
 def VGGNet(image_shape, num_classes, augmentation=False, l2_lambda=0.0):
+    """ This is actually not working... """
     model = Sequential()
 
     if augmentation:
