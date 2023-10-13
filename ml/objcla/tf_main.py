@@ -27,7 +27,8 @@ def make_tb(name):
     )
 
 
-def train(dataset, epoch):
+def train(dataset, epoch, model_name):
+    logger.info("Using model: " + model_name)
     loader = getattr(dataloader, f"load_{dataset}")
     x_train, y_train, x_test, y_test = loader(onehot=True)
 
@@ -38,7 +39,10 @@ def train(dataset, epoch):
 
     # ResNet without augmentation, 42 epochs, 83% accuracy
     # ResNet with augmentation, 42 epochs, 79% accuracy. Still climbing.
-    model = ResNet(image_shape, num_classes=y_train.shape[1], augmentation=True)
+    resnet = ResNet(image_shape, num_classes=y_train.shape[1], augmentation=True)
+    alexnet = AlexNet(image_shape, num_classes=y_train.shape[1], augmentation=True)
+
+    model = {"alexnet": alexnet, "resnet": resnet}[model_name]
 
     model.compile(
         optimizer="adam", loss=CategoricalCrossentropy(), metrics=["accuracy"]
@@ -50,7 +54,8 @@ def train(dataset, epoch):
             y_train,
             epochs=epoch,
             batch_size=64,
-            validation_split=0.2,
+            # validation_split=0.2,
+            validation_data=(x_test, y_test),
             callbacks=[make_tb("resnet-" + dataset + "-augmented")],
         )
 
@@ -63,9 +68,10 @@ def train(dataset, epoch):
 
 @click.command()
 @click.option("--dataset", default="mnist", help="Use fashion dataset instead of MNIST")
-@click.option("--epoch", default=42, help="Use fashion dataset instead of MNIST")
-def main(dataset, epoch):
-    train(dataset, epoch)
+@click.option("--epoch", default=42, help="")
+@click.option("--model", default="alexnet", help="")
+def main(dataset, epoch, model):
+    train(dataset, epoch, model)
 
 
 if __name__ == "__main__":
