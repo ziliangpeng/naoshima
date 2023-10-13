@@ -12,7 +12,6 @@ nltk
 transformers
 datasets
 
-python-gflags
 loguru
 
 tensorflow_datasets
