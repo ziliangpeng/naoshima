@@ -114,7 +114,7 @@ def AlexNet(image_shape, num_classes, augmentation=False, l2_lambda=0.0):
 
 
 def VGGNet(image_shape, num_classes, augmentation=False, l2_lambda=0.0):
-    """This is actually not working..."""
+    """This is actually not working, even after batch norm..."""
     model = Sequential()
 
     if augmentation:
@@ -125,24 +125,34 @@ def VGGNet(image_shape, num_classes, augmentation=False, l2_lambda=0.0):
     model.add(
         Conv2D(64, (3, 3), activation="relu", padding="same", input_shape=image_shape)
     )
+    model.add(BatchNormalization())
     model.add(Conv2D(64, (3, 3), activation="relu", padding="same"))
+    model.add(BatchNormalization())
     model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
     # Block 2
     model.add(Conv2D(128, (3, 3), activation="relu", padding="same"))
+    model.add(BatchNormalization())
     model.add(Conv2D(128, (3, 3), activation="relu", padding="same"))
+    model.add(BatchNormalization())
     model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
     # Block 3
     model.add(Conv2D(256, (3, 3), activation="relu", padding="same"))
+    model.add(BatchNormalization())
     model.add(Conv2D(256, (3, 3), activation="relu", padding="same"))
+    model.add(BatchNormalization())
     model.add(Conv2D(256, (3, 3), activation="relu", padding="same"))
+    model.add(BatchNormalization())
     model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
     # Block 4
     model.add(Conv2D(512, (3, 3), activation="relu", padding="same"))
+    model.add(BatchNormalization())
     model.add(Conv2D(512, (3, 3), activation="relu", padding="same"))
+    model.add(BatchNormalization())
     model.add(Conv2D(512, (3, 3), activation="relu", padding="same"))
+    model.add(BatchNormalization())
     model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
     # The gen-code is for ImageNet, which is larger and can be pooled more times.
@@ -201,6 +211,11 @@ def inception_module(x, filters):
     return output
 
 
+# Note: The original GoogLeNet does not do BatchNormalization after every Convolution layer.
+# BatchNormalization was published in 2015.
+# AlexNet 2012.
+# VGGNet, GoogLeNet 2014.
+# ResNet 2015
 def GoogLeNet(input_shape, num_classes):
     input_layer = Input(input_shape)
 
