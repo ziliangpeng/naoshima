@@ -5,6 +5,7 @@ Trains a GPT to add n-digit numbers.
 import os
 import sys
 import json
+from loguru import logger
 
 import torch
 from torch.utils.data import Dataset
@@ -68,7 +69,7 @@ class AdditionDataset(Dataset):
     @staticmethod
     def get_default_config():
         C = CN()
-        C.ndigit = 2
+        C.ndigit = 4
         return C
 
     def __init__(self, config, split):
@@ -77,7 +78,7 @@ class AdditionDataset(Dataset):
 
         # split up all addition problems into either training data or test data
         ndigit = self.config.ndigit
-        assert ndigit <= 3, "the lines below would be very memory inefficient, in future maybe refactor to support"
+        assert ndigit <= 4, "the lines below would be very memory inefficient, in future maybe refactor to support"
         num = (10**ndigit)**2 # total number of possible addition problems with ndigit numbers
         rng = torch.Generator()
         rng.manual_seed(1337)
@@ -167,13 +168,13 @@ if __name__ == '__main__':
             correct = (d3i_pred == d3i_gt).cpu() # Software 1.0 vs. Software 2.0 fight RIGHT on this line haha
             for i in range(x.size(0)):
                 results.append(int(correct[i]))
-                if not correct[i] and mistakes_printed_already < 5: # only print up to 5 mistakes to get a sense
+                if not correct[i] and mistakes_printed_already < 2: # only print up to 5 mistakes to get a sense
                     mistakes_printed_already += 1
                     print("GPT claims that %d + %d = %d but gt is %d" % (d1i[i], d2i[i], d3i_pred[i], d3i_gt[i]))
             if max_batches is not None and b+1 >= max_batches:
                 break
         rt = torch.tensor(results, dtype=torch.float)
-        print("%s final score: %d/%d = %.2f%% correct" % (split, rt.sum(), len(results), 100*rt.mean()))
+        logger.info("%s final score: %d/%d = %.2f%% correct" % (split, rt.sum(), len(results), 100*rt.mean()))
         return rt.sum()
 
     # iteration callback
@@ -181,12 +182,12 @@ if __name__ == '__main__':
     def batch_end_callback(trainer):
         global top_score
 
-        if trainer.iter_num % 10 == 0:
-            print(f"iter_dt {trainer.iter_dt * 1000:.2f}ms; iter {trainer.iter_num}: train loss {trainer.loss.item():.5f}")
+        # if trainer.iter_num % 10 == 0:
+        #     print(f"iter_dt {trainer.iter_dt * 1000:.2f}ms; iter {trainer.iter_num}: train loss {trainer.loss.item():.5f}")
 
         if trainer.iter_num % 500 == 0:
             # evaluate both the train and test score
-            train_max_batches = {1: None, 2: None, 3: 5}[config.data.ndigit] # if ndigit=2 we can afford the whole train set, ow no
+            train_max_batches = {1: None, 2: None, 3: 5, 4:7}[config.data.ndigit] # if ndigit=2 we can afford the whole train set, ow no
             model.eval()
             with torch.no_grad():
                 train_score = eval_split(trainer, 'train', max_batches=train_max_batches)
