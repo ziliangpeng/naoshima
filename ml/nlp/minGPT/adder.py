@@ -37,7 +37,7 @@ def get_config():
 
     # trainer
     C.trainer = Trainer.get_default_config()
-    C.trainer.learning_rate = 5e-4 # the model we're using is so small that we can go a bit faster
+    # C.trainer.learning_rate = 5e-4 # the model we're using is so small that we can go a bit faster
 
     return C
 
@@ -71,7 +71,7 @@ class AdditionDataset(Dataset):
     @staticmethod
     def get_default_config():
         C = CN()
-        C.ndigit = 4
+        C.ndigit = 7
         return C
 
     def __init__(self, config, split):
