@@ -78,7 +78,7 @@ class AdditionDataset(Dataset):
 
         # split up all addition problems into either training data or test data
         ndigit = self.config.ndigit
-        assert ndigit <= 4, "the lines below would be very memory inefficient, in future maybe refactor to support"
+        assert ndigit <= 9, "the lines below would be very memory inefficient, in future maybe refactor to support"
         num = (10**ndigit)**2 # total number of possible addition problems with ndigit numbers
         rng = torch.Generator()
         rng.manual_seed(1337)
@@ -187,7 +187,7 @@ if __name__ == '__main__':
 
         if trainer.iter_num % 500 == 0:
             # evaluate both the train and test score
-            train_max_batches = {1: None, 2: None, 3: 5, 4:7}[config.data.ndigit] # if ndigit=2 we can afford the whole train set, ow no
+            train_max_batches = {1: None, 2: None, 3: 99, 4: 99, 5: 99}[config.data.ndigit] # if ndigit=2 we can afford the whole train set, ow no
             model.eval()
             with torch.no_grad():
                 train_score = eval_split(trainer, 'train', max_batches=train_max_batches)
