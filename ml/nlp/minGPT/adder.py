@@ -80,10 +80,13 @@ class AdditionDataset(Dataset):
         ndigit = self.config.ndigit
         assert ndigit <= 9, "the lines below would be very memory inefficient, in future maybe refactor to support"
         num = (10**ndigit)**2 # total number of possible addition problems with ndigit numbers
+        # logger.info(f"num {num}")
         rng = torch.Generator()
         rng.manual_seed(1337)
         perm = torch.randperm(num, generator=rng)
-        num_test = min(int(num*0.2), 500) # 20% of the whole dataset, or only up to 500
+        # logger.info(f"perm {perm}")
+        # logger.info(len(perm))
+        num_test = min(int(num*0.2), 5000) # 20% of the whole dataset, or only up to 500
         self.ixes = perm[:num_test] if split == 'test' else perm[num_test:]
 
     def get_vocab_size(self):
@@ -112,6 +115,7 @@ class AdditionDataset(Dataset):
         bstr = f'%0{ndigit}d' % b
         cstr = (f'%0{ndigit+1}d' % c)[::-1] # reverse c to make addition easier
         render = astr + bstr + cstr
+        # logger.info(f"render {render}")
         dix = [int(s) for s in render] # convert each character to its token index
         # x will be input to GPT and y will be the associated expected outputs
         x = torch.tensor(dix[:-1], dtype=torch.long)
