@@ -33,10 +33,11 @@ def get_config():
     C.model = GPT.get_default_config()
     # nano can't solve n=7
     # C.model.model_type = 'gpt-nano'
-    C.model.model_type = 'gpt-micro'
+    C.model.model_type = 'gpt-mini'
 
     # trainer
     C.trainer = Trainer.get_default_config()
+    # C.trainer.device = 'mps'
     # C.trainer.learning_rate = 5e-4 # the model we're using is so small that we can go a bit faster
 
     return C
