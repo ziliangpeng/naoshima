@@ -31,7 +31,9 @@ def get_config():
 
     # model
     C.model = GPT.get_default_config()
-    C.model.model_type = 'gpt-nano'
+    # nano can't solve n=7
+    # C.model.model_type = 'gpt-nano'
+    C.model.model_type = 'gpt-micro'
 
     # trainer
     C.trainer = Trainer.get_default_config()
@@ -80,14 +82,23 @@ class AdditionDataset(Dataset):
         ndigit = self.config.ndigit
         assert ndigit <= 9, "the lines below would be very memory inefficient, in future maybe refactor to support"
         num = (10**ndigit)**2 # total number of possible addition problems with ndigit numbers
+        self.num = num
         # logger.info(f"num {num}")
         rng = torch.Generator()
         rng.manual_seed(1337)
-        perm = torch.randperm(num, generator=rng)
+        # perm = torch.randperm(num, generator=rng)
         # logger.info(f"perm {perm}")
         # logger.info(len(perm))
-        num_test = min(int(num*0.2), 5000) # 20% of the whole dataset, or only up to 500
-        self.ixes = perm[:num_test] if split == 'test' else perm[num_test:]
+        num_test = min(int(num*0.2), 9999) # 20% of the whole dataset, or only up to 9999
+        self.test_data = []
+        while len(self.test_data) < num_test:
+            # make sure to generate the same test_data for train and test.
+            r = torch.randint(num, (1,), generator=rng).item()
+            if r not in self.test_data:
+                self.test_data.append(r)
+
+        logger.info(self.test_data[:32])
+        # self.ixes = perm[:num_test] if split == 'test' else perm[num_test:]
 
     def get_vocab_size(self):
         return 10 # digits 0..9
@@ -99,12 +110,25 @@ class AdditionDataset(Dataset):
         return 3*self.config.ndigit + 1 - 1
 
     def __len__(self):
-        return self.ixes.nelement()
+        if self.split == 'test':
+            return len(self.test_data)
+        else:
+            return self.num - len(self.test_data)
+        # return self.ixes.nelement()
 
     def __getitem__(self, idx):
         ndigit = self.config.ndigit
         # given a problem index idx, first recover the associated a + b
-        idx = self.ixes[idx].item()
+        # By doing this, idx'ing test data is predictable and deterministic, but train data is not.
+        if self.split == 'test':
+            idx = self.test_data[idx]
+        else:
+            found = False
+            while not found:
+                idx = torch.randint(self.num, (1,)).item()
+                if idx not in self.test_data:
+                    found = True
+
         nd = 10**ndigit
         a = idx // nd
         b = idx %  nd
@@ -150,7 +174,8 @@ if __name__ == '__main__':
     def eval_split(trainer, split, max_batches=None):
         dataset = {'train':train_dataset, 'test':test_dataset}[split]
         ndigit = config.data.ndigit
-        results = []
+        all_results = []
+        partial_results = []
         mistakes_printed_already = 0
         factors = torch.tensor([[10**i for i in range(ndigit+1)][::-1]]).to(trainer.device)
         loader = DataLoader(dataset, batch_size=100, num_workers=0, drop_last=False)
@@ -169,16 +194,51 @@ if __name__ == '__main__':
             d3i_pred = (d3 * factors).sum(1)
             d3i_gt = d1i + d2i # manually calculate the ground truth
             # evaluate the correctness of the results in this batch
-            correct = (d3i_pred == d3i_gt).cpu() # Software 1.0 vs. Software 2.0 fight RIGHT on this line haha
+            def all_correct(pred, gt):
+                # ret = []
+                # for p, g in zip(pred, gt):
+                #     ret.append(int(p == g))
+                # return torch.tensor(ret, dtype=torch.float)
+                return (d3i_pred == d3i_gt).cpu() # Software 1.0 vs. Software 2.0 fight RIGHT on this line haha
+            def partial_correct(pred, gt):
+                ret = []
+                for p, g in zip(pred, gt):
+                    p, g = str(p), str(g)
+                    if len(p) != len(g):
+                        ret.append(0)
+                        continue
+                    correct_digits = 0
+                    for i in range(len(p)):
+                        if p[i] == g[i]:
+                            correct_digits += 1
+                    ret.append(correct_digits / len(g))
+                return torch.tensor(ret, dtype=torch.float)
+            
+            # correct = (d3i_pred == d3i_gt).cpu() # Software 1.0 vs. Software 2.0 fight RIGHT on this line haha
+            all_correct = all_correct(d3i_pred, d3i_gt)
+            partial_correct = partial_correct(d3i_pred, d3i_gt)
+            correct = partial_correct
+            # print(x)
+            # print(y)
+            # print(d3i_pred)
+            # print(d3i_gt)
+            # print(correct)
             for i in range(x.size(0)):
-                results.append(int(correct[i]))
-                if not correct[i] and mistakes_printed_already < 2: # only print up to 5 mistakes to get a sense
+                all_results.append(all_correct[i])
+                partial_results.append(partial_correct[i])
+                if correct[i] != 1.0 and mistakes_printed_already < 2: # only print up to 5 mistakes to get a sense
                     mistakes_printed_already += 1
                     print("GPT claims that %d + %d = %d but gt is %d" % (d1i[i], d2i[i], d3i_pred[i], d3i_gt[i]))
             if max_batches is not None and b+1 >= max_batches:
                 break
-        rt = torch.tensor(results, dtype=torch.float)
-        logger.info("%s final score: %d/%d = %.2f%% correct" % (split, rt.sum(), len(results), 100*rt.mean()))
+
+        # rt = torch.tensor(results, dtype=torch.float)
+        # logger.info("%s final score: %d/%d = %.2f%% correct" % (split, rt.sum(), len(results), 100*rt.mean()))
+
+        rt = torch.tensor(partial_results, dtype=torch.float)
+        logger.info("%s final score: %d/%d = %.2f%% partial correct" % (split, rt.sum(), len(partial_results), 100*rt.mean()))
+        rt = torch.tensor(all_results, dtype=torch.float)
+        logger.info("%s final score: %d/%d = %.2f%% all correct" % (split, rt.sum(), len(all_results), 100*rt.mean()))
         return rt.sum()
 
     # iteration callback
@@ -191,9 +251,11 @@ if __name__ == '__main__':
 
         if trainer.iter_num % 500 == 0:
             # evaluate both the train and test score
-            train_max_batches = {1: None, 2: None, 3: 99, 4: 99, 5: 99}[config.data.ndigit] # if ndigit=2 we can afford the whole train set, ow no
+            # train_max_batches = {1: None, 2: None, 3: 99, 4: 99, 5: 99}[config.data.ndigit] # if ndigit=2 we can afford the whole train set, ow no
+            train_max_batches = 99
             model.eval()
             with torch.no_grad():
+                logger.info(f"=================== epoch {trainer.iter_num // 500} =======================")
                 train_score = eval_split(trainer, 'train', max_batches=train_max_batches)
                 test_score  = eval_split(trainer, 'test',  max_batches=None)
             score = train_score + test_score
