@@ -268,8 +268,12 @@ class GPT(nn.Module):
 
         # forward the GPT model itself
         tok_emb = self.transformer.wte(idx) # token embeddings of shape (b, t, n_embd)
+        # print(tok_emb.shape)
         pos_emb = self.transformer.wpe(pos) # position embeddings of shape (1, t, n_embd)
+        # print(pos_emb.shape)
+        # print((tok_emb + pos_emb).shape)
         x = self.transformer.drop(tok_emb + pos_emb)
+        # print(x.shape)
         for block in self.transformer.h:
             x = block(x)
         x = self.transformer.ln_f(x)

@@ -72,7 +72,7 @@ class AdditionDataset(Dataset):
     @staticmethod
     def get_default_config():
         C = CN()
-        C.ndigit = 7
+        C.ndigit = 5
         return C
 
     def __init__(self, config, split):
