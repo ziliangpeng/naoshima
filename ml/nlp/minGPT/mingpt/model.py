@@ -272,6 +272,7 @@ class GPT(nn.Module):
         pos_emb = self.transformer.wpe(pos) # position embeddings of shape (1, t, n_embd)
         # print(pos_emb.shape)
         # print((tok_emb + pos_emb).shape)
+        # tok_emb + pos_emb will add a pos_emb to every sample in the batch
         x = self.transformer.drop(tok_emb + pos_emb)
         # print(x.shape)
         for block in self.transformer.h:

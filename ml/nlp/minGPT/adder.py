@@ -33,7 +33,8 @@ def get_config():
     C.model = GPT.get_default_config()
     # nano can't solve n=7
     # C.model.model_type = 'gpt-nano'
-    C.model.model_type = 'gpt-mini'
+    # C.model.model_type = 'gpt-mini'
+    C.model.model_type = 'gpt2'
 
     # trainer
     C.trainer = Trainer.get_default_config()
@@ -72,7 +73,7 @@ class AdditionDataset(Dataset):
     @staticmethod
     def get_default_config():
         C = CN()
-        C.ndigit = 5
+        C.ndigit = 7
         return C
 
     def __init__(self, config, split):
@@ -90,7 +91,7 @@ class AdditionDataset(Dataset):
         # perm = torch.randperm(num, generator=rng)
         # logger.info(f"perm {perm}")
         # logger.info(len(perm))
-        num_test = min(int(num*0.2), 9999) # 20% of the whole dataset, or only up to 9999
+        num_test = min(int(num*0.2), 5000) # 20% of the whole dataset, or only up to 9999
         self.test_data = []
         while len(self.test_data) < num_test:
             # make sure to generate the same test_data for train and test.
@@ -253,7 +254,7 @@ if __name__ == '__main__':
         if trainer.iter_num % 500 == 0:
             # evaluate both the train and test score
             # train_max_batches = {1: None, 2: None, 3: 99, 4: 99, 5: 99}[config.data.ndigit] # if ndigit=2 we can afford the whole train set, ow no
-            train_max_batches = 99
+            train_max_batches = 50
             model.eval()
             with torch.no_grad():
                 logger.info(f"=================== epoch {trainer.iter_num // 500} =======================")
