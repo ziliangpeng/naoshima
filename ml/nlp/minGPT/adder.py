@@ -5,6 +5,7 @@ Trains a GPT to add n-digit numbers.
 import os
 import sys
 import json
+import time
 from loguru import logger
 
 import torch
@@ -31,10 +32,8 @@ def get_config():
 
     # model
     C.model = GPT.get_default_config()
-    # nano can't solve n=7
-    # C.model.model_type = 'gpt-nano'
-    # C.model.model_type = 'gpt-mini'
-    C.model.model_type = 'gpt2'
+    # nano can't solve n=7, need gpt2
+    C.model.model_type = 'gpt-nano'
 
     # trainer
     C.trainer = Trainer.get_default_config()
@@ -73,7 +72,7 @@ class AdditionDataset(Dataset):
     @staticmethod
     def get_default_config():
         C = CN()
-        C.ndigit = 7
+        C.ndigit = 1
         return C
 
     def __init__(self, config, split):
@@ -160,6 +159,12 @@ if __name__ == '__main__':
     setup_logging(config)
     set_seed(config.system.seed)
 
+    """
+    --data.ndigit=3
+    --model.model_type=gpt2
+    --trainer.device=mps
+    """
+
     # construct train and test datasets
     train_dataset = AdditionDataset(config.data, split='train')
     test_dataset  = AdditionDataset(config.data, split='test')
@@ -215,6 +220,16 @@ if __name__ == '__main__':
                             correct_digits += 1
                     ret.append(correct_digits / len(g))
                 return torch.tensor(ret, dtype=torch.float)
+            """
+            benchmark of time (epoch 0 to epoch 1):
+            -3 dgits/gpt2/M2
+                - both all and partial
+                - epoch mark to train score, 3:20
+                - train score to test score: 4:01
+                - test score to epoch mark: 12:14
+                - all
+
+            """
             
             # correct = (d3i_pred == d3i_gt).cpu() # Software 1.0 vs. Software 2.0 fight RIGHT on this line haha
             all_correct = all_correct(d3i_pred, d3i_gt)
@@ -245,8 +260,10 @@ if __name__ == '__main__':
 
     # iteration callback
     top_score = 0
+    t = time.time()
     def batch_end_callback(trainer):
         global top_score
+        global t
 
         # if trainer.iter_num % 10 == 0:
         #     print(f"iter_dt {trainer.iter_dt * 1000:.2f}ms; iter {trainer.iter_num}: train loss {trainer.loss.item():.5f}")
@@ -258,8 +275,14 @@ if __name__ == '__main__':
             model.eval()
             with torch.no_grad():
                 logger.info(f"=================== epoch {trainer.iter_num // 500} =======================")
+                logger.info(f"TIME {time.time() - t:.2f}s")
+                t = time.time()
                 train_score = eval_split(trainer, 'train', max_batches=train_max_batches)
+                logger.info(f"TIME {time.time() - t:.2f}s")
+                t = time.time()
                 test_score  = eval_split(trainer, 'test',  max_batches=None)
+                logger.info(f"TIME {time.time() - t:.2f}s")
+                t = time.time()
             score = train_score + test_score
             # save the model if this is the best score we've seen so far
             if score > top_score:
