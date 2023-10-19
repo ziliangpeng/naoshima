@@ -222,12 +222,15 @@ if __name__ == '__main__':
                 return torch.tensor(ret, dtype=torch.float)
             """
             benchmark of time (epoch 0 to epoch 1):
-            -3 dgits/gpt2/M2
+            - 7 digits/gpt2/M2
                 - both all and partial
-                - epoch mark to train score, 3:20
-                - train score to test score: 4:01
-                - test score to epoch mark: 12:14
+                    - epoch mark to train score, 191s
+                    - train score to test score: 180s
+                    - test score to epoch mark: 554s
                 - all
+                    - epoch mark to train score, 207s
+                    - train score to test score: 203s
+                    - test score to epoch mark:
 
             """
             

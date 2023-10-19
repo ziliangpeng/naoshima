@@ -13,6 +13,8 @@ from mingpt.model import GPT
 from mingpt.trainer import Trainer
 from mingpt.utils import set_seed, setup_logging, CfgNode as CN
 
+from loguru import logger
+
 # -----------------------------------------------------------------------------
 
 def get_config():
@@ -33,7 +35,7 @@ def get_config():
 
     # trainer
     C.trainer = Trainer.get_default_config()
-    C.trainer.learning_rate = 5e-4 # the model we're using is so small that we can go a bit faster
+    C.trainer.learning_rate = 3e-4 # the model we're using is so small that we can go a bit faster
 
     return C
 
@@ -47,7 +49,7 @@ class CharDataset(Dataset):
     @staticmethod
     def get_default_config():
         C = CN()
-        C.block_size = 128
+        C.block_size = 256
         return C
 
     def __init__(self, config, data):
@@ -108,16 +110,18 @@ if __name__ == '__main__':
     def batch_end_callback(trainer):
 
         if trainer.iter_num % 10 == 0:
-            print(f"iter_dt {trainer.iter_dt * 1000:.2f}ms; iter {trainer.iter_num}: train loss {trainer.loss.item():.5f}")
+            logger.info(f"iter_dt {trainer.iter_dt * 1000:.2f}ms; iter {trainer.iter_num}: train loss {trainer.loss.item():.5f}")
 
-        if trainer.iter_num % 500 == 0:
+        if trainer.iter_num % 50 == 0:
             # evaluate both the train and test score
             model.eval()
             with torch.no_grad():
                 # sample from the model...
-                context = "O God, O God!"
+                # context = "O God, O God!"
+                context = "apiVersion: v1"
                 x = torch.tensor([train_dataset.stoi[s] for s in context], dtype=torch.long)[None,...].to(trainer.device)
-                y = model.generate(x, 500, temperature=1.0, do_sample=True, top_k=10)[0]
+                y = model.generate(x, 4096, temperature=1.0, do_sample=True, top_k=10)[0]
+                # y = model.generate(x, 1024, temperature=1.0, do_sample=False, top_k=1)[0]
                 completion = ''.join([train_dataset.itos[int(i)] for i in y])
                 print(completion)
             # save the latest model
