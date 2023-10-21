@@ -49,7 +49,7 @@ class CharDataset(Dataset):
     @staticmethod
     def get_default_config():
         C = CN()
-        C.block_size = 256
+        C.block_size = 512
         return C
 
     def __init__(self, config, data):
@@ -112,14 +112,14 @@ if __name__ == '__main__':
         if trainer.iter_num % 10 == 0:
             logger.info(f"iter_dt {trainer.iter_dt * 1000:.2f}ms; iter {trainer.iter_num}: train loss {trainer.loss.item():.5f}")
 
-        if trainer.iter_num % 50 == 0:
+        if trainer.iter_num % 100 == 0:
             # evaluate both the train and test score
             model.eval()
             with torch.no_grad():
                 # sample from the model...
                 context = "apiVersion: v1"
                 x = torch.tensor([train_dataset.stoi[s] for s in context], dtype=torch.long)[None,...].to(trainer.device)
-                y = model.generate(x, 4096, temperature=1.0, do_sample=True, top_k=10)[0]
+                y = model.generate(x, 8192, temperature=1.0, do_sample=True, top_k=10)[0]
                 # y = model.generate(x, 1024, temperature=1.0, do_sample=False, top_k=1)[0]
                 completion = ''.join([train_dataset.itos[int(i)] for i in y])
                 print(completion)
