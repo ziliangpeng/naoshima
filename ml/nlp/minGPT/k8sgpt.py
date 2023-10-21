@@ -112,14 +112,14 @@ if __name__ == '__main__':
         if trainer.iter_num % 10 == 0:
             logger.info(f"iter_dt {trainer.iter_dt * 1000:.2f}ms; iter {trainer.iter_num}: train loss {trainer.loss.item():.5f}")
 
-        if trainer.iter_num % 100 == 0:
+        if trainer.iter_num % 1000 == 0:
             # evaluate both the train and test score
             model.eval()
             with torch.no_grad():
                 # sample from the model...
                 context = "- apiVersion: apps/v"
                 x = torch.tensor([train_dataset.stoi[s] for s in context], dtype=torch.long)[None,...].to(trainer.device)
-                y = model.generate(x, 8192, temperature=1.0, do_sample=True, top_k=10)[0]
+                y = model.generate(x, 2048, temperature=1.0, do_sample=True, top_k=10)[0]
                 # y = model.generate(x, 1024, temperature=1.0, do_sample=False, top_k=1)[0]
                 completion = ''.join([train_dataset.itos[int(i)] for i in y])
                 print(completion)
@@ -131,6 +131,16 @@ if __name__ == '__main__':
             model.train()
 
     trainer.set_callback('on_batch_end', batch_end_callback)
+
+    """
+    batch size 64, block size 512
+        gpt-mini, loss 0.5-0.6
+        gopher, OOM on V100
+        gpt2, OOM on V100
+
+    batch size 4, block size 512
+        gpt2, loss X, 142ms/step, 5.8GiB GPU Mem,  
+    """
 
     # run the optimization
     trainer.run()
