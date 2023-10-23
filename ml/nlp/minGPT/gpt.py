@@ -29,6 +29,7 @@ def get_config():
     C.system.gen_per_iter = 1000
     C.system.print_per_iter = 10
     C.system.input_file = 'input.txt'
+    C.system.compile = False
 
     # data
     C.data = CharDataset.get_default_config()
@@ -107,6 +108,9 @@ if __name__ == '__main__':
     config.model.vocab_size = train_dataset.get_vocab_size()
     config.model.block_size = train_dataset.get_block_size()
     model = GPT(config.model)
+    # very cool. reduced training time from 200ms to 118 ms (got gpt-mini, 512, )
+    if config.system.compile:
+        model = torch.compile(model)
 
     # construct the trainer object
     trainer = Trainer(config.trainer, model, train_dataset)
@@ -122,7 +126,7 @@ if __name__ == '__main__':
             model.eval()
             with torch.no_grad():
                 # sample from the model...
-                context = "Title: Ziliang Peng\nContext:"
+                context = "Title: Python (programming language)\nContext:"
                 x = torch.tensor([train_dataset.stoi[s] for s in context], dtype=torch.long)[None,...].to(trainer.device)
                 y = model.generate(x, config.system.gen_len, temperature=1.0, do_sample=True, top_k=10)[0]
                 # y = model.generate(x, 1024, temperature=1.0, do_sample=False, top_k=1)[0]
