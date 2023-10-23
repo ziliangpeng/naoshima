@@ -153,7 +153,9 @@ if __name__ == '__main__':
 
 
     python gpt.py --model.model_type=gpt2 --system.compile=1  --trainer.batch_size=16 --data.block_size=512 --system.gen_len=5000 --system.print_per_iter=100
-    429ms/iter
+        86.46M parameters.
+        429ms/iter (V100)
+        1394ms/iter (T4)
     """
 
     # run the optimization
