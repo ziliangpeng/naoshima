@@ -24,7 +24,7 @@ def get_config():
     # system
     C.system = CN()
     C.system.seed = 3407
-    C.system.work_dir = './out/chargpt'
+    C.system.work_dir = './out/wikigpt'
     C.system.gen_len = 2048
     C.system.gen_per_iter = 1000
     C.system.print_per_iter = 10
@@ -134,6 +134,8 @@ if __name__ == '__main__':
                 print(completion)
             # save the latest model
             print("saving model")
+            with open(os.path.join(config.system.work_dir, f"completion-{trainer.iter_num}.txt"), "w") as f:
+                f.write(completion)
             ckpt_path = os.path.join(config.system.work_dir, "model.pt")
             torch.save(model.state_dict(), ckpt_path)
             # revert model to training mode
@@ -143,6 +145,9 @@ if __name__ == '__main__':
 
     """
     batch size: 32, block size: 512, gopher, almost max out V100 memory.
+
+
+    python gpt.py --model.model_type=gpt2 --system.compile=1  --trainer.batch_size=16 --data.block_size=512 --system.gen_len=5000 --system.print_per_iter=100
     """
 
     # run the optimization

@@ -156,7 +156,6 @@ if __name__ == '__main__':
         gpt-micro, loss 0.35-0.45, 26ms,
         gpt-micro, loss 0.10-0.16, 26ms, 2.2GiB, (100k iterations)
         gpt-micro, loss 0.08-0.14, 26ms, 2.2GiB, (250k iterations)
-            gpt-micro, loss 0.08-0.14, 26ms, 2.2GiB, (250k iterations)
         gpt-mini, loss 0.17-0.26, 57ms,
         gpt-mini, loss 0.059-0.074, 57ms, 3.7 GiB, (60k iterations)
         gpt-mini, loss 0.048-0.061, 57ms, 3.7 GiB, (130k iterations)
