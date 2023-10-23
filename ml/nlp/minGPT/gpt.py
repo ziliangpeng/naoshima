@@ -29,7 +29,7 @@ def get_config():
     C.system.gen_per_iter = 1000
     C.system.print_per_iter = 10
     C.system.input_file = 'input.txt'
-    C.system.compile = False
+    C.system.compile = 0
 
     # data
     C.data = CharDataset.get_default_config()
@@ -126,7 +126,7 @@ if __name__ == '__main__':
             model.eval()
             with torch.no_grad():
                 # sample from the model...
-                context = "Title: Python (programming language)\nContext:"
+                context = "Context:"
                 x = torch.tensor([train_dataset.stoi[s] for s in context], dtype=torch.long)[None,...].to(trainer.device)
                 y = model.generate(x, config.system.gen_len, temperature=1.0, do_sample=True, top_k=10)[0]
                 # y = model.generate(x, 1024, temperature=1.0, do_sample=False, top_k=1)[0]
@@ -142,6 +142,7 @@ if __name__ == '__main__':
     trainer.set_callback('on_batch_end', batch_end_callback)
 
     """
+    batch size: 32, block size: 512, gopher, almost max out V100 memory.
     """
 
     # run the optimization
