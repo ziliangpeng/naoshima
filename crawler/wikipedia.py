@@ -1,3 +1,4 @@
+import os
 import time
 import requests
 from bs4 import BeautifulSoup
@@ -42,6 +43,8 @@ def get_wiki_page(url):
 @click.command()
 @click.option('--count', default=10, help='')
 def main(count):
+    if not os.path.exists(WIKI_PAGES_DIR):
+        os.makedirs(WIKI_PAGES_DIR)
     queue = set([START_URL])
     done = set()
     num_to_crawl = count
