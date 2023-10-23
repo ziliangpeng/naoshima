@@ -133,13 +133,41 @@ if __name__ == '__main__':
     trainer.set_callback('on_batch_end', batch_end_callback)
 
     """
+    large block size seems to make ti memorizing stuff, becoming less creative.
+
+
+    batch size 4, block size 512, 5000 iterations
+        gpt2, loss X, 142ms/step, 5.8GiB GPU Mem,  
+        gpt-nano, loss 1.5, 11ms/step, 1.2GiB,
+        gpt-micro, loss 0.4-0.8, 14ms, 1.3GiB
+        gpt2-medium, loss 0.17-0.31, 445ms, 14.8GiB
+        gpt2-medium, loss 0.05-0.21, 445ms, 14.8GiB (10000)
+        gpt2-medium, loss 0.025-0.06, 445ms, 14.8GiB (140k iterations)
+
+    batch size 8, block size 512, 5000 iterations
+        gpt-micro, loss 0.4-0.6, 17.5ms,
+        gopher, loss 0.1-0.25, 120ms, 5.8GiB
+        gpt2, loss 0.09-0.21, 268 ms, 9.5GiB
+        gpt2, loss 0.07-0.13, 268 ms, 9.5GiB (10000 iterations)
+        gpt2, loss 0.03-0.04, 268 ms, 9.5GiB (75000 iterations)
+        gpt2-medium, OOM on V100
+
+    batch size 16, block size 512, 5000 iterations
+        gpt-micro, loss 0.35-0.45, 26ms,
+        gpt-micro, loss 0.10-0.16, 26ms, 2.2GiB, (100k iterations)
+        gpt-micro, loss 0.08-0.14, 26ms, 2.2GiB, (250k iterations)
+            gpt-micro, loss 0.08-0.14, 26ms, 2.2GiB, (250k iterations)
+        gpt-mini, loss 0.17-0.26, 57ms,
+        gpt-mini, loss 0.059-0.074, 57ms, 3.7 GiB, (60k iterations)
+        gpt-mini, loss 0.048-0.061, 57ms, 3.7 GiB, (130k iterations)
+        gpt-mini, loss 0.046-0.061, 57ms, 3.7 GiB, (270k iterations)
+        gopher, loss 0.1-0.15, 233ms, 10GiB
+        gopher, loss 0.029-0.034, 233ms, 10GiB (50k iterations)
+
     batch size 64, block size 512
         gpt-mini, loss 0.5-0.6
         gopher, OOM on V100
         gpt2, OOM on V100
-
-    batch size 4, block size 512
-        gpt2, loss X, 142ms/step, 5.8GiB GPU Mem,  
     """
 
     # run the optimization
