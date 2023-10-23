@@ -21,7 +21,8 @@ def get_wiki_page(url):
     body = "\n".join([p.text for p in paragraphs])
     text += f'Context:{body}'
 
-    with open(f'{WIKI_PAGES_DIR}/{title}.txt'.replace('/','-'), 'w') as f:
+    title = title.replace('/', '-')
+    with open(f'{WIKI_PAGES_DIR}/{title}.txt', 'w') as f:
         f.write(text)
 
 
