@@ -33,7 +33,7 @@ def get_wiki_page(url):
         if not link.startswith('/wiki/'):
             continue
         next_page = f'https://en.wikipedia.org{link}'
-        print(f'Next: {next_page}')
+        # print(f'Next: {next_page}')
         pages.append(next_page)
         # time.sleep(1)  # Sleep for 1 second to be respectful to Wikipedia's servers
         # crawl_wikipedia(next_page, depth-1)
