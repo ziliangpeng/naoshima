@@ -29,6 +29,7 @@ def get_config():
     C.system.gen_per_iter = 1000
     C.system.print_per_iter = 10
     C.system.input_file = 'input.txt'
+    C.system.resume = 0
 
     # data
     C.data = CharDataset.get_default_config()
@@ -110,6 +111,11 @@ if __name__ == '__main__':
     config.model.block_size = train_dataset.get_block_size()
     model = GPT(config.model)
 
+    ckpt_path = os.path.join(config.system.work_dir, "model.pt")
+    if config.system.resume and os.path.exists(ckpt_path):
+        model.load_state_dict(torch.load(ckpt_path))
+        logger.info(f"resuming from {ckpt_path}")
+
     # construct the trainer object
     trainer = Trainer(config.trainer, model, train_dataset)
 
@@ -134,7 +140,7 @@ if __name__ == '__main__':
             print("saving model")
             with open(os.path.join(config.system.work_dir, f"completion-{trainer.iter_num}.txt"), "w") as f:
                 f.write(completion)
-            ckpt_path = os.path.join(config.system.work_dir, "model.pt")
+            # ckpt_path = os.path.join(config.system.work_dir, "model.pt")
             torch.save(model.state_dict(), ckpt_path)
             # revert model to training mode
             model.train()
@@ -144,11 +150,14 @@ if __name__ == '__main__':
     """
     batch size: 32, block size: 512, gopher, almost max out V100 memory.
 
+    python gpt.py --model.model_type=gpt2 --trainer.compile=?  --trainer.batch_size=8 --data.block_size=512 --system.gen_len=5000 --system.print_per_iter=100
+        compile=~750ms/iter
+        non-compile= ~888ms/iter
 
-    python gpt.py --model.model_type=gpt2 --system.compile=1  --trainer.batch_size=16 --data.block_size=512 --system.gen_len=5000 --system.print_per_iter=100
+    python gpt.py --model.model_type=gpt2 --trainer.compile=1  --trainer.batch_size=16 --data.block_size=512 --system.gen_len=5000 --system.print_per_iter=100
         86.46M parameters.
         429ms/iter (V100)
-        1394ms/iter (T4)
+        1394ms/iter (T4) compiled. (not compile will OOM)
         930ms/iter (T4 * 2), no compile
     """
 
