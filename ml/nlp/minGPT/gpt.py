@@ -117,7 +117,7 @@ if __name__ == '__main__':
     def batch_end_callback(trainer):
 
         if trainer.iter_num % config.system.print_per_iter == 0:
-            logger.info(f"iter_dt {trainer.iter_dt * 1000:.2f}ms; iter {trainer.iter_num}: train loss {trainer.loss.item():.5f}")
+            logger.info(f"iter_dt {trainer.iter_dt * 1000:.2f}ms; iter {trainer.iter_num}: train loss {trainer.loss.sum().item():.5f}")
 
         if trainer.iter_num % config.system.gen_per_iter == 0:
             # evaluate both the train and test score
