@@ -26,6 +26,8 @@ class Trainer:
         C.betas = (0.9, 0.95)
         C.weight_decay = 0.1 # only applied on matmul weights
         C.grad_norm_clip = 1.0
+        C.compile = 0
+        C.data_parallel = 0
         return C
 
     def __init__(self, config, model, train_dataset):
@@ -35,14 +37,22 @@ class Trainer:
         self.train_dataset = train_dataset
         self.callbacks = defaultdict(list)
 
+        # very cool. reduced training time from 200ms to 118 ms (got gpt-mini, 512, )
+        if config.compile:
+            model = torch.compile(model)
+
         # determine the device we'll train on
         if config.device == 'auto':
-            self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
+            if torch.cuda.is_available():
+                self.device = 'cuda'
+                if config.data_parallel:
+                    model = torch.nn.DataParallel(model)
+            else:
+                self.device = 'cpu'
         else:
             self.device = config.device
         self.model = self.model.to(self.device)
         print("running on device", self.device)
-        # self.model = torch.nn.DataParallel(self.model)
 
         # variables that will be assigned to trainer class later for logging and etc
         self.iter_num = 0

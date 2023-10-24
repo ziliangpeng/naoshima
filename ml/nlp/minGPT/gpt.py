@@ -29,8 +29,6 @@ def get_config():
     C.system.gen_per_iter = 1000
     C.system.print_per_iter = 10
     C.system.input_file = 'input.txt'
-    C.system.compile = 0
-    C.system.data_parallel = 0
 
     # data
     C.data = CharDataset.get_default_config()
@@ -42,6 +40,8 @@ def get_config():
     # trainer
     C.trainer = Trainer.get_default_config()
     C.trainer.learning_rate = 3e-4 # the model we're using is so small that we can go a bit faster
+    C.trainer.compile = 0
+    C.trainer.data_parallel = 0
 
 
     return C
@@ -110,13 +110,6 @@ if __name__ == '__main__':
     config.model.block_size = train_dataset.get_block_size()
     model = GPT(config.model)
 
-    # The following should probably be trainer config
-    if config.system.data_parallel:
-        model = torch.nn.DataParallel(model)
-    # very cool. reduced training time from 200ms to 118 ms (got gpt-mini, 512, )
-    if config.system.compile:
-        model = torch.compile(model)
-
     # construct the trainer object
     trainer = Trainer(config.trainer, model, train_dataset)
 
@@ -156,6 +149,7 @@ if __name__ == '__main__':
         86.46M parameters.
         429ms/iter (V100)
         1394ms/iter (T4)
+        930ms/iter (T4 * 2), no compile
     """
 
     # run the optimization
