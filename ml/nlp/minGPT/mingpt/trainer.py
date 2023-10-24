@@ -10,6 +10,8 @@ import torch
 from torch.utils.data.dataloader import DataLoader
 from mingpt.utils import CfgNode as CN
 
+from loguru import logger
+
 class Trainer:
 
     @staticmethod
@@ -47,12 +49,13 @@ class Trainer:
                 self.device = 'cuda'
                 if config.data_parallel:
                     model = torch.nn.DataParallel(model)
+                    logger.info("Using data parallel")
             else:
                 self.device = 'cpu'
         else:
             self.device = config.device
         self.model = self.model.to(self.device)
-        print("running on device", self.device)
+        logger.info("running on device", self.device)
 
         # variables that will be assigned to trainer class later for logging and etc
         self.iter_num = 0
