@@ -44,21 +44,21 @@ class Trainer:
 
         # very cool. reduced training time from 200ms to 118 ms (got gpt-mini, 512, )
         if config.compile:
-            model = torch.compile(model)
+            self.model = torch.compile(self.model)
 
         # determine the device we'll train on
         if config.device == 'auto':
             if torch.cuda.is_available():
                 self.device = 'cuda'
                 if config.data_parallel:
-                    model = torch.nn.DataParallel(model)
+                    self.model = torch.nn.DataParallel(self.model)
                     logger.info("Using data parallel")
             else:
                 self.device = 'cpu'
         else:
             self.device = config.device
         self.model = self.model.to(self.device)
-        logger.info("running on device", self.device)
+        logger.info(f"running on device {self.device})
 
         # variables that will be assigned to trainer class later for logging and etc
         self.iter_num = 0
