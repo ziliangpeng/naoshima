@@ -18,7 +18,7 @@ def get_wiki_page(url):
     title = soup.find('h1', {'class': 'firstHeading'}).text
     text = f'Title: {title}\n'
     paragraphs = soup.find_all('p')
-    body = "\n".join([p.text for p in paragraphs])
+    body = "".join([p.text for p in paragraphs])
     text += f'Context:{body}'
 
     title = title.replace('/', '-')

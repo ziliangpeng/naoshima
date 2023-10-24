@@ -39,6 +39,9 @@ class Trainer:
         self.train_dataset = train_dataset
         self.callbacks = defaultdict(list)
 
+        # setup the optimizer
+        self.optimizer = model.configure_optimizers(config)
+
         # very cool. reduced training time from 200ms to 118 ms (got gpt-mini, 512, )
         if config.compile:
             model = torch.compile(model)
@@ -74,9 +77,6 @@ class Trainer:
 
     def run(self):
         model, config = self.model, self.config
-
-        # setup the optimizer
-        self.optimizer = model.configure_optimizers(config)
 
         # setup the dataloader
         train_loader = DataLoader(
