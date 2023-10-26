@@ -114,7 +114,8 @@ if __name__ == '__main__':
     ckpt_path = os.path.join(config.system.work_dir, "model.pt")
     if config.system.resume and os.path.exists(ckpt_path):
         model.load_state_dict(torch.load(ckpt_path))
-        logger.info(f"resuming from {ckpt_path}")
+        logger.info(f"resumed from {ckpt_path}")
+        torch.save(model.state_dict(), ckpt_path + '.bak')
 
     # construct the trainer object
     trainer = Trainer(config.trainer, model, train_dataset)
@@ -140,6 +141,7 @@ if __name__ == '__main__':
             print("saving model")
             with open(os.path.join(config.system.work_dir, f"completion-{trainer.iter_num}.txt"), "w") as f:
                 f.write(completion)
+            print("done saving model")
             # ckpt_path = os.path.join(config.system.work_dir, "model.pt")
             torch.save(model.state_dict(), ckpt_path)
             # revert model to training mode
@@ -151,6 +153,7 @@ if __name__ == '__main__':
     batch size: 32, block size: 512, gopher, almost max out V100 memory.
 
     python gpt.py --model.model_type=gpt2 --trainer.compile=?  --trainer.batch_size=8 --data.block_size=512 --system.gen_len=5000 --system.print_per_iter=100
+        T4
         compile=~750ms/iter
         non-compile= ~888ms/iter
 
@@ -159,6 +162,25 @@ if __name__ == '__main__':
         429ms/iter (V100)
         1394ms/iter (T4) compiled. (not compile will OOM)
         930ms/iter (T4 * 2), no compile
+
+    serious long training:
+    python gpt.py --model.model_type=gpt2 --trainer.data_parallel=1 --trainer.compile=0  --trainer.batch_size=26 --data.block_size=512 --system.gen_len=500 --system.print_per_iter=100 --system.resume=1
+        number of parameters: 88.81M
+        actually using batch size 26 to max out memory.
+        16xx ms / iter, T4 * 2.
+        450ms/iter, V100 * 2
+
+        V100 * 2, seems to be stuck at 1.6-1.7 loss.
+        I messed the model while saving, and have to start again....
+
+        Fuck it, using V100 * 8 and batchsize = 96 in the new attempt.
+        about 560-600ms/iter.
+        When I do 8 GPU, many GPU have low utilization, sometimes 50%, sometimes 70%, sometimes 100%.
+
+
+
+        Next time, try smaller batch size (32?) and larger model.
+
     """
 
     # run the optimization
