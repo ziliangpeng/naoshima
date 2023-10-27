@@ -63,7 +63,7 @@ def main(count):
     done = set()
     num_to_crawl = count
     for _ in range(num_to_crawl):
-        logger.info('===============================')
+        logger.info(f'{_} ===============================')
         topk = find_top_k(queue, 5)
         url = random.choice(topk)
         # url = queue.pop()
