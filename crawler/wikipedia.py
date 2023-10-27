@@ -11,7 +11,7 @@ from loguru import logger
 WIKI_PAGES_DIR = 'wiki-pages'
 
 START_URL = "https://en.wikipedia.org/wiki/Python_(programming_language)"
-# START_URL = "https://zh.wikipedia.org/wiki/%E9%98%BF%E5%A7%86%E6%96%AF%E7%89%B9%E4%B8%B9"
+START_URL = "https://zh.wikipedia.org/wiki/%E9%98%BF%E5%A7%86%E6%96%AF%E7%89%B9%E4%B8%B9"
 
 def get_wiki_page(url):
     logger.info(f"Crawling {url}")
@@ -47,6 +47,8 @@ def get_wiki_page(url):
 
 def find_top_k(queue, k):
     ret =  sorted(queue, key=lambda x: queue[x], reverse=True)[:k]
+    for k in ret:
+        logger.info(f"{k}: {queue[k]}")
     # logger.info(ret)
     return ret
 
@@ -61,6 +63,7 @@ def main(count):
     done = set()
     num_to_crawl = count
     for _ in range(num_to_crawl):
+        logger.info('===============================')
         topk = find_top_k(queue, 5)
         url = random.choice(topk)
         # url = queue.pop()
@@ -68,8 +71,8 @@ def main(count):
         done.add(url)
         links = get_wiki_page(url)
         for link in links:
-            if link not in done and link not in queue:
-                queue[link] += 1
+            # if link not in done and link not in queue:
+            queue[link] += 1
         time.sleep(1)  # Sleep for 1 second to be respectful to Wikipedia's servers
 
 if __name__ == '__main__':

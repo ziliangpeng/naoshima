@@ -133,7 +133,7 @@ if __name__ == '__main__':
                 # sample from the model...
                 context = "Title:"
                 x = torch.tensor([train_dataset.stoi[s] for s in context], dtype=torch.long)[None,...].to(trainer.device)
-                y = model.generate(x, config.system.gen_len, temperature=1.0, do_sample=True, top_k=10)[0]
+                y = model.generate(x, config.system.gen_len, temperature=1.0, do_sample=True, top_k=3)[0]
                 # y = model.generate(x, 1024, temperature=1.0, do_sample=False, top_k=1)[0]
                 completion = ''.join([train_dataset.itos[int(i)] for i in y])
                 print(completion)
@@ -176,6 +176,14 @@ if __name__ == '__main__':
         Fuck it, using V100 * 8 and batchsize = 96 in the new attempt.
         about 560-600ms/iter.
         When I do 8 GPU, many GPU have low utilization, sometimes 50%, sometimes 70%, sometimes 100%.
+        loss is tablizing at 5.9-6.0 (could improve if I continue to train, but I'm tired of hearing its hallucintion.)
+        This is a char level transformer, and it's able to generate words and grammar and sentences that start to be convincing.
+        It made up many titles and I had to Google to see if they really exist (most don't)
+        This is interesting, because basically my gpt2 already know how to speak like a wikipedia page.
+
+
+        Next, I am going to train a Chinese language model. I improved the wiki cralwer, to limit to a language, and will prioritize most linked pages.
+        This seems to help in narrowing pages to a certain topic related to starting page.
 
 
 
