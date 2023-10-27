@@ -71,8 +71,8 @@ def main(count):
         done.add(url)
         links = get_wiki_page(url)
         for link in links:
-            # if link not in done and link not in queue:
-            queue[link] += 1
+            if link not in done:
+                queue[link] += 1
         time.sleep(1)  # Sleep for 1 second to be respectful to Wikipedia's servers
 
 if __name__ == '__main__':
