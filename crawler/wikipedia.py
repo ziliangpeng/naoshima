@@ -10,6 +10,8 @@ from loguru import logger
 
 import urllib.parse
 
+import pickle
+
 WIKI_PAGES_DIR = 'wiki-pages'
 
 START_URL = "https://en.wikipedia.org/wiki/Python_(programming_language)"
@@ -53,7 +55,6 @@ def get_wiki_page(url):
         next_page = f'{host}{link}'
         # print(f'Next: {next_page}')
         pages.add(next_page)
-        # time.sleep(1)  # Sleep for 1 second to be respectful to Wikipedia's servers
         # crawl_wikipedia(next_page, depth-1)
 
     return pages
@@ -70,12 +71,27 @@ def find_top_k(queue, k):
 
 @click.command()
 @click.option('--count', default=10, help='')
-def main(count):
+@click.option('--load', default=False, help='')
+def main(count, load):
     if not os.path.exists(WIKI_PAGES_DIR):
         os.makedirs(WIKI_PAGES_DIR)
-    queue = defaultdict(int)
-    queue[START_URL] = 1
-    done = set()
+
+    # Load queue and done from file if they exist
+    if load and os.path.exists('queue.pkl'):
+        logger.info("loading queue.pkl")
+        with open('queue.pkl', 'rb') as f:
+            queue = pickle.load(f)
+    else:
+        queue = defaultdict(int)
+        queue[START_URL] = 1
+
+    if load and os.path.exists('done.pkl'):
+
+        with open('done.pkl', 'rb') as f:
+            done = pickle.load(f)
+    else:
+        done = set()
+
     num_to_crawl = count
     for _ in range(num_to_crawl):
         logger.info(f'{_} ===============================')
@@ -88,6 +104,14 @@ def main(count):
         for link in links:
             if link not in done:
                 queue[link] += 1
+
+        # Save queue and done to file
+        with open('queue.pkl', 'wb') as f:
+            pickle.dump(queue, f)
+
+        with open('done.pkl', 'wb') as f:
+            pickle.dump(done, f)
+
         time.sleep(1)  # Sleep for 1 second to be respectful to Wikipedia's servers
 
 if __name__ == '__main__':
