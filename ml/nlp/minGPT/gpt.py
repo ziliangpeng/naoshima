@@ -31,6 +31,7 @@ def get_config():
     C.system.input_file = 'input.txt'
     C.system.resume = 0
     C.system.topk = 3
+    C.system.prompt = "Title:"
 
     # data
     C.data = CharDataset.get_default_config()
@@ -132,7 +133,7 @@ if __name__ == '__main__':
             model.eval()
             with torch.no_grad():
                 # sample from the model...
-                context = "Title:"
+                context = config.system.prompt
                 x = torch.tensor([train_dataset.stoi[s] for s in context], dtype=torch.long)[None,...].to(trainer.device)
                 y = model.generate(x, config.system.gen_len, temperature=1.0, do_sample=True, top_k=config.system.topk)[0]
                 # y = model.generate(x, 1024, temperature=1.0, do_sample=False, top_k=1)[0]
@@ -185,7 +186,7 @@ if __name__ == '__main__':
 
         Next, I am going to train a Chinese language model. I improved the wiki cralwer, to limit to a language, and will prioritize most linked pages.
         This seems to help in narrowing pages to a certain topic related to starting page.
-       python gpt.py --model.model_type=gpt2 --trainer.data_parallel=1 --trainer.compile=0  --trainer.batch_size=128 --data.block_size=256 --system.gen_len=1000 --system.print_per_iter=100 --system.resume=0
+      python gpt.py --model.model_type=gpt2 --trainer.data_parallel=1 --trainer.compile=0  --trainer.batch_size=128 --data.block_size=256 --system.gen_len=1000 --system.print_per_iter=100 --system.resume=0
 
         I used a small input, and 256 context length, 128 batch size, and gpt2, and top 3 sampling, it almost remember perfetctly and just repeat the input.
         training loss goes as low as 0.6
@@ -194,6 +195,10 @@ if __name__ == '__main__':
           - topk=3 instead of 10, limiting its creativity/hallucination.
           - dataset too small, and well under its capacity.
           - so, if I tokenize English better (fit more info in the context length), the result could improve a lot too.
+
+
+      python gpt.py --model.model_type=gopher --trainer.data_parallel=1 --trainer.compile=0  --trainer.batch_size=32 --data.block_size=128 --system.gen_len=1000 --system.print_per_iter=100 --system
+.resume=0 --system.topk=10
 
 
 
