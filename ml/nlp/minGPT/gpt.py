@@ -197,9 +197,9 @@ if __name__ == '__main__':
           - so, if I tokenize English better (fit more info in the context length), the result could improve a lot too.
 
 
-      python gpt.py --model.model_type=gopher --trainer.data_parallel=1 --trainer.compile=0  --trainer.batch_size=32 --data.block_size=128 --system.gen_len=1000 --system.print_per_iter=100 --system
-.resume=0 --system.topk=10
+      python gpt.py --model.model_type=gopher --trainer.data_parallel=1 --trainer.compile=0  --trainer.batch_size=32 --data.block_size=128 --system.gen_len=1000 --system.print_per_iter=100 --system.resume=0 --system.topk=10
 
+      python gpt.py --model.model_type=gpt-mini --trainer.data_parallel=0 --trainer.compile=1  --trainer.batch_size=128 --data.block_size=128 --system.gen_len=1000 --system.print_per_iter=100 --system.resume=1 --system.prompt=人类的未来
 
 
         Next time, try smaller batch size (32?) and larger model.

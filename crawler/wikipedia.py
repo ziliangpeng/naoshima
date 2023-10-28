@@ -72,7 +72,8 @@ def find_top_k(queue, k):
 @click.command()
 @click.option('--count', default=10, help='')
 @click.option('--load', default=False, help='')
-def main(count, load):
+@click.option('--k', default=5, help='')
+def main(count, load, k):
     if not os.path.exists(WIKI_PAGES_DIR):
         os.makedirs(WIKI_PAGES_DIR)
 
@@ -95,7 +96,7 @@ def main(count, load):
     num_to_crawl = count
     for _ in range(num_to_crawl):
         logger.info(f'{_} ===============================')
-        topk = find_top_k(queue, 5)
+        topk = find_top_k(queue, k)
         url = random.choice(topk)
         # url = queue.pop()
         queue.pop(url)
@@ -111,6 +112,8 @@ def main(count, load):
 
         with open('done.pkl', 'wb') as f:
             pickle.dump(done, f)
+
+        logger.info("persisted queue.pkl and done.pkl. Sleeping for 1 second")
 
         time.sleep(1)  # Sleep for 1 second to be respectful to Wikipedia's servers
 
