@@ -32,6 +32,7 @@ def get_config():
     C.system.resume = 0
     C.system.topk = 3
     C.system.prompt = "Title:"
+    C.system.load = ''
 
     # data
     C.data = CharDataset.get_default_config()
@@ -111,7 +112,10 @@ if __name__ == '__main__':
     # construct the model
     config.model.vocab_size = train_dataset.get_vocab_size()
     config.model.block_size = train_dataset.get_block_size()
-    model = GPT(config.model)
+    if not config.system.load:
+        model = GPT(config.model)
+    else:
+        model = GPT.from_pretrained(config.system.load)
 
     ckpt_path = os.path.join(config.system.work_dir, "model.pt")
     if config.system.resume and os.path.exists(ckpt_path):
