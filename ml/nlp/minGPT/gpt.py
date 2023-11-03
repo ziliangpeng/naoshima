@@ -205,6 +205,8 @@ if __name__ == '__main__':
 
       python gpt.py --model.model_type=gpt-mini --trainer.data_parallel=0 --trainer.compile=1  --trainer.batch_size=128 --data.block_size=128 --system.gen_len=1000 --system.print_per_iter=100 --system.resume=1 --system.prompt=人类的未来
 
+        Most LLMs only train tokens with 1, w or 3 epochs. I should find a way to limit training on only 3 epochs too.
+
 
         Next time, try smaller batch size (32?) and larger model.
 
