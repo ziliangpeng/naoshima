@@ -16,9 +16,9 @@ WIKI_PAGES_DIR = 'wiki-pages'
 
 START_URL = "https://en.wikipedia.org/wiki/Python_(programming_language)"
 # 阿姆斯特丹
-START_URL = "https://zh.wikipedia.org/wiki/%E9%98%BF%E5%A7%86%E6%96%AF%E7%89%B9%E4%B8%B9"
+# START_URL = "https://zh.wikipedia.org/wiki/%E9%98%BF%E5%A7%86%E6%96%AF%E7%89%B9%E4%B8%B9"
 # 人工神经网络
-START_URL = "https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"
+# START_URL = "https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"
 
 
 def decode_url(url):
@@ -26,6 +26,9 @@ def decode_url(url):
     decoded_text = decoded_bytes.decode('utf-8', errors='replace')
     return decoded_text
 
+
+def lang(url):
+    return url[url.find('://')+3:url.find('wikipedia.org/')-1]
 
 def get_wiki_page(url):
     logger.info(f"Crawling {decode_url(url)}")
@@ -39,7 +42,11 @@ def get_wiki_page(url):
     text += f'Context:{body}'
 
     title = title.replace('/', '-')
-    with open(f'{WIKI_PAGES_DIR}/{title}.txt', 'w') as f:
+    target_dir = WIKI_PAGES_DIR + '/' + lang(url)
+    if not os.path.exists(target_dir):
+        os.makedirs(target_dir)
+
+    with open(f'{target_dir}/{title}.txt', 'w') as f:
         f.write(text)
 
     host = url[:url.find('wikipedia.org/')+len('wikipedia.org/')-1]
@@ -74,9 +81,6 @@ def find_top_k(queue, k):
 @click.option('--load', default=False, help='')
 @click.option('--k', default=5, help='')
 def main(count, load, k):
-    if not os.path.exists(WIKI_PAGES_DIR):
-        os.makedirs(WIKI_PAGES_DIR)
-
     # Load queue and done from file if they exist
     if load and os.path.exists('queue.pkl'):
         logger.info("loading queue.pkl")
