@@ -81,6 +81,7 @@ class Trainer:
         # setup the dataloader
         train_loader = DataLoader(
             self.train_dataset,
+            # If not sample, the batch will be a bunch of blocks with each having 1 diff in start index, having much overlaps.
             sampler=torch.utils.data.RandomSampler(self.train_dataset, replacement=True, num_samples=int(1e10)),
             shuffle=False,
             pin_memory=True,
