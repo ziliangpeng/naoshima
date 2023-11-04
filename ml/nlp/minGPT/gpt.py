@@ -14,6 +14,7 @@ from mingpt.trainer import Trainer
 from mingpt.utils import set_seed, setup_logging, CfgNode as CN
 
 from loguru import logger
+from collections import defaultdict
 
 # -----------------------------------------------------------------------------
 
@@ -66,6 +67,8 @@ class CharDataset(Dataset):
     def __init__(self, config, data):
         self.config = config
 
+        data = CharDataset.cap_vocab(data, 4200)
+
         chars = sorted(list(set(data)))
         data_size, vocab_size = len(data), len(chars)
         print('data has %d characters, %d unique.' % (data_size, vocab_size))
@@ -74,6 +77,19 @@ class CharDataset(Dataset):
         self.itos = { i:ch for i,ch in enumerate(chars) }
         self.vocab_size = vocab_size
         self.data = data
+
+    @staticmethod
+    def cap_vocab(data, k):
+        freq = defaultdict(int)
+        for c in data:
+            freq[c] += 1
+
+        freq = sorted(freq.items(), key=lambda x: x[1], reverse=True)[:k]
+        freq = [f[0] for f in freq]
+
+        d = [c if c in freq else '🤯' for c in data]
+        return d
+
 
     def get_vocab_size(self):
         return self.vocab_size
