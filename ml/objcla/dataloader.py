@@ -3,26 +3,24 @@ from tensorflow.keras.datasets import cifar10, cifar100
 from tensorflow.keras.utils import to_categorical
 from loguru import logger
 from functools import partial
+from datasets import load_dataset
+
+import numpy as np
 
 
 # untested
-def load_mnist_from_huggingface():
-    tokenizer = AutoTokenizer.from_pretrained("mnist")
-    model = AutoModelForSequenceClassification.from_pretrained("mnist")
-    nlp = pipeline("text-classification", model=model, tokenizer=tokenizer)
+def load_mnist_hf():
+    dataset = load_dataset("mnist")
+    train_data = dataset["train"]
+    test_data = dataset["test"]
 
-    train_dataset = nlp.tokenizer(["train"], padding=True, truncation=True, return_tensors="pt")
-    test_dataset = nlp.tokenizer(["test"], padding=True, truncation=True, return_tensors="pt")
+    x_train = np.array(train_data["image"]) / 255.0
+    y_train = np.array(train_data["label"])
 
-    train_inputs = train_dataset["input_ids"]
-    train_labels = train_dataset["attention_mask"]
-    test_inputs = test_dataset["input_ids"]
-    test_labels = test_dataset["attention_mask"]
+    x_test = np.array(test_data["image"]) / 255.0
+    y_test = np.array(test_data["label"])
 
-    logger.info("Using MNIST dataset from HuggingFace")
-
-    return train_inputs, train_labels, test_inputs, test_labels
-    
+    return x_train, y_train, x_test, y_test
 
 
 def _load_keras(loader, name, onehot):
@@ -53,4 +51,7 @@ if __name__ == "__main__":
     load_mnist(onehot=True)
     load_cifar10(onehot=False)
     X_train, y_train, X_test, y_test = load_mnist(onehot=True)
-    logger.info(type(X_train[0])) # type should be numpy.narray
+    logger.info(type(X_train[0]))  # type should be numpy.narray
+    logger.info(X_train[0].shape)
+    x_train_hf, y_train_hf, x_test_hf, y_test_hf = load_mnist_hf()
+    assert np.allclose(X_train, x_train_hf)
