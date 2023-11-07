@@ -65,8 +65,14 @@ def train(x_train, y_train, x_test, y_test, params, lr):
 @click.option("--model", default="fnn", help="")
 @click.option("--dataset", default="mnist", help="")
 @click.option("--training_size", default=600, help="")
-def main(model, dataset, training_size):
-    loader = getattr(dataloader, f"load_{dataset}")
+@click.option("--load_from_hf", default=False, help="")
+def main(model, dataset, training_size, load_from_hf):
+    # jax-metal works a expected, speeding up and maxing out M2 GPU.
+    # params size is hardcoded, so only works for (fashion) mnist.
+    load_fn = f"load_{dataset}"
+    if load_from_hf:
+        load_fn += "_hf"
+    loader = getattr(dataloader, load_fn)
     x_train, y_train, x_test, y_test = loader(onehot=True)
     # At least it can train and overfit on a small dataset.
     num_images = training_size
