@@ -33,13 +33,19 @@ def _load_hf(name, onehot):
     train_data = dataset["train"]
     test_data = dataset["test"]
 
-    train_data_name = "img" in train_data.column_names and "img" or "image"
+    # "image" for mnist and fashion_mnist, "img" for cifar10 and cifar100
+    data_name = "img" in train_data.column_names and "img" or "image"
+    logger.debug(f"data_name is {data_name}")
 
-    x_train = np.array(train_data[train_data_name]) / 255.0
-    y_train = np.array(train_data["label"])
+    # "label" for mnist, fashion_mnist, and cifar10, "coarse_label" or "fine_label" for cifar100
+    label_name = "label" in train_data.column_names and "label" or "coarse_label"
+    logger.debug(f"label_name is {label_name}")
 
-    x_test = np.array(test_data[train_data_name]) / 255.0
-    y_test = np.array(test_data["label"])
+    x_train = np.array(train_data[data_name]) / 255.0
+    y_train = np.array(train_data[label_name])
+
+    x_test = np.array(test_data[data_name]) / 255.0
+    y_test = np.array(test_data[label_name])
 
     if onehot:
         y_train = categorical(y_train)  # Convert the labels to one-hot encoding
