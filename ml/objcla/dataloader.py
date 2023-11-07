@@ -14,6 +14,7 @@ def categorical_tf(y):
 
 
 def categorical(y):
+    # TODO: would be good to not need sklearn either.
     y = y.reshape(-1, 1)
     # Create the encoder
     encoder = OneHotEncoder(
