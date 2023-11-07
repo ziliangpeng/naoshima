@@ -64,7 +64,7 @@ def train(x_train, y_train, x_test, y_test, params, lr, epochs=100):
 @click.option("--model", default="fnn", help="")
 @click.option("--dataset", default="mnist", help="")
 @click.option("--training_size", default=600, help="")
-@click.option("--load_from_hf", default=False, help="")
+@click.option("--load_from_hf", default=True, help="")
 @click.option("--epochs", default=100, help="")
 def main(model, dataset, training_size, load_from_hf, epochs):
     # jax-metal works a expected, speeding up and maxing out M2 GPU.

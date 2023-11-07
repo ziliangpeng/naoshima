@@ -1,5 +1,3 @@
-from tensorflow.keras.datasets import mnist, fashion_mnist
-from tensorflow.keras.datasets import cifar10, cifar100
 from loguru import logger
 from functools import partial
 from datasets import load_dataset
@@ -28,35 +26,18 @@ def categorical(y):
     return y_onehot
 
 
-def load_mnist_hf(onehot=True):
-    dataset = load_dataset("mnist")
+def _load_hf(name, onehot):
+    logger.info(f"Loading {name} dataset from hf")
+    dataset = load_dataset(name)
     train_data = dataset["train"]
     test_data = dataset["test"]
 
-    x_train = np.array(train_data["image"]) / 255.0
+    train_data_name = "img" in train_data.column_names and "img" or "image"
+
+    x_train = np.array(train_data[train_data_name]) / 255.0
     y_train = np.array(train_data["label"])
 
-    x_test = np.array(test_data["image"]) / 255.0
-    y_test = np.array(test_data["label"])
-
-    # replace this to not use keras
-    if onehot:
-        y_train = categorical(y_train)  # Convert the labels to one-hot encoding
-        y_test = categorical(y_test)
-
-    return x_train, y_train, x_test, y_test
-
-
-def load_cifar10_hf(onehot=True):
-    logger.info(f"Using cifar10 dataset from hf")
-    dataset = load_dataset("cifar10")
-    train_data = dataset["train"]
-    test_data = dataset["test"]
-
-    x_train = np.array(train_data["img"]) / 255.0
-    y_train = np.array(train_data["label"])
-
-    x_test = np.array(test_data["img"]) / 255.0
+    x_test = np.array(test_data[train_data_name]) / 255.0
     y_test = np.array(test_data["label"])
 
     if onehot:
@@ -68,7 +49,7 @@ def load_cifar10_hf(onehot=True):
 
 def _load_keras(loader, name, onehot):
     (x_train, y_train), (x_test, y_test) = loader()
-    logger.info(f"Using {name} dataset from keras")
+    logger.info(f"Loading {name} dataset from keras")
 
     image_shape = x_train[0].shape
     logger.info(f"The size is {len(x_train)}")
@@ -84,10 +65,17 @@ def _load_keras(loader, name, onehot):
     return x_train, y_train, x_test, y_test
 
 
-load_cifar10 = partial(_load_keras, cifar10.load_data, "cifar10")
-load_cifar100 = partial(_load_keras, cifar100.load_data, "cifar100")
-load_mnist = partial(_load_keras, mnist.load_data, "mnist")
-load_fashion_mnist = partial(_load_keras, fashion_mnist.load_data, "fashion")
+DATASETS = ["mnist", "fashion_mnist", "cifar10", "cifar100"]
+
+for d in DATASETS:
+    try:
+        from tensorflow.keras.datasets import mnist, fashion_mnist, cifar10, cifar100
+
+        globals()[f"load_{d}_tf"] = partial(_load_keras, mnist.load_data, d)
+    except ImportError:
+        logger.warning(f"Cannot import tensorflow for the {d} dataset.")
+    globals()[f"load_{d}_hf"] = partial(_load_hf, d)
+    globals()[f"load_{d}"] = partial(_load_hf, d)
 
 
 if __name__ == "__main__":
@@ -98,7 +86,7 @@ if __name__ == "__main__":
     X_train, y_train, X_test, y_test = load_mnist(onehot=True)
     logger.info(type(X_train[0]))  # type should be numpy.narray
     logger.info(X_train[0].shape)
-    x_train_hf, y_train_hf, x_test_hf, y_test_hf = load_mnist_hf()
+    x_train_hf, y_train_hf, x_test_hf, y_test_hf = load_mnist_hf(onehot=True)
     assert np.allclose(X_train, x_train_hf)
 
     # not work, since order seems to be different?
