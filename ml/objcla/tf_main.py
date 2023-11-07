@@ -34,9 +34,13 @@ def make_tb(name):
     )
 
 
-def train(dataset, epoch, model_name):
-    logger.info("Using model: " + model_name)
-    loader = getattr(dataloader, f"load_{dataset}")
+def train(dataset, epoch, model_name, load_from_hf):
+    logger.info(f"Loading from hf is {load_from_hf}")
+    load_fn = f"load_{dataset}"
+    if load_from_hf:
+        load_fn += "_hf"
+    loader = getattr(dataloader, load_fn)
+    # loader = getattr(dataloader, f"load_{dataset}")
     x_train, y_train, x_test, y_test = loader(onehot=True)
 
     if x_train[0].ndim == 2:
@@ -79,8 +83,9 @@ def train(dataset, epoch, model_name):
 @click.option("--dataset", default="mnist", help="Use fashion dataset instead of MNIST")
 @click.option("--epoch", default=42, help="")
 @click.option("--model", default="alexnet", help="")
-def main(dataset, epoch, model):
-    train(dataset, epoch, model)
+@click.option("--load_from_hf", default=False, help="")
+def main(dataset, epoch, model, load_from_hf):
+    train(dataset, epoch, model, load_from_hf)
 
 
 if __name__ == "__main__":
