@@ -39,10 +39,9 @@ def update(params, x, y, lr):
     return [(param - lr * grad) for param, grad in zip(params, grads)]
 
 
-def train(x_train, y_train, x_test, y_test, params, lr):
+def train(x_train, y_train, x_test, y_test, params, lr, epochs=100):
     batch_size = 128
     num_batches = x_train.shape[0] // batch_size
-    epochs = 100
     for epoch in range(epochs):
         start_time = time.time()
         for i in range(num_batches):
@@ -66,7 +65,8 @@ def train(x_train, y_train, x_test, y_test, params, lr):
 @click.option("--dataset", default="mnist", help="")
 @click.option("--training_size", default=600, help="")
 @click.option("--load_from_hf", default=False, help="")
-def main(model, dataset, training_size, load_from_hf):
+@click.option("--epochs", default=100, help="")
+def main(model, dataset, training_size, load_from_hf, epochs):
     # jax-metal works a expected, speeding up and maxing out M2 GPU.
     # params size is hardcoded, so only works for (fashion) mnist.
     load_fn = f"load_{dataset}"
@@ -104,7 +104,7 @@ def main(model, dataset, training_size, load_from_hf):
     logger.info(f"Using {model} model")
 
     lr = 4e-3
-    train(x_train, y_train, x_test, y_test, params, lr)
+    train(x_train, y_train, x_test, y_test, params, lr, epochs)
 
 
 if __name__ == "__main__":
