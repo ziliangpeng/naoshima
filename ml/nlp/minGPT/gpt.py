@@ -72,9 +72,13 @@ class CharDataset(Dataset):
         self.config = config
 
         if config.cap_data != -1:
+            logger.info("Start capping data")
             data = data[:config.cap_data]
+            logger.info("Done capping data")
         if config.cap_vocab != -1:
+            logger.info("Start capping vocab")
             data = CharDataset.cap_vocab(data, config.cap_vocab)
+            logger.info("Done capping vocab")
 
         chars = sorted(list(set(data)))
         data_size, vocab_size = len(data), len(chars)
