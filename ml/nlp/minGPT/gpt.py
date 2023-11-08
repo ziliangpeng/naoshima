@@ -92,16 +92,24 @@ class CharDataset(Dataset):
 
     @staticmethod
     def cap_vocab(data, k):
-        # freq = defaultdict(int)
-        # for c in data:
-        #     freq[c] += 1
-        freq = Counter(data)
+        # # freq = defaultdict(int)
+        # # for c in data:
+        # #     freq[c] += 1
+        # freq = Counter(data)
 
-        freq = sorted(freq.items(), key=lambda x: x[1], reverse=True)[:k]
-        freq = [f[0] for f in freq]
+        # freq = sorted(freq.items(), key=lambda x: x[1], reverse=True)[:k]
+        # freq = [f[0] for f in freq]
 
-        d = [c if c in freq else '🤯' for c in data]
-        return d
+        # d = [c if c in freq else '🤯' for c in data]
+        # return d
+
+
+        char_counts = Counter(data)
+        most_common_chars = char_counts.most_common(k)
+        most_common_chars_set = set(char for char, _ in most_common_chars)
+
+        result = [char if char in most_common_chars_set else '🤯' for char in data]
+        return result
 
 
     def get_vocab_size(self):
