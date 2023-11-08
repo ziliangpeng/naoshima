@@ -64,12 +64,17 @@ class CharDataset(Dataset):
     def get_default_config():
         C = CN()
         C.block_size = 512
+        C.cap_vocab = -1
+        C.cap_data = -1
         return C
 
     def __init__(self, config, data):
         self.config = config
 
-        data = CharDataset.cap_vocab(data, 4200)
+        if config.cap_data != -1:
+            data = data[:config.cap_data]
+        if config.cap_vocab != -1:
+            data = CharDataset.cap_vocab(data, config.cap_vocab)
 
         chars = sorted(list(set(data)))
         data_size, vocab_size = len(data), len(chars)
