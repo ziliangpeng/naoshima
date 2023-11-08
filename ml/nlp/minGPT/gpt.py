@@ -41,6 +41,8 @@ def get_config():
     # model
     C.model = GPT.get_default_config()
     C.model.model_type = 'gpt-mini'
+    C.model.use_flash = True
+    C.model.dropout = 0
 
     # trainer
     C.trainer = Trainer.get_default_config()
@@ -148,7 +150,7 @@ if __name__ == '__main__':
         if trainer.iter_num % config.system.print_per_iter == 0:
             logger.info(f"iter_dt {trainer.iter_dt * 1000:.2f}ms; iter {trainer.iter_num}: train loss {trainer.loss.sum().item():.5f}")
 
-        if trainer.iter_num % config.system.gen_per_iter == 0:
+        if config.system.gen_per_iter != -1 and trainer.iter_num % config.system.gen_per_iter == 0:
             # evaluate both the train and test score
             model.eval()
             with torch.no_grad():
