@@ -15,6 +15,7 @@ from mingpt.utils import set_seed, setup_logging, CfgNode as CN
 
 from loguru import logger
 from collections import defaultdict
+from collections import Counter
 
 # -----------------------------------------------------------------------------
 
@@ -91,9 +92,10 @@ class CharDataset(Dataset):
 
     @staticmethod
     def cap_vocab(data, k):
-        freq = defaultdict(int)
-        for c in data:
-            freq[c] += 1
+        # freq = defaultdict(int)
+        # for c in data:
+        #     freq[c] += 1
+        freq = Counter(data)
 
         freq = sorted(freq.items(), key=lambda x: x[1], reverse=True)[:k]
         freq = [f[0] for f in freq]
