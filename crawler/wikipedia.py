@@ -18,7 +18,7 @@ START_URL = "https://en.wikipedia.org/wiki/Python_(programming_language)"
 # 阿姆斯特丹
 # START_URL = "https://zh.wikipedia.org/wiki/%E9%98%BF%E5%A7%86%E6%96%AF%E7%89%B9%E4%B8%B9"
 # 人工神经网络
-# START_URL = "https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"
+START_URL = "https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"
 
 
 def decode_url(url):

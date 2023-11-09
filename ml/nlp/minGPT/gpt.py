@@ -16,6 +16,7 @@ from mingpt.utils import set_seed, setup_logging, CfgNode as CN
 from loguru import logger
 from collections import defaultdict
 from collections import Counter
+from hanziconv import HanziConv
 
 # -----------------------------------------------------------------------------
 
@@ -67,10 +68,20 @@ class CharDataset(Dataset):
         C.block_size = 512
         C.cap_vocab = -1
         C.cap_data = -1
+        C.to_simp = False
         return C
+
 
     def __init__(self, config, data):
         self.config = config
+
+        if config.to_simp:
+            logger.info("Start tosimp")
+            def to_simp(character):
+                return HanziConv.toSimplified(character)
+            data = [to_simp(c) for c in data]
+            logger.info("Done tosimp")
+
 
         if config.cap_data != -1:
             logger.info("Start capping data")
