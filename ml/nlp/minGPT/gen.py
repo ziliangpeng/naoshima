@@ -5,7 +5,10 @@ from loguru import logger
 
 def gen():
     # Load the entire model
-    device = 'mps'
+    if torch.cuda.is_available():
+        device = 'cuda'
+    else:
+        device = 'mps'
     gen_len = 4
 
     model = torch.load('wiki-gpt.pt')
