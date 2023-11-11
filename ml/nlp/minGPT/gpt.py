@@ -17,6 +17,7 @@ from loguru import logger
 from collections import defaultdict
 from collections import Counter
 from hanziconv import HanziConv
+import pickle
 
 # -----------------------------------------------------------------------------
 
@@ -157,6 +158,10 @@ if __name__ == '__main__':
     text = open(config.system.input_file, 'r').read() # don't worry we won't run out of file handles
     train_dataset = CharDataset(config.data, text)
 
+    # Assuming train_dataset is already defined
+    with open('train_dataset_stoi.pickle', 'wb') as f:
+        pickle.dump(train_dataset.stoi, f)
+
     # construct the model
     config.model.vocab_size = train_dataset.get_vocab_size()
     config.model.block_size = train_dataset.get_block_size()
@@ -191,13 +196,15 @@ if __name__ == '__main__':
                 # y = model.generate(x, 1024, temperature=1.0, do_sample=False, top_k=1)[0]
                 completion = ''.join([train_dataset.itos[int(i)] for i in y])
                 print(completion)
-            # save the latest model
-            print("saving model")
             with open(os.path.join(config.system.work_dir, f"completion-{trainer.iter_num}.txt"), "w") as f:
                 f.write(completion)
-            print("done saving model")
-            # ckpt_path = os.path.join(config.system.work_dir, "model.pt")
+
+            # save the latest model
+            logger.info("saving model")
             torch.save(model.state_dict(), ckpt_path)
+            torch.save(model, "wiki-gpt.pt")
+            logger.info("done saving model")
+            # ckpt_path = os.path.join(config.system.work_dir, "model.pt")
             # revert model to training mode
             model.train()
 

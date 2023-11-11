@@ -276,6 +276,7 @@ class GPT(nn.Module):
 
     def forward(self, idx, targets=None):
         device = idx.device
+        logger.info(device)
         b, t = idx.size()
         assert t <= self.block_size, f"Cannot forward sequence of length {t}, block size is only {self.block_size}"
         pos = torch.arange(0, t, dtype=torch.long, device=device).unsqueeze(0) # shape (1, t)
@@ -309,6 +310,7 @@ class GPT(nn.Module):
         Most likely you'll want to make sure to be in model.eval() mode of operation for this.
         """
         for _ in range(max_new_tokens):
+            logger.info(_)
             # if the sequence context is growing too long we must crop it at block_size
             idx_cond = idx if idx.size(1) <= self.block_size else idx[:, -self.block_size:]
             # forward the model to get the logits for the index in the sequence

@@ -7,3 +7,6 @@ __pycache__/
 out/
 
 input.txt
+
+train_dataset_stoi.pickle
+wiki-gpt.pt
