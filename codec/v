@@ -115,7 +115,7 @@ def process_video(gpu, quality, resize, filename):
 @click.command()
 @click.argument("files", nargs=-1)
 @click.option("--gpu", is_flag=True, default=False, help="GPU to use")
-@click.option("--quality", default="high", help="Quality to use")
+@click.option("--quality", default="low", help="Quality to use")
 @click.option("--resize", default="-1", help="Resolution to use")
 def main(gpu, quality, resize, files):
     logger.info(f"Filenames: {files}")
