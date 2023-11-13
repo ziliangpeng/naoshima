@@ -14,11 +14,11 @@ import pickle
 
 WIKI_PAGES_DIR = 'wiki-pages'
 
-START_URL = "https://en.wikipedia.org/wiki/Python_(programming_language)"
+START_URL_EN = "https://en.wikipedia.org/wiki/Python_(programming_language)"
 # 阿姆斯特丹
 # START_URL = "https://zh.wikipedia.org/wiki/%E9%98%BF%E5%A7%86%E6%96%AF%E7%89%B9%E4%B8%B9"
 # 人工神经网络
-START_URL = "https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"
+START_URL_ZH = "https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"
 
 
 def decode_url(url):
@@ -80,7 +80,12 @@ def find_top_k(queue, k):
 @click.option('--count', default=10, help='')
 @click.option('--load', default=False, help='')
 @click.option('--k', default=5, help='')
-def main(count, load, k):
+@click.option('--lang', default='en', help='')
+def main(count, load, k, lang):
+    logger.info(f"Crawling for language {lang}")
+
+    start_url = {'en': START_URL_EN, 'zh': START_URL_ZH}[lang]
+
     # Load queue and done from file if they exist
     if load and os.path.exists('queue.pkl'):
         logger.info("loading queue.pkl")
@@ -88,7 +93,7 @@ def main(count, load, k):
             queue = pickle.load(f)
     else:
         queue = defaultdict(int)
-        queue[START_URL] = 1
+        queue[start_url] = 1
 
     if load and os.path.exists('done.pkl'):
 
