@@ -24,3 +24,6 @@ bazel-*
 
 # vscode
 .vscode/*
+
+.ipynb_checkpoints/
+Untitled.ipynb
