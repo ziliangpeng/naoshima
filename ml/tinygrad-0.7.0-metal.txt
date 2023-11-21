@@ -1,0 +1,33 @@
+WARNING: creating new view with reshape View(shape=(41, 42), strides=(0, 0), offset=0, mask=((0, 41), (0, 1)), contiguous=False, shape_strides=((1722, 0),)) -> (1722,)
+*** copy METAL <- CPU size 41 dtype dtypes.float
+***       0.00 GB    0.01 ms op: BinaryOps.MUL        out(float): (41, 41)                       in(2): [(41, 41)] 
+*** exec  0.00 GB    0.00 ms op: ReduceOps.SUM        out(float): (41, 1)                        in(1): [(41, 41)] (41, 1)
+UOps.DEFINE_GLOBAL  :                           []                               ('data0', dtypes.float)
+UOps.DEFINE_GLOBAL  :                           []                               ('data1', dtypes.float)
+   0 buffer<41, dtypes.float>                        [View(shape=(41, 1), strides=(1, 0), offset=0, mask=None, contiguous=True, shape_strides=((41, 1),))]
+   1 const<1.0, dtypes.float>                        [View(shape=(41, 42), strides=(0, 0), offset=0, mask=((0, 41), (0, 1)), contiguous=False, shape_strides=((1722, 0),)), View(shape=(41, 41), strides=(41, 1), offset=0, mask=None, contiguous=True, shape_strides=((1681, 1),))]
+   2 buffer<41, dtypes.float>                        [View(shape=(41, 41), strides=(0, 1), offset=0, mask=None, contiguous=False, shape_strides=((41, 0), (41, 1)))]
+  41   41
+UOps.LOOP           :                           []                               ([<gidx0[0-40]>], 'global')
+UOps.LOOP           :                           []                               ([], 'local')
+UOps.LOAD           : <acc0_0>                  []                               ConstOp(value=0.0, valid=<1>, invalid_value=0.0)
+UOps.LOOP           :                           []                               ([<ridx1[0-40]>], 'reduce')
+UOps.LOAD           : <const1_0>                []                               ConstOp(value=1.0, valid=<((((gidx0[0-40]*41)+ridx1[0-40])%42)<1)>, invalid_value=0.0)
+UOps.LOAD           : <val2_0>                  []                               MemOp(name='data1', idx=<ridx1[0-40]>, local=False, memory_dtype=dtypes.float, valid=<1>, invalid_value=0.0)
+UOps.ALU            : <acc0_0>                  [<const1_0>, <val2_0>, <acc0_0>] TernaryOps.MULACC
+UOps.ENDLOOP        :                           []                               ([<ridx1[0-40]>], 'reduce')
+UOps.STORE          :                           [<acc0_0>]                       MemOp(name='data0', idx=<gidx0[0-40]>, local=False, memory_dtype=dtypes.float, valid=<1>, invalid_value=0.0)
+UOps.ENDLOOP        :                           []                               ([<gidx0[0-40]>], 'global+local')
+#include <metal_stdlib>
+using namespace metal;
+kernel void r_41_41(device float* data0, const device float* data1, uint3 gid [[threadgroup_position_in_grid]], uint3 lid [[thread_position_in_threadgroup]]) {
+{ int gidx0 = gid.x;  /* 41 */
+    float acc0_0 = 0.0f;
+    for (int ridx1 = 0; ridx1 <= 40; ++ridx1) {
+      float const1_0 = (((((gidx0*41)+ridx1)%42)<1))?(1.0f):0.0f;
+      float val2_0 = *(data1+ridx1);
+      acc0_0 = ((const1_0*val2_0)+acc0_0);
+    } /* reduce */
+    *(data0+gidx0) = acc0_0;
+  } /* global+local */
+}

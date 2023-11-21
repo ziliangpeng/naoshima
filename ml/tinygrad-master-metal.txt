@@ -1,0 +1,37 @@
+***      copy METAL <- CPU size 41               shape (41,)                   dtype dtypes.float
+  0 ━┳ SUM (41, 1)
+  1  ┗━┳ MUL 
+  2    ┣━━ CONST ConstBuffer(val=1.0, dtype=dtypes.float, st=ShapeTracker(views=(View(shape=(41, 42), strides=(0, 0), offset=0, mask=((0, 41), (0, 1)), contiguous=False), View(shape=(41, 41), strides=(41, 1), offset=0, mask=None, contiguous=True))))
+  3    ┗━━ MEM MemBuffer(idx=1, dtype=dtypes.float, st=ShapeTracker(views=(View(shape=(41, 41), strides=(0, 1), offset=0, mask=None, contiguous=False),)))
+   0 UOps.DEFINE_GLOBAL  : ptr.dtypes.float          []                               ('data0', dtypes.float)
+   1 UOps.DEFINE_GLOBAL  : ptr.dtypes.float          []                               ('data1', dtypes.float)
+   2 UOps.SPECIAL        : dtypes.int32              []                               (0, 'gidx0', 41)
+   3 UOps.DEFINE_ACC     : dtypes.float              []                               0.0
+   4 UOps.CONST          : dtypes.int32              []                               0
+   5 UOps.CONST          : dtypes.int32              []                               41
+   6 UOps.LOOP           : dtypes.int32              [4, 5]                           None
+   7 UOps.CONST          : dtypes.float              []                               1.0
+   8 UOps.ALU            : dtypes.int32              [2, 5]                           BinaryOps.MUL
+   9 UOps.ALU            : dtypes.int32              [8, 6]                           BinaryOps.ADD
+  10 UOps.CONST          : dtypes.int32              []                               42
+  11 UOps.ALU            : dtypes.int32              [9, 10]                          BinaryOps.MOD
+  12 UOps.CONST          : dtypes.int32              []                               1
+  13 UOps.ALU            : dtypes.bool               [11, 12]                         BinaryOps.CMPLT
+  14 UOps.CONST          : dtypes.float              []                               0.0
+  15 UOps.ALU            : dtypes.float              [13, 7, 14]                      TernaryOps.WHERE
+  16 UOps.LOAD           : dtypes.float              [1, 6]                           None
+  17 UOps.ALU            : dtypes.float              [15, 16, 3]                      TernaryOps.MULACC
+  18 UOps.PHI            : dtypes.float              [3, 17, 6]                       None
+  19 UOps.END            :                           [6]                              None
+  20 UOps.STORE          :                           [0, 2, 18]                       None
+#include <metal_stdlib>
+using namespace metal;
+kernel void r_41_41(device float* data0, const device float* data1, uint3 gid [[threadgroup_position_in_grid]], uint3 lid [[thread_position_in_threadgroup]]) {
+  int gidx0 = gid.x; /* 41 */
+  float acc0 = 0.0f;
+  for (int ridx0 = 0; ridx0 < 41; ++ridx0) {
+    float val0 = *(data1+ridx0);
+    acc0 = (((((((gidx0*41)+ridx0)%42)<1)!=0?1.0f:0.0f)*val0)+acc0);
+  }
+  *(data0+gidx0) = acc0;
+}
