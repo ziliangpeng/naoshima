@@ -60,7 +60,7 @@ def calcualte_resize(resize, w, h):
         raise ValueError(f"Unknown resize: {resize}")
 
 
-def process_video(gpu, quality, resize, filename):
+def process_video(gpu, quality, resize, filename, threads=-1):
     logger.info(f"GPU: {gpu}")
     logger.info(f"Quality: {quality}")
     logger.info(f"Resize: {resize}")
@@ -84,6 +84,9 @@ def process_video(gpu, quality, resize, filename):
         "-movflags",
         "use_metadata_tags",
     ]
+    if threads != -1:
+        logger.info(f"Using threads: {threads}")
+        cmd += ["-threads", str(threads)]
     if gpu:
         cmd += ["-c:v", "hevc_videotoolbox", "-tag:v", "hvc1"]
         bitrate = {"low": 2, "high": 4}[quality] * target_w * target_h
@@ -117,10 +120,11 @@ def process_video(gpu, quality, resize, filename):
 @click.option("--gpu", is_flag=True, default=False, help="GPU to use")
 @click.option("--quality", default="low", help="Quality to use")
 @click.option("--resize", default="-1", help="Resolution to use")
-def main(gpu, quality, resize, files):
+@click.option("--threads", default=-1, help="Threads to use")
+def main(gpu, quality, resize, files, threads):
     logger.info(f"Filenames: {files}")
     for f in files:
-        process_video(gpu, quality, resize, f)
+        process_video(gpu, quality, resize, f, threads=threads)
 
 
 if __name__ == "__main__":
