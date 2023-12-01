@@ -17,12 +17,15 @@ def main():
     n = 9
     m = 49
     k = 25
-    x = Tensor.rand(n, m, requires_grad=True)
-    y = Tensor.rand(m, k, requires_grad=True)
+    x = Tensor.rand(n, m)
+    y = Tensor.rand(m, k)
+    z = Tensor.rand(k, 121)
+
+    a = (x @ y) @ z
     
-    z = x.matmul(y).sum()
+    # a = x.matmul(y).add(z).sum()
     # z.backward()
-    print(z.numpy())
+    print(a.numpy())
     
     # print(x.grad.numpy())  # dz/dx
     # print(y.grad.numpy())  # dz/dy
