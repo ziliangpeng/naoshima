@@ -1,0 +1,98 @@
+using epoch=7 for experiment:
+
+batch size 1024,  train .9808,  test .3337,  
+Epoch 1/7
+59/59 [==============================] - 73s 1s/step - loss: 2.5957 - accuracy: 0.5273 - val_loss: 37.1204 - val_accuracy: 0.1135
+Epoch 2/7
+59/59 [==============================] - 75s 1s/step - loss: 0.2908 - accuracy: 0.9094 - val_loss: 40.2917 - val_accuracy: 0.1135
+Epoch 3/7
+59/59 [==============================] - 77s 1s/step - loss: 0.1289 - accuracy: 0.9608 - val_loss: 46.0051 - val_accuracy: 0.1135
+Epoch 4/7
+59/59 [==============================] - 83s 1s/step - loss: 0.0987 - accuracy: 0.9698 - val_loss: 40.3759 - val_accuracy: 0.1135
+Epoch 5/7
+59/59 [==============================] - 79s 1s/step - loss: 0.0787 - accuracy: 0.9758 - val_loss: 65.3325 - val_accuracy: 0.1161
+Epoch 6/7
+59/59 [==============================] - 81s 1s/step - loss: 0.0667 - accuracy: 0.9801 - val_loss: 43.7535 - val_accuracy: 0.2093
+Epoch 7/7
+59/59 [==============================] - 83s 1s/step - loss: 0.0636 - accuracy: 0.9808 - val_loss: 14.8210 - val_accuracy: 0.3337
+313/313 [==============================] - 5s 16ms/step - loss: 14.8210 - accuracy: 0.3337
+2023-12-09 21:44:20.064 | INFO     | __main__:train:77 - Test loss: 14.8210
+2023-12-09 21:44:20.065 | INFO     | __main__:train:78 - Test accuracy: 0.3337
+
+batch size 256,   train .9824,  test .9814,
+Epoch 1/7
+235/235 [==============================] - 66s 275ms/step - loss: 0.7086 - accuracy: 0.8363 - val_loss: 11.4474 - val_accuracy: 0.2035
+Epoch 2/7
+235/235 [==============================] - 64s 272ms/step - loss: 0.1179 - accuracy: 0.9655 - val_loss: 1.5088 - val_accuracy: 0.6317
+Epoch 3/7
+235/235 [==============================] - 80s 339ms/step - loss: 0.0927 - accuracy: 0.9738 - val_loss: 0.0560 - val_accuracy: 0.9836
+Epoch 4/7
+235/235 [==============================] - 79s 338ms/step - loss: 0.0812 - accuracy: 0.9763 - val_loss: 0.1679 - val_accuracy: 0.9534
+Epoch 5/7
+235/235 [==============================] - 79s 337ms/step - loss: 0.0672 - accuracy: 0.9805 - val_loss: 0.0366 - val_accuracy: 0.9889
+Epoch 6/7
+235/235 [==============================] - 80s 341ms/step - loss: 0.0616 - accuracy: 0.9827 - val_loss: 0.0358 - val_accuracy: 0.9902
+Epoch 7/7
+235/235 [==============================] - 80s 341ms/step - loss: 0.0609 - accuracy: 0.9824 - val_loss: 0.0660 - val_accuracy: 0.9814
+313/313 [==============================] - 5s 16ms/step - loss: 0.0660 - accuracy: 0.9814
+2023-12-09 21:55:53.219 | INFO     | __main__:train:77 - Test loss: 0.0660
+2023-12-09 21:55:53.220 | INFO     | __main__:train:78 - Test accuracy: 0.9814
+
+batch size 64,    train .9783,  test .9883,
+Epoch 1/7
+938/938 [==============================] - 92s 97ms/step - loss: 0.4791 - accuracy: 0.8771 - val_loss: 0.1291 - val_accuracy: 0.9611
+Epoch 2/7
+938/938 [==============================] - 91s 97ms/step - loss: 0.1459 - accuracy: 0.9608 - val_loss: 0.0919 - val_accuracy: 0.9751
+Epoch 3/7
+938/938 [==============================] - 95s 101ms/step - loss: 0.1161 - accuracy: 0.9706 - val_loss: 0.0578 - val_accuracy: 0.9845
+Epoch 4/7
+938/938 [==============================] - 111s 118ms/step - loss: 0.1004 - accuracy: 0.9744 - val_loss: 0.0532 - val_accuracy: 0.9855
+Epoch 5/7
+938/938 [==============================] - 105s 112ms/step - loss: 0.2150 - accuracy: 0.9616 - val_loss: 0.0729 - val_accuracy: 0.9779
+Epoch 6/7
+938/938 [==============================] - 106s 113ms/step - loss: 0.1199 - accuracy: 0.9699 - val_loss: 0.0425 - val_accuracy: 0.9874
+Epoch 7/7
+938/938 [==============================] - 107s 114ms/step - loss: 0.0862 - accuracy: 0.9783 - val_loss: 0.0445 - val_accuracy: 0.9883
+313/313 [==============================] - 5s 17ms/step - loss: 0.0445 - accuracy: 0.9883
+2023-12-09 22:26:40.679 | INFO     | __main__:train:77 - Test loss: 0.0445
+2023-12-09 22:26:40.680 | INFO     | __main__:train:78 - Test accuracy: 0.9883
+
+batch size 16,    train .9671,  test .9809,
+Epoch 1/7
+3750/3750 [==============================] - 371s 98ms/step - loss: 0.5291 - accuracy: 0.8769 - val_loss: 121.1782 - val_accuracy: 0.1150
+Epoch 2/7
+3750/3750 [==============================] - 395s 105ms/step - loss: 0.2628 - accuracy: 0.9386 - val_loss: 0.1420 - val_accuracy: 0.9708
+Epoch 3/7
+3750/3750 [==============================] - 375s 100ms/step - loss: 0.2975 - accuracy: 0.9395 - val_loss: 0.1086 - val_accuracy: 0.9692
+Epoch 4/7
+3750/3750 [==============================] - 375s 100ms/step - loss: 0.3023 - accuracy: 0.9505 - val_loss: 0.0784 - val_accuracy: 0.9777
+Epoch 5/7
+3750/3750 [==============================] - 375s 100ms/step - loss: 0.1899 - accuracy: 0.9552 - val_loss: 0.0685 - val_accuracy: 0.9820
+Epoch 6/7
+3750/3750 [==============================] - 375s 100ms/step - loss: 0.1632 - accuracy: 0.9618 - val_loss: 0.0669 - val_accuracy: 0.9826
+Epoch 7/7
+3750/3750 [==============================] - 375s 100ms/step - loss: 0.1362 - accuracy: 0.9671 - val_loss: 0.0709 - val_accuracy: 0.9809
+313/313 [==============================] - 9s 27ms/step - loss: 0.0709 - accuracy: 0.9809
+2023-12-09 23:26:53.709 | INFO     | __main__:train:78 - Test loss: 0.0709
+2023-12-09 23:26:53.710 | INFO     | __main__:train:79 - Test accuracy: 0.9809
+
+batch size 4,     train 
+Epoch 1/7
+15000/15000 [==============================] - 644s 43ms/step - loss: 0.8214 - accuracy: 0.8104 - val_loss: 0.1687 - val_accuracy: 0.9716
+Epoch 2/7
+15000/15000 [==============================] - 706s 47ms/step - loss: 0.3121 - accuracy: 0.9337 - val_loss: 0.1431 - val_accuracy: 0.9693
+Epoch 3/7
+15000/15000 [==============================] - 693s 46ms/step - loss: 0.2294 - accuracy: 0.9502 - val_loss: 0.2182 - val_accuracy: 0.9380
+Epoch 4/7
+15000/15000 [==============================] - 686s 46ms/step - loss: 0.2015 - accuracy: 0.9589 - val_loss: 0.1642 - val_accuracy: 0.9718
+Epoch 5/7
+15000/15000 [==============================] - 688s 46ms/step - loss: 0.1947 - accuracy: 0.9626 - val_loss: 0.0995 - val_accuracy: 0.9853
+Epoch 6/7
+15000/15000 [==============================] - 688s 46ms/step - loss: 0.2079 - accuracy: 0.9636 - val_loss: 0.1442 - val_accuracy: 0.9610
+Epoch 7/7
+15000/15000 [==============================] - 691s 46ms/step - loss: 0.1900 - accuracy: 0.9664 - val_loss: 0.0925 - val_accuracy: 0.9818
+313/313 [==============================] - 5s 17ms/step - loss: 0.0925 - accuracy: 0.9818
+2023-12-10 12:03:18.079 | INFO     | __main__:train:87 - Test loss: 0.0925
+2023-12-10 12:03:18.080 | INFO     | __main__:train:88 - Test accuracy: 0.9818
+
+batch size 1,
