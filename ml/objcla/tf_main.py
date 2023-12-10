@@ -34,7 +34,7 @@ def make_tb(name):
     )
 
 
-def train(dataset, epoch, model_name, load_from_hf):
+def train(dataset, epoch, batch_size, model_name, load_from_hf):
     logger.info(f"Loading from hf is {load_from_hf}")
     load_fn = f"load_{dataset}"
     if load_from_hf:
@@ -45,6 +45,7 @@ def train(dataset, epoch, model_name, load_from_hf):
 
     if x_train[0].ndim == 2:
         x_train = x_train[..., np.newaxis]
+        # or: x_train = tf.expand_dims(x_train, axis=2)
         x_test = x_test[..., np.newaxis]
     image_shape = x_train[0].shape  # (28, 28)
 
@@ -66,7 +67,7 @@ def train(dataset, epoch, model_name, load_from_hf):
             x_train,
             y_train,
             epochs=epoch,
-            batch_size=64,
+            batch_size=batch_size,
             # validation_split=0.2,
             validation_data=(x_test, y_test),
             callbacks=[make_tb("resnet-" + dataset + "-augmented")],
@@ -82,10 +83,11 @@ def train(dataset, epoch, model_name, load_from_hf):
 @click.command()
 @click.option("--dataset", default="mnist", help="Use fashion dataset instead of MNIST")
 @click.option("--epoch", default=42, help="")
+@click.option("--batch_size", default=64, help="")
 @click.option("--model", default="alexnet", help="")
-@click.option("--load_from_hf", default=False, help="")
-def main(dataset, epoch, model, load_from_hf):
-    train(dataset, epoch, model, load_from_hf)
+@click.option("--load_from_hf", default=True, help="")
+def main(dataset, epoch, batch_size, model, load_from_hf):
+    train(dataset, epoch, batch_size, model, load_from_hf)
 
 
 if __name__ == "__main__":
