@@ -4,6 +4,7 @@ import unittest
 
 from loguru import logger
 import dataloader
+import dataloader_keras
 
 
 class TestDataloader(unittest.TestCase):
@@ -18,10 +19,10 @@ class TestDataloader(unittest.TestCase):
         start_time = time.time()
         dataloader.categorical(y_train)
         end_time = time.time()
-        logger.info(f"Time taken for sklearn categorical: {end_time - start_time}")
+        logger.info(f"Time taken for categorical: {end_time - start_time}")
 
         start_time = time.time()
-        dataloader.categorical_tf(y_train)
+        dataloader_keras.categorical_tf(y_train)
         end_time = time.time()
         logger.info(f"Time taken for tf categorical: {end_time - start_time}")
 
