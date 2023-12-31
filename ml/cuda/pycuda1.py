@@ -44,6 +44,15 @@ def cuda2(a): # matmul
     }
     """
 
+    """ notes:
+    a warp is usually 32 threads. all threads inside a warp need to run the same instruction at the same time,
+    otherwise the warp has to serialize the execution of the different instructions. this happens when the threads
+    are in different branches of an if statement. this feels more like a limitation than a feature.
+
+    a block is usually 1024 threads. is a block's x * y * z is set to be larger than 1024, cuda will error out.
+    
+    """
+
     # Initialize matrices
     # size = 1000 * 1000
     assert a.shape[0] == a.shape[1]
