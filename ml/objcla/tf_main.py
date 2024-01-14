@@ -34,11 +34,8 @@ def make_tb(name):
     )
 
 
-def train(dataset, epoch, batch_size, model_name, load_from_hf):
-    logger.info(f"Loading from hf is {load_from_hf}")
+def train(dataset, epoch, batch_size, model_name):
     load_fn = f"load_{dataset}"
-    if load_from_hf:
-        load_fn += "_hf"
     loader = getattr(dataloader, load_fn)
     # loader = getattr(dataloader, f"load_{dataset}")
     x_train, y_train, x_test, y_test = loader(onehot=True)
@@ -85,9 +82,8 @@ def train(dataset, epoch, batch_size, model_name, load_from_hf):
 @click.option("--epoch", default=42, help="")
 @click.option("--batch_size", default=64, help="")
 @click.option("--model", default="alexnet", help="")
-@click.option("--load_from_hf", default=True, help="")
-def main(dataset, epoch, batch_size, model, load_from_hf):
-    train(dataset, epoch, batch_size, model, load_from_hf)
+def main(dataset, epoch, batch_size, model):
+    train(dataset, epoch, batch_size, model)
 
 
 if __name__ == "__main__":

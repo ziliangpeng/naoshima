@@ -2,6 +2,7 @@ from loguru import logger
 from functools import partial
 from datasets import load_dataset
 import numpy as np
+import PIL # requires Pillow to convert PngImageFile to ndarray
 
 def categorical(y):
     l, n = y.shape[0], max(y) + 1
