@@ -2,8 +2,6 @@ import requests
 import re
 import statsd
 
-import leveldb
-
 
 ARKB_URL = "https://ark-funds.com/funds/arkb/"
 
@@ -35,4 +33,5 @@ na = get_na(text)
 
 s = statsd.StatsClient("localhost", 8125)
 s.gauge("arkb.netasserts", float(na))
+print("net asserts: {}".format(na))
 
