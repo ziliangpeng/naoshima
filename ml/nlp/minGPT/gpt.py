@@ -30,10 +30,10 @@ def get_config():
     C.system.seed = 3407
     C.system.work_dir = './out/wikigpt'
     C.system.gen_len = 2048
-    C.system.gen_per_iter = 1000
+    C.system.gen_per_iter = -1
     C.system.print_per_iter = 10
     C.system.input_file = 'input.txt'
-    C.system.resume = 0
+    C.system.resume = 1
     C.system.topk = 3
     C.system.prompt = "Title:"
     C.system.load = ''
@@ -187,17 +187,17 @@ if __name__ == '__main__':
 
         if config.system.gen_per_iter != -1 and trainer.iter_num % config.system.gen_per_iter == 0:
             # evaluate both the train and test score
-            # model.eval()
-            # with torch.no_grad():
-            #     # sample from the model...
-            #     context = config.system.prompt
-            #     x = torch.tensor([train_dataset.stoi[s] for s in context], dtype=torch.long)[None,...].to(trainer.device)
-            #     y = model.generate(x, config.system.gen_len, temperature=1.0, do_sample=True, top_k=config.system.topk)[0]
-            #     # y = model.generate(x, 1024, temperature=1.0, do_sample=False, top_k=1)[0]
-            #     completion = ''.join([train_dataset.itos[int(i)] for i in y])
-            #     print(completion)
-            # with open(os.path.join(config.system.work_dir, f"completion-{trainer.iter_num}.txt"), "w") as f:
-            #     f.write(completion)
+            model.eval()
+            with torch.no_grad():
+                # sample from the model...
+                context = config.system.prompt
+                x = torch.tensor([train_dataset.stoi[s] for s in context], dtype=torch.long)[None,...].to(trainer.device)
+                y = model.generate(x, config.system.gen_len, temperature=1.0, do_sample=True, top_k=config.system.topk)[0]
+                # y = model.generate(x, 1024, temperature=1.0, do_sample=False, top_k=1)[0]
+                completion = ''.join([train_dataset.itos[int(i)] for i in y])
+                print(completion)
+            with open(os.path.join(config.system.work_dir, f"completion-{trainer.iter_num}.txt"), "w") as f:
+                f.write(completion)
 
             # save the latest model
             logger.info("saving model")
