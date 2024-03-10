@@ -46,11 +46,12 @@ def rand_str(length=100):
     s = ''.join(random.choice('abcdefghijklmnopqrstuvwxyz') for _ in range(length))
     return s
 
-for i in range(100000000):
+for i in range(1000000000):
+    key_range = 10000000
     start_time = time.time()
-    k = str(rand_int(200000))
+    k = str(rand_int(key_range))
     k_enc = k.encode('utf-8')
-    v = rand_str(rand_int(500))
+    v = rand_str(rand_int(1000))
     v_enc = v.encode('utf-8')
     end_time = time.time()
     elapsed = int((end_time - start_time) * 1000000000)
@@ -63,7 +64,7 @@ for i in range(100000000):
     s.gauge('lsmdb.insert', elapsed)
     s.incr('lsmdb.cnt', 1)
 
-    k = str(rand_int(100000))
+    k = str(rand_int(key_range))
     k_enc = k.encode('utf-8')
     start_time = time.time()
     key_exist = k_enc in lsmdb
@@ -79,6 +80,10 @@ for i in range(100000000):
         s.incr('lsmdb.hit', 1)
     else:
         s.incr('lsmdb.miss', 1)
+
+    if i % 100000 == 0:
+        file_size = os.path.getsize('/tmp/db/lsmdb')
+        s.gauge('lsmdb.filesize', file_size)
 
     # sl[k] = v
     # db[k] = v
