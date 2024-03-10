@@ -1,0 +1,17 @@
+* * * * * echo "system.battery:$(~/dotfiles/bin/macos/battery)|g" | nc -w 1 -u 127.0.0.1 8125
+
+* * * * * echo "system.battery_cycle_count:$(/usr/sbin/system_profiler SPPowerDataType | grep 'Cycle Count' | awk '{print $3}')|g" | nc -w 1 -u 127.0.0.1 8125
+
+* * * * * echo "system.ping:1|c" | nc -w 1 -u 127.0.0.1 8125
+
+* * * * * python3 ~/dotfiles/bin/gdrive_size.py
+
+* * * * * python3 ~/code/naoshima/scripts/arkb-asset.py
+
+* * * * * echo "system.disk.read_unit:$(/opt/homebrew/bin/smartctl -a /dev/disk0 | grep "Data Units Read" | perl -ne 'print $1 if /Data Units Read:\s+([\d,]+)/' | tr -d ',')|g" | nc -w 1 -u 127.0.0.1 8125
+
+* * * * * echo "system.disk.written_unit:$(/opt/homebrew/bin/smartctl -a /dev/disk0 | grep "Data Units Written" | perl -ne 'print $1 if /Data Units Written:\s+([\d,]+)/' | tr -d ',')|g" | nc -w 1 -u 127.0.0.1 8125
+
+* * * * * echo "system.disk.read_tb:$(/opt/homebrew/bin/smartctl -a /dev/disk0 | grep "Data Units Read" | perl -ne 'print $1 if /\[([\d.]+) TB\]/')|g" | nc -w 1 -u 127.0.0.1 8125
+
+* * * * * echo "system.disk.written_tb:$(/opt/homebrew/bin/smartctl -a /dev/disk0 | grep "Data Units Written" | perl -ne 'print $1 if /\[([\d.]+) TB\]/')|g" | nc -w 1 -u 127.0.0.1 8125
