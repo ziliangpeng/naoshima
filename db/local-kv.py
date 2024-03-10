@@ -76,6 +76,7 @@ for i in range(100000000):
         end_time = time.time()
         elapsed = int((end_time - start_time) * 1000000000)
         s.gauge('lsmdb.get', elapsed)
+        s.incr('lsmdb.hit', 1)
     else:
         s.incr('lsmdb.miss', 1)
 
