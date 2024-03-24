@@ -15,3 +15,6 @@
 * * * * * echo "system.disk.read_tb:$(/opt/homebrew/bin/smartctl -a /dev/disk0 | grep "Data Units Read" | perl -ne 'print $1 if /\[([\d.]+) TB\]/')|g" | nc -w 1 -u 127.0.0.1 8125
 
 * * * * * echo "system.disk.written_tb:$(/opt/homebrew/bin/smartctl -a /dev/disk0 | grep "Data Units Written" | perl -ne 'print $1 if /\[([\d.]+) TB\]/')|g" | nc -w 1 -u 127.0.0.1 8125
+
+# linux disk LBAs Written
+# echo "system.disk.lbas_written.sda:$(cat ~/pwd | sudo -S smartctl -a /dev/sda | grep "Total_LBAs_Written" | awk '{print $NF}')|g" | nc -w 1 -u 127.0.0.1 8125
