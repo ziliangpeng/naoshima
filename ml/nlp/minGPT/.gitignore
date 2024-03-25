@@ -1,5 +1,12 @@
-.ipynb_checkpoints/
 __pycache__/
+.DS_Store
+models/**/*
+*.pytest_cache
+*.model
+*.vocab
+
+
+.ipynb_checkpoints/
 *.swp
 .env
 .pylintrc
