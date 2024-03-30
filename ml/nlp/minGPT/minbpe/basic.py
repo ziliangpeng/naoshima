@@ -43,6 +43,11 @@ class BasicTokenizer(Tokenizer):
             # prints
             if verbose:
                 print(f"merge {i+1}/{num_merges}: {pair} -> {idx} ({vocab[idx]}) had {stats[pair]} occurrences")
+                try:
+                    text = vocab[idx].decode("utf-8")
+                    print(text)
+                except UnicodeDecodeError:
+                    pass
 
         # save class variables
         self.merges = merges # used in encode()
