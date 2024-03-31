@@ -4,6 +4,8 @@ Trains a character-level language model.
 
 import os
 import sys
+import statsd
+import tiktoken
 
 import torch
 from torch.utils.data import Dataset
@@ -20,6 +22,7 @@ from hanziconv import HanziConv
 import pickle
 
 # -----------------------------------------------------------------------------
+s = statsd.StatsClient("localhost", 8125)
 
 def get_config():
 
@@ -31,7 +34,7 @@ def get_config():
     C.system.work_dir = './out/wikigpt'
     C.system.gen_len = 2048
     C.system.gen_per_iter = -1
-    C.system.print_per_iter = 10
+    C.system.print_per_iter = 500
     C.system.input_file = 'input.txt'
     C.system.resume = 1
     C.system.topk = 3
@@ -66,7 +69,7 @@ class CharDataset(Dataset):
     @staticmethod
     def get_default_config():
         C = CN()
-        C.block_size = 512
+        C.block_size = 256
         C.cap_vocab = -1
         C.cap_data = -1
         C.to_simp = False
@@ -92,6 +95,11 @@ class CharDataset(Dataset):
             logger.info("Start capping vocab")
             data = CharDataset.cap_vocab(data, config.cap_vocab)
             logger.info("Done capping vocab")
+
+        
+        encoding_name = "r50k_base"
+        encoding = tiktoken.get_encoding(encoding_name)
+        data = encoding.encode(data)
 
         chars = sorted(list(set(data)))
         data_size, vocab_size = len(data), len(chars)
@@ -157,6 +165,7 @@ if __name__ == '__main__':
     # construct the training dataset
     text = open(config.system.input_file, 'r').read() # don't worry we won't run out of file handles
     train_dataset = CharDataset(config.data, text)
+    logger.info(f"training dataset length: {len(train_dataset)}")
 
     # Assuming train_dataset is already defined
     with open('train_dataset_stoi.pickle', 'wb') as f:
@@ -184,6 +193,7 @@ if __name__ == '__main__':
 
         if trainer.iter_num % config.system.print_per_iter == 0:
             logger.info(f"iter_dt {trainer.iter_dt * 1000:.2f}ms; iter {trainer.iter_num}: train loss {trainer.loss.sum().item():.5f}")
+        s.gauge('gpt.loss', trainer.loss.sum().item())
 
         if config.system.gen_per_iter != -1 and trainer.iter_num % config.system.gen_per_iter == 0:
             # evaluate both the train and test score
