@@ -84,7 +84,9 @@ def find_top_k(queue, k):
 def main(count, load, k, lang):
     logger.info(f"Crawling for language {lang}")
 
-    start_url = {'en': START_URL_EN, 'zh': START_URL_ZH}[lang]
+    start_url = {'en': START_URL_EN, 'zh': START_URL_ZH}
+    if lang != 'all':
+        start_url = start_url[lang]
 
     # Load queue and done from file if they exist
     if load and os.path.exists('queue.pkl'):
@@ -93,7 +95,11 @@ def main(count, load, k, lang):
             queue = pickle.load(f)
     else:
         queue = defaultdict(int)
-        queue[start_url] = 1
+        if type(start_url) == dict:
+            for url in start_url.values():
+                queue[url] = 1
+        elif type(start_url) == str:
+            queue[start_url] = 1
 
     if load and os.path.exists('done.pkl'):
 
@@ -122,9 +128,9 @@ def main(count, load, k, lang):
         with open('done.pkl', 'wb') as f:
             pickle.dump(done, f)
 
-        logger.info("persisted queue.pkl and done.pkl. Sleeping for 1 second")
+        # logger.info("persisted queue.pkl and done.pkl. Sleeping for 1 second")
 
-        time.sleep(1)  # Sleep for 1 second to be respectful to Wikipedia's servers
+        # time.sleep(1)  # Sleep for 1 second to be respectful to Wikipedia's servers
 
 if __name__ == '__main__':
     main()
