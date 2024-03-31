@@ -14,6 +14,7 @@ models/**/*
 out/
 
 input.txt
+wiki*.txt
 
 train_dataset_stoi.pickle
 wiki-gpt.pt
