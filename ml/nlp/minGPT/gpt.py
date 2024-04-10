@@ -275,6 +275,11 @@ if __name__ == '__main__':
 
         Next time, try smaller batch size (32?) and larger model.
 
+
+    2024-04-10: One training set to try is to do parathesis completion. Let the LLM predict closing the parathesis before a end-of-text, or end-of-line.
+      the loss function simply evaluates valid/invalid.
+      Can probably design some other grammar completion tasks. (this is inspired by Zeyuan Zhu's Physics of Language models, part 1.)
+
     """
 
     # run the optimization
