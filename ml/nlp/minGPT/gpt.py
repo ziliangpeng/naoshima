@@ -280,6 +280,8 @@ if __name__ == '__main__':
       the loss function simply evaluates valid/invalid.
       Can probably design some other grammar completion tasks. (this is inspired by Zeyuan Zhu's Physics of Language models, part 1.)
 
+      yeah and another one is to do the IMDB sentiment. Simply put a review text and let it predict 0/1.
+
     """
 
     # run the optimization
