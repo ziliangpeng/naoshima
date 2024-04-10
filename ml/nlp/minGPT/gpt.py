@@ -282,6 +282,8 @@ if __name__ == '__main__':
 
       yeah and another one is to do the IMDB sentiment. Simply put a review text and let it predict 0/1.
 
+      Actually there are a lot of interesting ideas to train for various text patterns. human language is probably the most complex pattern.
+
     """
 
     # run the optimization
