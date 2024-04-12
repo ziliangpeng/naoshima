@@ -87,6 +87,7 @@ int main(int argc, char* argv[]) {
     }
 
     const char* filename = argv[1];
+    fprintf(stdout, "Reading file: %s\n", filename);
 
     double timeRead = measureTime(readUsingRead, filename);
     printf("Time taken for read(): %.5f seconds\n", timeRead);
