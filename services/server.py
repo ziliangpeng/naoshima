@@ -1,5 +1,9 @@
 from flask import Flask, request, jsonify
 
+import statsd
+
+sd = statsd.StatsClient('localhost', 8125)
+
 # curl -X POST -H "Content-Type: application/json" -d '{"input_integer": 42}' http://127.0.0.1:4200/echo
 
 app = Flask(__name__)
@@ -14,6 +18,8 @@ def echo_integer():
     
     if not isinstance(input_integer, int):
         return jsonify({"error": "input_integer must be an integer"}), 400
+
+    sd.incr('web.test.echo_integer.py')
     
     return jsonify({"input_integer": input_integer})
 
