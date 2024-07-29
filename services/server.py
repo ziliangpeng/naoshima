@@ -11,11 +11,11 @@ sd = statsd.StatsClient('localhost', 8125)
 # gunicorn --workers 4 --bind 0.0.0.0:4200 app:app
 
 app = Flask(__name__)
-cache = Cache(app, config={'CACHE_TYPE': 'simple'})
+# cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
 @app.route('/echo', methods=['POST'])
 # @cache.cached(timeout=60)
-@cache.cached()
+# @cache.cached()
 def echo_integer():
     data = request.get_json()
     if 'input_integer' not in data:
@@ -29,6 +29,11 @@ def echo_integer():
     sd.incr('web.test.echo_integer.py')
     
     return jsonify({"input_integer": input_integer})
+
+
+@app.route('/42')
+def forty_two():
+    return '42'
 
 if __name__ == '__main__':
     app.run(debug=True, port=4200)
