@@ -1,0 +1,15 @@
+
+Simple flask app. hitting qps limit. macbook air ~500/s. vdi ~900/s.
+CPU not saturated, but qps doesn't go up, even with gunicorn 2 workers.
+
+
+Tried  --worker-class=gevent for gunicorn in vdi, qps bumped to 1000/s.
+cpu system dropped to 0. all cpu usage is user cpu.
+
+
+
+It does look like locust is the bottleneck. Used FastHttpUser instead of HttpUser and
+greatly bumped qps. Also, should serve static content instead of echo.
+
+After some simple tuning, a simple static serving, multiple gevent workers, multiple locust gevent testers.
+Peaked ~16k qps, CPU almost saturated on vdi.
