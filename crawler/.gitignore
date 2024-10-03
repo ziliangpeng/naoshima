@@ -1,4 +1,5 @@
 wiki-pages/
+wikipedia_content/
 
 # queue.pkl, done.pkl
 *.pkl
