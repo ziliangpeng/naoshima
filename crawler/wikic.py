@@ -9,6 +9,10 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1):
     queue = [start_url]
     page_count = 0
 
+    # Extract the language code from the start_url
+    parsed_url = urlparse(start_url)
+    lang_code = parsed_url.netloc.split('.')[0]
+
     while queue and page_count < max_pages:
         url = queue.pop(0)
         if url in visited_urls:
@@ -25,7 +29,10 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1):
 
             # Save content to file
             filename = f"{title.replace(' ', '_')}.txt"
-            filepath = os.path.join(output_directory, filename)
+            lang_directory = os.path.join(output_directory, lang_code)
+            if not os.path.exists(lang_directory):
+                os.makedirs(lang_directory)
+            filepath = os.path.join(lang_directory, filename)
             with open(filepath, 'w', encoding='utf-8') as f:
                 f.write(f"Title: {title}\n\nURL: {url}\n\nContent:\n{content}")
 
@@ -35,7 +42,7 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1):
             for link in soup.find_all('a', href=True):
                 href = link['href']
                 if href.startswith('/wiki/') and ':' not in href:
-                    full_url = urljoin('https://en.wikipedia.org', href)
+                    full_url = urljoin(f'https://{lang_code}.wikipedia.org', href)
                     if full_url not in visited_urls:
                         queue.append(full_url)
 
