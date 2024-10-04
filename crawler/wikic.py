@@ -7,9 +7,13 @@ import random
 from collections import Counter
 from loguru import logger
 import pickle
+import statsd
 
 # Constant for the state filename
 STATE_FILENAME = "crawl_state.pkl"
+
+# Initialize statsd client
+statsd_client = statsd.StatsClient()
 
 def save_state(visited_urls, url_counter, queue, page_count, lang_code, output_directory):
     state = {
@@ -43,7 +47,10 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1, k=5):
     if not queue:
         queue = {start_url}
 
+    last_request_time = 0
+
     while queue and page_count < max_pages:
+
         top_k = sorted(queue, key=lambda x: url_counter[x], reverse=True)[:min(k, len(queue))]
         url = random.choice(top_k)
         queue.remove(url)
@@ -53,6 +60,11 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1, k=5):
 
         decoded_url = unquote(url)
         logger.info(f"Page count: {page_count + 1} - Processing URL: {decoded_url} (Count: {url_counter[url]}, Queue size: {len(queue)})")
+        
+        # Send metrics to statsd
+        statsd_client.gauge('wikipedia_crawler.page_count', page_count + 1)
+        statsd_client.gauge('wikipedia_crawler.url_count', url_counter[url])
+        statsd_client.gauge('wikipedia_crawler.queue_size', len(queue))
 
         try:
             response = requests.get(url)
@@ -93,17 +105,20 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1, k=5):
             visited_urls.add(url)
             page_count += 1
 
-            if page_count % 1000 == 0:
+            if page_count % 100 == 0:
                 save_state(visited_urls, url_counter, queue, page_count, lang_code, output_directory)
 
-            time.sleep(delay)
+            current_time = time.time()
+            time_since_last_request = current_time - last_request_time
+            if time_since_last_request < delay:
+                time.sleep(delay - time_since_last_request)
+            last_request_time = time.time()
 
         except Exception as e:
             logger.error(f"Error crawling {url}: {e}")
 
     logger.info(f"Crawling completed. Processed {page_count} pages.")
     save_state(visited_urls, url_counter, queue, page_count, lang_code, output_directory)
-
 if __name__ == "__main__":
     start_url = "https://en.wikipedia.org/wiki/Python_(programming_language)"
     start_url = "https://zh.wikipedia.org/wiki/%E6%84%8F%E5%A4%A7%E5%88%A9"
@@ -112,4 +127,4 @@ if __name__ == "__main__":
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
 
-    crawl_wikipedia(start_url, output_directory, max_pages=1000000, delay=0.1, k=5)
+    crawl_wikipedia(start_url, output_directory, max_pages=1000000, delay=1, k=5)
