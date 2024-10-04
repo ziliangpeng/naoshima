@@ -62,6 +62,7 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1, k=5):
             title = soup.find('h1', {'id': 'firstHeading'}).text
             content = soup.find('div', {'id': 'mw-content-text'}).text
 
+            # Save parsed content
             filename = f"{title.replace(' ', '_')}.txt"
             lang_directory = os.path.join(output_directory, lang_code)
             if not os.path.exists(lang_directory):
@@ -70,6 +71,16 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1, k=5):
             filepath = os.path.join(lang_directory, filename)
             with open(filepath, 'w', encoding='utf-8') as f:
                 f.write(f"Title: {title}\n\nURL: {url}\n\nContent:\n{content}")
+
+            # Save raw HTML content
+            raw_html_directory = os.path.join(output_directory, f"{lang_code}_full")
+            if not os.path.exists(raw_html_directory):
+                os.makedirs(raw_html_directory)
+            raw_html_filename = f"{title.replace(' ', '_')}.html"
+            raw_html_filename = raw_html_filename.replace('/', '_')
+            raw_html_filepath = os.path.join(raw_html_directory, raw_html_filename)
+            with open(raw_html_filepath, 'w', encoding='utf-8') as f:
+                f.write(response.text)
 
             for link in soup.find_all('a', href=True):
                 href = link['href']
