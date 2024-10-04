@@ -3,10 +3,13 @@ from bs4 import BeautifulSoup
 import os
 import time
 from urllib.parse import urljoin, urlparse
+import random
+from collections import Counter
 
-def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1):
+def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1, k=5):
     visited_urls = set()
-    queue = [start_url]
+    url_counter = Counter()
+    queue = [(start_url, 0)]
     page_count = 0
 
     # Extract the language code from the start_url
@@ -14,9 +17,18 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1):
     lang_code = parsed_url.netloc.split('.')[0]
 
     while queue and page_count < max_pages:
-        url = queue.pop(0)
+        # Sort queue by count and select randomly from top k
+        queue.sort(key=lambda x: x[1], reverse=True)
+        top_k = min(k, len(queue))
+        url, _ = random.choice(queue[:top_k])
+        queue = [(u, c) for u, c in queue if u != url]
+
         if url in visited_urls:
             continue
+
+        from urllib.parse import unquote
+        decoded_url = unquote(url)
+        print(f"Processing URL: {decoded_url} (Count: {url_counter[url]})")
 
         try:
             response = requests.get(url)
@@ -32,11 +44,12 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1):
             lang_directory = os.path.join(output_directory, lang_code)
             if not os.path.exists(lang_directory):
                 os.makedirs(lang_directory)
+            filename = filename.replace('/', '_')
             filepath = os.path.join(lang_directory, filename)
             with open(filepath, 'w', encoding='utf-8') as f:
                 f.write(f"Title: {title}\n\nURL: {url}\n\nContent:\n{content}")
 
-            print(f"Saved: {filename}")
+            # print(f"Saved: {filename}")
 
             # Extract links to other Wikipedia pages
             for link in soup.find_all('a', href=True):
@@ -44,7 +57,8 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1):
                 if href.startswith('/wiki/') and ':' not in href:
                     full_url = urljoin(f'https://{lang_code}.wikipedia.org', href)
                     if full_url not in visited_urls:
-                        queue.append(full_url)
+                        url_counter[full_url] += 1
+                        queue.append((full_url, url_counter[full_url]))
 
             visited_urls.add(url)
             page_count += 1
@@ -59,9 +73,10 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1):
 
 if __name__ == "__main__":
     start_url = "https://en.wikipedia.org/wiki/Python_(programming_language)"
+    start_url = "https://zh.wikipedia.org/wiki/%E6%84%8F%E5%A4%A7%E5%88%A9"
     output_directory = "wikipedia_content"
 
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
 
-    crawl_wikipedia(start_url, output_directory, max_pages=1000000, delay=0.000001)
+    crawl_wikipedia(start_url, output_directory, max_pages=1000000, delay=0.1, k=5)
