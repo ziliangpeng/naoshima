@@ -5,19 +5,45 @@ import time
 from urllib.parse import urljoin, urlparse, unquote
 import random
 from collections import Counter
+from loguru import logger
+import pickle
+
+# Constant for the state filename
+STATE_FILENAME = "crawl_state.pkl"
+
+def save_state(visited_urls, url_counter, queue, page_count, lang_code, output_directory):
+    state = {
+        'visited_urls': visited_urls,
+        'url_counter': url_counter,
+        'queue': queue,
+        'page_count': page_count,
+        'lang_code': lang_code
+    }
+    state_file = os.path.join(output_directory, STATE_FILENAME)
+    with open(state_file, 'wb') as f:
+        pickle.dump(state, f, protocol=pickle.HIGHEST_PROTOCOL)
+    logger.info(f"Saved state to {state_file}")
+
+def load_state(output_directory):
+    state_file = os.path.join(output_directory, STATE_FILENAME)
+    if os.path.exists(state_file):
+        with open(state_file, 'rb') as f:
+            state = pickle.load(f)
+        logger.info(f"Loaded state from {state_file}")
+        return state['visited_urls'], state['url_counter'], state['queue'], state['page_count'], state['lang_code']
+    return set(), Counter(), set(), 0, None
 
 def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1, k=5):
-    visited_urls = set()
-    url_counter = Counter()
-    queue = {start_url}
-    page_count = 0
+    visited_urls, url_counter, queue, page_count, lang_code = load_state(output_directory)
+    
+    if not lang_code:
+        parsed_url = urlparse(start_url)
+        lang_code = parsed_url.netloc.split('.')[0]
 
-    # Extract the language code from the start_url
-    parsed_url = urlparse(start_url)
-    lang_code = parsed_url.netloc.split('.')[0]
+    if not queue:
+        queue = {start_url}
 
     while queue and page_count < max_pages:
-        # Select randomly from top k URLs based on their count
         top_k = sorted(queue, key=lambda x: url_counter[x], reverse=True)[:min(k, len(queue))]
         url = random.choice(top_k)
         queue.remove(url)
@@ -26,18 +52,16 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1, k=5):
             continue
 
         decoded_url = unquote(url)
-        print(f"Page count: {page_count + 1} - Processing URL: {decoded_url} (Count: {url_counter[url]}, Queue size: {len(queue)})")
+        logger.info(f"Page count: {page_count + 1} - Processing URL: {decoded_url} (Count: {url_counter[url]}, Queue size: {len(queue)})")
 
         try:
             response = requests.get(url)
             response.raise_for_status()
             soup = BeautifulSoup(response.text, 'html.parser')
 
-            # Extract title and content
             title = soup.find('h1', {'id': 'firstHeading'}).text
             content = soup.find('div', {'id': 'mw-content-text'}).text
 
-            # Save content to file
             filename = f"{title.replace(' ', '_')}.txt"
             lang_directory = os.path.join(output_directory, lang_code)
             if not os.path.exists(lang_directory):
@@ -47,7 +71,6 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1, k=5):
             with open(filepath, 'w', encoding='utf-8') as f:
                 f.write(f"Title: {title}\n\nURL: {url}\n\nContent:\n{content}")
 
-            # Extract links to other Wikipedia pages
             for link in soup.find_all('a', href=True):
                 href = link['href']
                 if href.startswith('/wiki/') and ':' not in href:
@@ -59,13 +82,16 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1, k=5):
             visited_urls.add(url)
             page_count += 1
 
-            # Respect Wikipedia's robots.txt with a delay
+            if page_count % 1000 == 0:
+                save_state(visited_urls, url_counter, queue, page_count, lang_code, output_directory)
+
             time.sleep(delay)
 
         except Exception as e:
-            print(f"Error crawling {url}: {e}")
+            logger.error(f"Error crawling {url}: {e}")
 
-    print(f"Crawling completed. Processed {page_count} pages.")
+    logger.info(f"Crawling completed. Processed {page_count} pages.")
+    save_state(visited_urls, url_counter, queue, page_count, lang_code, output_directory)
 
 if __name__ == "__main__":
     start_url = "https://en.wikipedia.org/wiki/Python_(programming_language)"
