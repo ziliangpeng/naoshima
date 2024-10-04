@@ -37,7 +37,7 @@ def load_state(output_directory):
         return state['visited_urls'], state['url_counter'], state['queue'], state['page_count'], state['lang_code']
     return set(), Counter(), set(), 0, None
 
-def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1, k=5):
+def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1):
     visited_urls, url_counter, queue, page_count, lang_code = load_state(output_directory)
     
     if not lang_code:
@@ -50,9 +50,11 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1, k=5):
     last_request_time = 0
 
     while queue and page_count < max_pages:
-
-        top_k = sorted(queue, key=lambda x: url_counter[x], reverse=True)[:min(k, len(queue))]
-        url = random.choice(top_k)
+        top_n = max(1, int(len(queue) * 0.2))
+        top_urls = sorted(queue, key=lambda x: url_counter[x], reverse=True)[:top_n]
+        total_count = sum(url_counter[url] for url in top_urls)
+        probabilities = [url_counter[url] / total_count for url in top_urls]
+        url = random.choices(top_urls, weights=probabilities, k=1)[0]
         queue.remove(url)
 
         if url in visited_urls:
@@ -127,4 +129,4 @@ if __name__ == "__main__":
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
 
-    crawl_wikipedia(start_url, output_directory, max_pages=1000000, delay=1, k=5)
+    crawl_wikipedia(start_url, output_directory, max_pages=1000000, delay=1)
