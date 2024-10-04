@@ -53,7 +53,10 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1):
         top_n = max(1, int(len(queue) * 0.2))
         top_urls = sorted(queue, key=lambda x: url_counter[x], reverse=True)[:top_n]
         total_count = sum(url_counter[url] for url in top_urls)
-        probabilities = [url_counter[url] / total_count for url in top_urls]
+        if total_count > 0:
+            probabilities = [url_counter[url] / total_count for url in top_urls]
+        else:
+            probabilities = [1 / len(top_urls)] * len(top_urls)
         url = random.choices(top_urls, weights=probabilities, k=1)[0]
         queue.remove(url)
 
