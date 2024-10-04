@@ -87,7 +87,9 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1):
             filename = filename.replace('/', '_')
             filepath = os.path.join(lang_directory, filename)
             with open(filepath, 'w', encoding='utf-8') as f:
-                f.write(f"Title: {title}\n\nURL: {url}\n\nContent:\n{content}")
+                current_time = time.strftime("%Y-%m-%d %H:%M:%S")
+                epoch_time = int(time.time())
+                f.write(f"Title: {title}\n\nURL: {url}\n\nEpoch: {epoch_time}, Current Time: {current_time}\n\nContent:\n{content}")
 
             # Save raw HTML content
             raw_html_directory = os.path.join(output_directory, f"{lang_code}_full")
