@@ -2,14 +2,14 @@ import requests
 from bs4 import BeautifulSoup
 import os
 import time
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urljoin, urlparse, unquote
 import random
 from collections import Counter
 
 def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1, k=5):
     visited_urls = set()
     url_counter = Counter()
-    queue = [(start_url, 0)]
+    queue = {start_url}
     page_count = 0
 
     # Extract the language code from the start_url
@@ -17,18 +17,16 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1, k=5):
     lang_code = parsed_url.netloc.split('.')[0]
 
     while queue and page_count < max_pages:
-        # Sort queue by count and select randomly from top k
-        queue.sort(key=lambda x: x[1], reverse=True)
-        top_k = min(k, len(queue))
-        url, _ = random.choice(queue[:top_k])
-        queue = [(u, c) for u, c in queue if u != url]
+        # Select randomly from top k URLs based on their count
+        top_k = sorted(queue, key=lambda x: url_counter[x], reverse=True)[:min(k, len(queue))]
+        url = random.choice(top_k)
+        queue.remove(url)
 
         if url in visited_urls:
             continue
 
-        from urllib.parse import unquote
         decoded_url = unquote(url)
-        print(f"Processing URL: {decoded_url} (Count: {url_counter[url]})")
+        print(f"Page count: {page_count + 1} - Processing URL: {decoded_url} (Count: {url_counter[url]}, Queue size: {len(queue)})")
 
         try:
             response = requests.get(url)
@@ -49,16 +47,14 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1, k=5):
             with open(filepath, 'w', encoding='utf-8') as f:
                 f.write(f"Title: {title}\n\nURL: {url}\n\nContent:\n{content}")
 
-            # print(f"Saved: {filename}")
-
             # Extract links to other Wikipedia pages
             for link in soup.find_all('a', href=True):
                 href = link['href']
                 if href.startswith('/wiki/') and ':' not in href:
                     full_url = urljoin(f'https://{lang_code}.wikipedia.org', href)
+                    url_counter[full_url] += 1
                     if full_url not in visited_urls:
-                        url_counter[full_url] += 1
-                        queue.append((full_url, url_counter[full_url]))
+                        queue.add(full_url)
 
             visited_urls.add(url)
             page_count += 1
