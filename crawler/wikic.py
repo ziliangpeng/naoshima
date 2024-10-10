@@ -2,12 +2,13 @@ import requests
 from bs4 import BeautifulSoup
 import os
 import time
-from urllib.parse import urljoin, urlparse, unquote
+from urllib.parse import urljoin, urlparse, unquote, quote
 import random
 from collections import Counter
 from loguru import logger
 import pickle
 import statsd
+from zhconv import convert
 
 # Constant for the state filename
 STATE_FILENAME = "crawl_state.pkl"
@@ -64,7 +65,13 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1):
             continue
 
         decoded_url = unquote(url)
-        logger.info(f"Page count: {page_count + 1} - Processing URL: {decoded_url} (Count: {url_counter[url]}, Queue size: {len(queue)})")
+        simp_decoded_url = convert(decoded_url, 'zh-cn')
+        logger.info(f"Page count: {page_count + 1} - Processing URL: {simp_decoded_url} (Count: {url_counter[url]}, Queue size: {len(queue)})")
+        if simp_decoded_url.startswith("http://") or simp_decoded_url.startswith("https://"):
+            scheme, rest = simp_decoded_url.split("://", 1)
+            url = f"{scheme}://{quote(rest)}"
+        else:
+            url = quote(simp_decoded_url)
         
         # Send metrics to statsd
         statsd_client.gauge('wikipedia_crawler.page_count', page_count + 1)
@@ -105,6 +112,8 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1):
                 href = link['href']
                 if href.startswith('/wiki/') and ':' not in href:
                     full_url = urljoin(f'https://{lang_code}.wikipedia.org', href)
+                    if lang_code == 'zh':
+                        full_url = convert(full_url, 'zh-cn')
                     url_counter[full_url] += 1
                     if full_url not in visited_urls:
                         queue.add(full_url)
