@@ -16,6 +16,12 @@ STATE_FILENAME = "crawl_state.pkl"
 # Initialize statsd client
 statsd_client = statsd.StatsClient()
 
+def sanitize_url(url):
+    parsed_url = urlparse(url)
+    decoded_url = unquote(parsed_url.geturl())
+    converted_url = convert(decoded_url, 'zh-cn')
+    return quote(converted_url.split('#')[0])
+
 def save_state(visited_urls, url_counter, queue, page_count, lang_code, output_directory):
     state = {
         'visited_urls': visited_urls,
@@ -40,6 +46,16 @@ def load_state(output_directory):
 
 def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1):
     visited_urls, url_counter, queue, page_count, lang_code = load_state(output_directory)
+
+    visited_urls = set(map(sanitize_url, visited_urls))
+    queue = set(map(sanitize_url, queue))
+    url_counter = Counter({sanitize_url(k): v for k, v in url_counter.items()})
+    logger.info(f"Size of visited_urls: {len(visited_urls)}")
+    logger.info(f"Size of url_counter: {len(url_counter)}")
+    logger.info(f"Size of queue: {len(queue)}")
+    statsd_client.gauge('wikipedia_crawler.page_count', page_count + 1)
+    statsd_client.gauge('wikipedia_crawler.queue_size', len(queue))
+    statsd_client.gauge('wikipedia_crawler.visited_urls', len(visited_urls))
     
     if not lang_code:
         parsed_url = urlparse(start_url)
@@ -50,8 +66,17 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1):
 
     last_request_time = 0
 
+    dudup_queue = set()
+    for url in queue:
+        if url in visited_urls:
+            continue
+        encoded_url = sanitize_url(url)
+        dudup_queue.add(encoded_url)
+    logger.info(f"Size of dedup queue: {len(dudup_queue)}")
+    queue = dudup_queue
+
     while queue and page_count < max_pages:
-        top_n = max(1, int(len(queue) * 0.2))
+        top_n = min(1024, max(1, int(len(queue) * 0.2)))
         top_urls = sorted(queue, key=lambda x: url_counter[x], reverse=True)[:top_n]
         total_count = sum(url_counter[url] for url in top_urls)
         if total_count > 0:
@@ -61,12 +86,16 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1):
         url = random.choices(top_urls, weights=probabilities, k=1)[0]
         queue.remove(url)
 
+        url = url.split('#')[0]
+
+        statsd_client.gauge('wikipedia_crawler.queue_size', len(queue))
         if url in visited_urls:
+            logger.info(f"Already visited {url} (Decoded URL: {unquote(url)})")
             continue
 
         decoded_url = unquote(url)
         simp_decoded_url = convert(decoded_url, 'zh-cn')
-        logger.info(f"Page count: {page_count + 1} - Processing URL: {simp_decoded_url} (Count: {url_counter[url]}, Queue size: {len(queue)})")
+        logger.info(f"Page count: {page_count + 1} - Processing URL: {simp_decoded_url} (Count: {url_counter[url]}, Queue size: {len(queue)}, Visited URLs: {len(visited_urls)})")
         if simp_decoded_url.startswith("http://") or simp_decoded_url.startswith("https://"):
             scheme, rest = simp_decoded_url.split("://", 1)
             url = f"{scheme}://{quote(rest)}"
@@ -77,6 +106,8 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1):
         statsd_client.gauge('wikipedia_crawler.page_count', page_count + 1)
         statsd_client.gauge('wikipedia_crawler.url_count', url_counter[url])
         statsd_client.gauge('wikipedia_crawler.queue_size', len(queue))
+        statsd_client.gauge('wikipedia_crawler.visited_urls', len(visited_urls))
+
 
         try:
             response = requests.get(url)
@@ -112,13 +143,20 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1):
                 href = link['href']
                 if href.startswith('/wiki/') and ':' not in href:
                     full_url = urljoin(f'https://{lang_code}.wikipedia.org', href)
-                    if lang_code == 'zh':
-                        full_url = convert(full_url, 'zh-cn')
+                    full_url = sanitize_url(full_url)
+                    # if lang_code == 'zh':
+                    #     decoded_full_url = unquote(full_url)
+                    #     converted_full_url = convert(decoded_full_url, 'zh-cn')
+                    #     full_url = quote(converted_full_url)
+                    # full_url = full_url.split('#')[0]
                     url_counter[full_url] += 1
-                    if full_url not in visited_urls:
+                    if full_url not in visited_urls and full_url not in queue:
+                        # decoded_full_url = unquote(full_url)
+                        # logger.info(f"Adding {decoded_full_url} to queue.")
                         queue.add(full_url)
 
             visited_urls.add(url)
+            queue.discard(url)
             page_count += 1
 
             if page_count % 100 == 0:
@@ -132,6 +170,8 @@ def crawl_wikipedia(start_url, output_directory, max_pages=100, delay=1):
 
         except Exception as e:
             logger.error(f"Error crawling {url}: {e}")
+            if isinstance(e, requests.exceptions.HTTPError) and e.response.status_code == 404:
+                visited_urls.add(url)
 
     logger.info(f"Crawling completed. Processed {page_count} pages.")
     save_state(visited_urls, url_counter, queue, page_count, lang_code, output_directory)
