@@ -9,7 +9,10 @@ notion = Client(auth=notion_token)
 
 s = statsd.StatsClient("localhost", 8125)
 
-d = {"d216d939579c4406872066f76f4aebe6": "ai_reading_list"}
+d = {
+    "d216d939579c4406872066f76f4aebe6": "ai_reading_list",
+    "f3515674357743debbb199bec6da454b": "system_reading_list",
+}
 
 
 def get_block_content(block):
@@ -44,24 +47,25 @@ def get_block_content(block):
         return f"Other: {block}"
     return ""
 
+
 def get_all_block_children(notion, page_id):
     all_results = []
     start_cursor = None
 
     while True:
         response = notion.blocks.children.list(
-            block_id=page_id,
-            start_cursor=start_cursor
+            block_id=page_id, start_cursor=start_cursor
         )
-        
-        all_results.extend(response['results'])
-        
-        if not response['has_more']:
+
+        all_results.extend(response["results"])
+
+        if not response["has_more"]:
             break
-        
-        start_cursor = response['next_cursor']
+
+        start_cursor = response["next_cursor"]
 
     return all_results
+
 
 def get_all_block_content(page_id):
     # blocks = notion.blocks.children.list(block_id=page_id)

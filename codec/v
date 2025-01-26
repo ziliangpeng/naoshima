@@ -44,17 +44,29 @@ def get_size(filename):
     w, h = result.stdout.split("x")[:2]
     return int(w), int(h)
 
+def calcualte_resize_portrait(resize, w, h):
+    if resize == "-1":
+        return w, h
+    elif resize == "1080":  # 1080x1920
+        return 1080, h * (1080 / w)
+    elif resize == "2.7k":  # 1520x2704
+        return 1520, h * (1520 / w)
+    elif resize == "4k":  # 2160x3840
+        return 2160, h * (2160 / w)
+    else:
+        raise ValueError(f"Unknown resize: {resize}")
 
 def calcualte_resize(resize, w, h):
+    if w < h:
+        return calcualte_resize_portrait(resize, w, h)
+
     if resize == "-1":
         return w, h
     elif resize == "1080":  # 1920x1080
         return w * (1080 / h), 1080
     elif resize == "2.7k":  # 2704x1520
-        # return 2704, h * (2704 / w)
         return w * (1520 / h), 1520
     elif resize == "4k":  # 3840x2160
-        # return 3840, h * (3840 / w)
         return w * (2160 / h), 2160
     else:
         raise ValueError(f"Unknown resize: {resize}")
