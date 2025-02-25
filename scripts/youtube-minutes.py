@@ -8,6 +8,7 @@ s = statsd.StatsClient("localhost", 8125)
 # Replace with your own API key
 API_KEY = os.getenv('YOUTUBE_TOKEN')
 PLAYLIST_ID = 'PLDvBZlLoGspw2LO7vNUZ8UnpHCUsrzlz3'
+PLAYLIST_ID = 'PLNfnQryZV738VB6300-sehYMLlJT4ndBo'
 
 def get_playlist_items(youtube, playlist_id):
     items = []
