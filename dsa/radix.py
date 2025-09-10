@@ -4,7 +4,9 @@ class RadixTreeNode:
         self.is_end_of_word = is_end_of_word
 
     def insert(self, word):
-        assert len(word) > 0
+        if len(word) == 0:
+            self.is_end_of_word = True
+            return
         start_c = word[0]
         if start_c not in self.children:
             self.children[start_c] = (word, RadixTreeNode(True))
