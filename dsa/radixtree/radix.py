@@ -109,6 +109,16 @@ class RadixTree:
     def insert(self, word):
         self.root.insert(word)
 
+    def delete(self, word) -> bool:
+        node, prefix_overlap = self.root.find_last_full_match_node(word)
+        if prefix_overlap != len(word):
+            return False
+        if not node.is_end_of_word:
+            return False
+        node.is_end_of_word = False
+        # TODO: either do async period cleanup, or impl online node removal
+        return True
+
 
 if __name__ == "__main__":
     tree = RadixTree()
