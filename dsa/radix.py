@@ -28,13 +28,21 @@ class RadixTreeNode:
                 )
                 new_intermediate_node.insert(new_word_suffix)
 
-    def find_matching_node(self, word) -> tuple["RadixTreeNode", int]:
+    def find_last_full_match_node(self, word) -> tuple["RadixTreeNode", int]:
+        if len(word) == 0:
+            return self, 0
         start_c = word[0]
         if start_c not in self.children:
-            return None, 0
+            return self, 0
         child_word, child_node = self.children[start_c]
         prefix_overlap = self._prefix_overlap(word, child_word)
-        return child_node, prefix_overlap
+        if prefix_overlap != len(child_word):
+            return self, prefix_overlap
+        else:
+            tmp_node, tmp_prefix_overlap = child_node.find_last_full_match_node(
+                word[prefix_overlap:]
+            )
+            return tmp_node, tmp_prefix_overlap + prefix_overlap
 
     def _prefix_overlap(self, str1, str2) -> int:
         l = min(len(str1), len(str2))
@@ -54,7 +62,7 @@ class RadixTree:
             child_node, prefix_overlap = node.find_matching_node(word)
 
     def insert(self, word):
-        node = self.root
+        self.root.insert(word)
 
     def delete(self, word):
         raise NotImplementedError("Not implemented")

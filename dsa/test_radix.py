@@ -61,18 +61,25 @@ class TestRadixTreeNode(unittest.TestCase):
         self.assertIsInstance(child_h_node, RadixTreeNode)
         self.assertTrue(child_h_node.is_end_of_word)
 
+    def test_find_last_full_match_node(self):
+        self.node.insert("overwhelmed")
+        found_node, prefix_overlap = self.node.find_last_full_match_node("overreached")
+        self.assertEqual(prefix_overlap, 4)
+        self.assertEqual(list(found_node.children.keys()), ["o"])
+
+
 class TestRadixTree(unittest.TestCase):
     def setUp(self):
         self.tree = RadixTree()
 
-    @patch.object(RadixTreeNode, 'insert')
+    @patch.object(RadixTreeNode, "insert")
     def test_simple_insert(self, mock_insert):
         self.tree.insert("hello")
         mock_insert.assert_called_once_with("hello")
 
-    @patch.object(RadixTreeNode, 'insert")
+    @patch.object(RadixTreeNode, "insert")
     def test_insert_duplicate(self, mock_insert):
-        'elf.tree.insert("hello")
+        self.tree.insert("hello")
         self.tree.insert("hello")
         self.assertEqual(mock_insert.call_count, 2)
         mock_insert.assert_has_calls([call("hello"), call("hello")])
