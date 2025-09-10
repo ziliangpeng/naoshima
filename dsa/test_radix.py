@@ -2,12 +2,16 @@ import unittest
 from radix import RadixTree, RadixTreeNode
 from unittest.mock import patch, call
 
+END_KEY = 1
+
 
 class TestRadixTreeNode(unittest.TestCase):
     def setUp(self):
         self.node = RadixTreeNode()
 
     def _compare_node_dict(self, node, d):
+        self.assertEqual(node.is_end_of_word, d.get(END_KEY, False))
+        d = {k: v for k, v in d.items() if k != END_KEY}
         self.assertEqual(
             sorted(node.children.keys()), sorted(map(lambda k: k[0], d.keys()))
         )
@@ -19,13 +23,13 @@ class TestRadixTreeNode(unittest.TestCase):
     def test_simple_insert(self):
         self.node.insert("hello")
 
-        self._compare_node_dict(self.node, {"hello": {}})
+        self._compare_node_dict(self.node, {"hello": {END_KEY: True}})
         self.assertTrue(self.node.children["h"][1].is_end_of_word)
 
     def test_insert_with_duplicate(self):
         self.node.insert("hello")
         self.node.insert("hello")
-        self._compare_node_dict(self.node, {"hello": {}})
+        self._compare_node_dict(self.node, {"hello": {END_KEY: True}})
         self.assertTrue(self.node.children["h"][1].is_end_of_word)
 
     def test_insert_with_overlap(self):
@@ -48,7 +52,10 @@ class TestRadixTreeNode(unittest.TestCase):
         self.assertTrue(child_h_node.is_end_of_word)
 
         # TODO: replace check above
-        self._compare_node_dict(self.node, {"over": {"reached": {}, "whelmed": {}}})
+        self._compare_node_dict(
+            self.node,
+            {"over": {"reached": {END_KEY: True}, "whelmed": {END_KEY: True}}},
+        )
 
     def test_insert_with_overlap_and_duplicate(self):
         self.node.insert("overwhelmed")
@@ -71,7 +78,10 @@ class TestRadixTreeNode(unittest.TestCase):
         self.assertIsInstance(child_h_node, RadixTreeNode)
         self.assertTrue(child_h_node.is_end_of_word)
 
-        self._compare_node_dict(self.node, {"over": {"reached": {}, "whelmed": {}}})
+        self._compare_node_dict(
+            self.node,
+            {"over": {"reached": {END_KEY: True}, "whelmed": {END_KEY: True}}},
+        )
 
     def test_find_last_full_match_node(self):
         self.node.insert("overwhelmed")
@@ -79,7 +89,7 @@ class TestRadixTreeNode(unittest.TestCase):
         self.assertEqual(prefix_overlap, 4)
         self.assertEqual(list(found_node.children.keys()), ["o"])
 
-        self._compare_node_dict(self.node, {"overwhelmed": {}})
+        self._compare_node_dict(self.node, {"overwhelmed": {END_KEY: True}})
 
 
 class TestRadixTree(unittest.TestCase):
