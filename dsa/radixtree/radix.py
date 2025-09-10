@@ -109,6 +109,21 @@ class RadixTree:
     def insert(self, word):
         self.root.insert(word)
 
+    def _dumb_removal(self, word):
+        node, prefix_overlap = self.root.find_last_full_match_node(word[:-1])
+        assert prefix_overlap == len(word) - 1
+        for c, (word, child) in list(node.children.items()):
+            if len(child.children) == 0 and not child.is_end_of_word:
+                del node.children[c]
+
+        """
+        TODO: there's 2 optimizations we need to to.
+        1. get word node's parent without another search / traversal
+            - child keep pointer to parent
+        2. in the parent, locate the child without for loop
+            - find a way to cache the edge to child and reuse it
+        """
+
     def delete(self, word) -> bool:
         node, prefix_overlap = self.root.find_last_full_match_node(word)
         if prefix_overlap != len(word):
@@ -117,6 +132,7 @@ class RadixTree:
             return False
         node.is_end_of_word = False
         # TODO: either do async period cleanup, or impl online node removal
+        self._dumb_removal(word)
         return True
 
 
