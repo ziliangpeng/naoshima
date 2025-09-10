@@ -1,4 +1,7 @@
+import json
+
 END_KEY = 1
+
 
 class RadixTreeNode:
     def __init__(self, is_end_of_word=False):
@@ -77,10 +80,10 @@ class RadixTree:
     def insert(self, word):
         self.root.insert(word)
 
+
 if __name__ == "__main__":
     tree = RadixTree()
     while True:
         word = input("Enter a word: ")
         tree.insert(word)
-        import json
         print(json.dumps(tree.root.to_dict(), indent=4))

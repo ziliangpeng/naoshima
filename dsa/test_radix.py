@@ -4,7 +4,6 @@ from unittest.mock import patch, call
 from radix import END_KEY
 
 
-
 class TestRadixTreeNode(unittest.TestCase):
     def setUp(self):
         self.node = RadixTreeNode()
