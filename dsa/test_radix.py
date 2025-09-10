@@ -11,12 +11,14 @@ class TestRadixTreeNode(unittest.TestCase):
 
         self.assertEqual(list(self.node.children.keys()), ["h"])
         self.assertEqual(self.node.children["h"][0], "hello")
+        self.assertTrue(self.node.children["h"][1].is_end_of_word)
 
     def test_insert_with_duplicate(self):
         self.node.insert("hello")
         self.node.insert("hello")
         self.assertEqual(list(self.node.children.keys()), ["h"])
         self.assertEqual(self.node.children["h"][0], "hello")
+        self.assertTrue(self.node.children["h"][1].is_end_of_word)
 
     def test_insert_with_overlap(self):
         self.node.insert("overwhelmed")
@@ -25,16 +27,17 @@ class TestRadixTreeNode(unittest.TestCase):
         child_word, child_node = self.node.children["o"]
         self.assertEqual(child_word, "over")
         self.assertIsInstance(child_node, RadixTreeNode)
+        self.assertFalse(child_node.is_end_of_word)
 
         self.assertEqual(list(sorted(child_node.children.keys())), ["r", "w"])
-
         child_a_word, child_a_node = child_node.children["r"]
         self.assertEqual(child_a_word, "reached")
         self.assertIsInstance(child_a_node, RadixTreeNode)
-
+        self.assertTrue(child_a_node.is_end_of_word)
         child_h_word, child_h_node = child_node.children["w"]
         self.assertEqual(child_h_word, "whelmed")
         self.assertIsInstance(child_h_node, RadixTreeNode)
+        self.assertTrue(child_h_node.is_end_of_word)
 
     def test_insert_with_overlap_and_duplicate(self):
         self.node.insert("overwhelmed")
@@ -45,16 +48,17 @@ class TestRadixTreeNode(unittest.TestCase):
         child_word, child_node = self.node.children["o"]
         self.assertEqual(child_word, "over")
         self.assertIsInstance(child_node, RadixTreeNode)
+        self.assertFalse(child_node.is_end_of_word)
 
         self.assertEqual(list(sorted(child_node.children.keys())), ["r", "w"])
-
         child_a_word, child_a_node = child_node.children["r"]
         self.assertEqual(child_a_word, "reached")
         self.assertIsInstance(child_a_node, RadixTreeNode)
-
+        self.assertTrue(child_a_node.is_end_of_word)
         child_h_word, child_h_node = child_node.children["w"]
         self.assertEqual(child_h_word, "whelmed")
         self.assertIsInstance(child_h_node, RadixTreeNode)
+        self.assertTrue(child_h_node.is_end_of_word)
 
 
 if __name__ == "__main__":

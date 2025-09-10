@@ -1,19 +1,21 @@
 class RadixTreeNode:
-    def __init__(self):
+    def __init__(self, is_end_of_word=False):
         self.children = {}
-        self.is_end_of_word = False
+        self.is_end_of_word = is_end_of_word
 
     def insert(self, word):
-        if len(word) == 0:
-            return
+        assert len(word) > 0
         start_c = word[0]
         if start_c not in self.children:
-            self.children[start_c] = (word, RadixTreeNode())
+            self.children[start_c] = (word, RadixTreeNode(True))
         else:
             child_word, child_node = self.children[start_c]
             prefix_overlap = self._prefix_overlap(word, child_word)
             if prefix_overlap == len(child_word):
-                child_node.insert(word[prefix_overlap:])
+                if len(word) == prefix_overlap:
+                    child_node.is_end_of_word = True
+                else:
+                    child_node.insert(word[prefix_overlap:])
             else:
                 existing_word_suffix = child_word[prefix_overlap:]
                 new_word_suffix = word[prefix_overlap:]
