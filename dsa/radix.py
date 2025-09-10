@@ -1,3 +1,5 @@
+END_KEY = 1
+
 class RadixTreeNode:
     def __init__(self, is_end_of_word=False):
         self.children = {}
@@ -46,6 +48,14 @@ class RadixTreeNode:
             )
             return tmp_node, tmp_prefix_overlap + prefix_overlap
 
+    def to_dict(self) -> dict:
+        d = {}
+        if self.is_end_of_word:
+            d[END_KEY] = True
+        for c, (word, node) in self.children.items():
+            d[word] = node.to_dict()
+        return d
+
     def _prefix_overlap(self, str1, str2) -> int:
         l = min(len(str1), len(str2))
         for i in range(l):
@@ -59,12 +69,18 @@ class RadixTree:
         self.root = RadixTreeNode()
 
     def exist(self, word) -> bool:
-        node = self.root
-        while True:
-            child_node, prefix_overlap = node.find_matching_node(word)
+        node, prefix_overlap = self.root.find_last_full_match_node(word)
+        if prefix_overlap == len(word) and node.is_end_of_word:
+            return True
+        return False
 
     def insert(self, word):
         self.root.insert(word)
 
-    def delete(self, word):
-        raise NotImplementedError("Not implemented")
+if __name__ == "__main__":
+    tree = RadixTree()
+    while True:
+        word = input("Enter a word: ")
+        tree.insert(word)
+        import json
+        print(json.dumps(tree.root.to_dict(), indent=4))

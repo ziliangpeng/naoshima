@@ -1,8 +1,8 @@
 import unittest
 from radix import RadixTree, RadixTreeNode
 from unittest.mock import patch, call
+from radix import END_KEY
 
-END_KEY = 1
 
 
 class TestRadixTreeNode(unittest.TestCase):
@@ -104,6 +104,26 @@ class TestRadixTree(unittest.TestCase):
         self.tree.insert("hello")
         self.assertEqual(mock_insert.call_count, 2)
         mock_insert.assert_has_calls([call("hello"), call("hello")])
+
+    def test_exist(self):
+        self.tree.insert("hello")
+        self.assertTrue(self.tree.exist("hello"))
+        self.assertFalse(self.tree.exist("hell"))
+        self.assertFalse(self.tree.exist("world"))
+        self.assertFalse(self.tree.exist("hello world"))
+        self.assertFalse(self.tree.exist("world hello"))
+
+        self.tree.insert("overwhelmed")
+        self.tree.insert("overreached")
+        self.assertTrue(self.tree.exist("overwhelmed"))
+        self.assertTrue(self.tree.exist("overreached"))
+        self.assertFalse(self.tree.exist(""))
+        self.assertFalse(self.tree.exist("over"))
+        self.assertFalse(self.tree.exist("overcooked"))
+        self.assertFalse(self.tree.exist("overwhelmeded"))
+        self.assertFalse(self.tree.exist("overreacheded"))
+        self.assertFalse(self.tree.exist("overcookeded"))
+        self.assertFalse(self.tree.exist("overwhelmededed"))
 
 
 if __name__ == "__main__":
