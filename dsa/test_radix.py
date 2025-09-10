@@ -1,5 +1,6 @@
 import unittest
 from radix import RadixTree, RadixTreeNode
+from unittest.mock import patch, call
 
 
 class TestRadixTreeNode(unittest.TestCase):
@@ -59,6 +60,22 @@ class TestRadixTreeNode(unittest.TestCase):
         self.assertEqual(child_h_word, "whelmed")
         self.assertIsInstance(child_h_node, RadixTreeNode)
         self.assertTrue(child_h_node.is_end_of_word)
+
+class TestRadixTree(unittest.TestCase):
+    def setUp(self):
+        self.tree = RadixTree()
+
+    @patch.object(RadixTreeNode, 'insert')
+    def test_simple_insert(self, mock_insert):
+        self.tree.insert("hello")
+        mock_insert.assert_called_once_with("hello")
+
+    @patch.object(RadixTreeNode, 'insert")
+    def test_insert_duplicate(self, mock_insert):
+        'elf.tree.insert("hello")
+        self.tree.insert("hello")
+        self.assertEqual(mock_insert.call_count, 2)
+        mock_insert.assert_has_calls([call("hello"), call("hello")])
 
 
 if __name__ == "__main__":
