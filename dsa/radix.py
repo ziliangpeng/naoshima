@@ -8,6 +8,35 @@ class RadixTreeNode:
         self.children = {}
         self.is_end_of_word = is_end_of_word
 
+    class Stats:
+        def __init__(self, node_count=0, char_count=0, str_count=0, full_char_count=0):
+            self.node_count = node_count
+            self.char_count = char_count
+            self.str_count = str_count
+            self.full_char_count = full_char_count
+
+        def __add__(self, other):
+            return self.__class__(
+                self.node_count + other.node_count,
+                self.char_count + other.char_count,
+                self.str_count + other.str_count,
+                self.full_char_count + other.full_char_count,
+            )
+
+        def __str__(self):
+            return f"Stats(node_count={self.node_count}, char_count={self.char_count}, str_count={self.str_count}, full_char_count={self.full_char_count})"
+
+    def stats(self) -> Stats:
+        s = self.Stats(node_count=1)
+        if self.is_end_of_word:
+            s.str_count += 1
+        for c, (word, node) in self.children.items():
+            child_stats = node.stats()
+            s += child_stats
+            s.char_count += len(word)
+            s.full_char_count += len(word) * child_stats.str_count
+        return s
+
     def insert(self, word):
         if len(word) == 0:
             self.is_end_of_word = True
@@ -87,3 +116,4 @@ if __name__ == "__main__":
         word = input("Enter a word: ")
         tree.insert(word)
         print(json.dumps(tree.root.to_dict(), indent=4))
+        print(tree.root.stats())
